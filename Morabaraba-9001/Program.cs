@@ -101,7 +101,7 @@ namespace Morabaraba_9001
         public class Board : IBoard
         {
 
-            private Dictionary<(char, int), ITile> allTiles;
+            public Dictionary<(char, int), ITile> allTiles;
             private IEnumerable<IEnumerable<ITile>> allBoardMills;
             public Board()
             {
