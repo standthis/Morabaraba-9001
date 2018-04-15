@@ -6,23 +6,22 @@ namespace Morabaraba_9001
 {
     class Program
     {
-        public interface Pos
+        public interface IPos
         {
-            char Row { get; }
-            int Col { get; }
+            char getRow();
+            int getCol();
         }
         public interface IBoard
         {
-            ICow Occupant(Pos pos);
-            IEnumerable<ICow> Cows(Color c);
-            IEnumerable<ICow> Mills(Color c);
-            
-            void MoveCow(ICow cow, Pos pos);
-            void PlaceCow(Pos pos);
-            void FlyCow(Pos pos);
-            void KillCow(Pos pos, Color c);
-            Dictionary<Pos, IEnumerable<Pos>> PossibleMoves { get; }
-            IEnumerable<Pos> AvailableMoves(ICow cow);  
+            ICow Occupant(IPos pos);
+            IEnumerable<ICow> Cows(IPlayer player);
+            IEnumerable<ICow> Mills(IPlayer player);  
+            void MoveCow(ICow cow, IPos fromPos, IPos toPos);
+            void PlaceCow(ICow cow, IPos pos);
+            void FlyCow(ICow cow, IPos fromPos, IPos toPos);
+            void KillCow(IPos pos, IPlayer player);
+            //Dictionary<IPos, IEnumerable<IPos>> PossibleMoves { get; }
+            IEnumerable<IPos> getPossibleMoves(IPos pos);
         }
 
 
@@ -35,6 +34,7 @@ namespace Morabaraba_9001
         public interface IPlayer
         {
             string Name { get; }
+            Color c { get; }
             (char, int) GetMove();
             int Unplayed { get; }
             PlayerState State { get; }
@@ -44,7 +44,7 @@ namespace Morabaraba_9001
         {
             //Symbol symbol {get;}
             Color Color { get; }
-            Pos Pos { get; }
+            IPos Pos { get; }
         }
 
 
@@ -59,50 +59,42 @@ namespace Morabaraba_9001
 
         public class Board : IBoard
         {
-            ICow[] light, dark;
-
-            public Board()
-            {
-            }
-
-            public Dictionary<Pos, IEnumerable<Pos>> PossibleMoves => throw new NotImplementedException();
-
-            public IEnumerable<Pos> AvailableMoves(ICow cow)
+            public IEnumerable<ICow> Cows(IPlayer player)
             {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ICow> Cows(Color c)
+            public void FlyCow(ICow cow, IPos fromPos, IPos toPos)
             {
                 throw new NotImplementedException();
             }
 
-            public void FlyCow(Pos pos)
+            public IEnumerable<IPos> getPossibleMoves(IPos pos)
             {
                 throw new NotImplementedException();
             }
 
-            public void KillCow(Pos pos, Color c)
+            public void KillCow(IPos pos, IPlayer player)
             {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ICow> Mills(Color c)
+            public IEnumerable<ICow> Mills(IPlayer player)
             {
                 throw new NotImplementedException();
             }
 
-            public void MoveCow(ICow cow, Pos pos)
+            public void MoveCow(ICow cow, IPos fromPos, IPos toPos)
             {
                 throw new NotImplementedException();
             }
 
-            public ICow Occupant(Pos pos)
+            public ICow Occupant(IPos pos)
             {
                 throw new NotImplementedException();
             }
 
-            public void PlaceCow(Pos pos)
+            public void PlaceCow(ICow cow, IPos pos)
             {
                 throw new NotImplementedException();
             }
@@ -110,7 +102,7 @@ namespace Morabaraba_9001
 
         public class Cow : ICow
         {
-            public Cow(Color c, Pos pos)
+            public Cow(Color c, IPos pos)
             {
                 Color = c;
                 Pos = pos;
@@ -118,7 +110,7 @@ namespace Morabaraba_9001
 
             public Color Color { get; set; }
 
-            public Pos Pos { get; private set; }
+            public IPos Pos { get; private set; }
         }
 
         static void Main(string[] args)
