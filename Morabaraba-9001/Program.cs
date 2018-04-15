@@ -14,12 +14,15 @@ namespace Morabaraba_9001
         public interface IBoard
         {
             ICow Occupant(Pos pos);
-            IEnumerable<ICow> Cows(Symbol symbol);
-            IEnumerable<ICow> Mills(Symbol symbol);
+            IEnumerable<ICow> Cows(Color c);
+            IEnumerable<ICow> Mills(Color c);
+            
             void MoveCow(ICow cow, Pos pos);
             void PlaceCow(Pos pos);
             void FlyCow(Pos pos);
-            void KillCow(Pos pos, Symbol symbol);
+            void KillCow(Pos pos, Color c);
+            Dictionary<Pos, IEnumerable<Pos>> PossibleMoves { get; }
+            IEnumerable<Pos> AvailableMoves(ICow cow);  
         }
 
 
@@ -39,11 +42,9 @@ namespace Morabaraba_9001
 
         public interface ICow
         {
-            IEnumerable<Pos> PossibleMoves { get; }
             //Symbol symbol {get;}
             Color Color { get; }
             Pos Pos { get; }
-            IEnumerable<Pos> AvailableMoves(IBoard board);
         }
 
 
@@ -63,7 +64,15 @@ namespace Morabaraba_9001
             public Board()
             {
             }
-            public IEnumerable<ICow> Cows(Symbol symbol)
+
+            public Dictionary<Pos, IEnumerable<Pos>> PossibleMoves => throw new NotImplementedException();
+
+            public IEnumerable<Pos> AvailableMoves(ICow cow)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<ICow> Cows(Color c)
             {
                 throw new NotImplementedException();
             }
@@ -73,12 +82,12 @@ namespace Morabaraba_9001
                 throw new NotImplementedException();
             }
 
-            public void KillCow(Pos pos, Symbol symbol)
+            public void KillCow(Pos pos, Color c)
             {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ICow> Mills(Symbol symbol)
+            public IEnumerable<ICow> Mills(Color c)
             {
                 throw new NotImplementedException();
             }
@@ -101,22 +110,15 @@ namespace Morabaraba_9001
 
         public class Cow : ICow
         {
-            public Cow(Color c, Pos pos, Pos[] possibleMoves)
+            public Cow(Color c, Pos pos)
             {
                 Color = c;
                 Pos = pos;
-                PossibleMoves = possibleMoves;
             }
 
-            public IEnumerable<Pos> PossibleMoves { get; }
             public Color Color { get; set; }
 
             public Pos Pos { get; private set; }
-
-            public IEnumerable<Pos> AvailableMoves(IBoard board)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         static void Main(string[] args)
