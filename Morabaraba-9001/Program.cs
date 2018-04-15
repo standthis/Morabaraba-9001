@@ -160,6 +160,10 @@ namespace Morabaraba_9001
                 IEnumerable<ITile> CA57 = new List<ITile> { C5, B6, A7 };
                 IEnumerable<ITile> GE13 = new List<ITile> { G1, F2, E3 };
                 IEnumerable<ITile> EG57 = new List<ITile> { E5, F6, G7 };
+                allBoardMills = new List<IEnumerable<ITile>> {
+                AA17, BB26, CC35, DD13, DD57, EE35, FF26, GG17, AG11, BF22,
+                CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible millsible mill combinations
+
                    
 
 
