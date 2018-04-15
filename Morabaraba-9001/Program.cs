@@ -19,7 +19,9 @@ namespace Morabaraba_9001
         void PlaceCow(ICow cow, (char,int) pos);
         void FlyCow(ICow cow, (char,int) fromPos, (char,int) toPos);
         void KillCow((char,int) pos);
-        IEnumerable<(char,int)> PossibleMoves((char,int) pos);
+        IEnumerable<(char, int)> PossibleMoves((char, int) pos);
+        Dictionary<(char, int), ITile> allTiles { get; }
+        IEnumerable<IEnumerable<ITile>> allBoardMills { get; }
         //    Dictionary<(char, int), ICow> allCows { get; }
     }
 
@@ -34,7 +36,7 @@ namespace Morabaraba_9001
     {
         string Name { get; }
         Color Color { get; }
-        (char, int) GetMove();
+        (char, int) GetMove(string what);
         int Unplayed { get; }
         PlayerState State { get; }
     }
@@ -56,11 +58,28 @@ namespace Morabaraba_9001
 
         public PlayerState State { get; }
 
-        public (char, int) GetMove()
+        public (char, int) GetMove(string what)
         {
             throw new NotImplementedException();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public interface ICow
     {
@@ -113,9 +132,114 @@ namespace Morabaraba_9001
     public interface IReferee
     {
         IPlayer Winner();
-        IPlayer noMove();
-        IPlayer getCurrentPlayer();
-        void Play();
+       // IPlayer noMove();
+        void Play(IPlayer player);
+        void StartGame();
+        // IPlayer player_1 { get; set; }
+        //IPlayer player_2 { get; set; }
+
+        IBoard GameBoard { get; }
+        IPlayer EnemyPlayer { get; }
+        IPlayer CurrentPlayer { get;}
+       
+    }
+
+    public class Referee : IReferee
+    {
+        public IPlayer CurrentPlayer { get; private set; }
+        public IPlayer EnemyPlayer { get; private set; }
+        public IBoard GameBoard { get; }
+
+        public Referee(IPlayer p1, IPlayer p2, IBoard board ){
+            CurrentPlayer = p1;
+            if (p2.Color == Color.dark)
+            {
+                CurrentPlayer = p2;
+            }
+            GameBoard = board;
+
+        }
+       
+       
+        private void Move(IPlayer player){
+          //  if (player.State != PlayerState.Moving)
+             //   throw new IncorrectStateException();
+           (char, int) toPos, fromPos;
+            bool valid = false;
+            while (!valid)
+            {
+                fromPos = player.GetMove("Where do you want to move from?: ");
+                if (GameBoard.a)
+
+                toPos = player.GetMove("Where do you want to move to?: ");
+
+            }
+            
+        }
+        private void Place(IPlayer player){
+         //   if (player.State != PlayerState.Placing)
+           //     throw new IncorrectStateException();
+            (char, int) toPos, fromPos;
+            bool valid = false;
+            while (!valid)
+            {
+                toPos = player.GetMove("Where do you want to place your cow?: ");
+
+            }
+
+        }
+        private void Fly(IPlayer player)
+        {
+            //if (player.State != PlayerState.Flying)
+              //  throw new IncorrectStateException();
+            (char, int) toPos, fromPos;
+            bool valid = false;
+            while (!valid)
+            {
+                fromPos = player.GetMove("Where do you want to fly from?: ");
+
+                toPos=player.GetMove("Where do you want to fly to?: ");
+
+            }
+            
+        }
+            
+        public void Play(IPlayer player,PlayerState state)
+        {
+
+            switch(state){
+                case PlayerState.Placing:
+                    Place(player);
+                    break;
+                case PlayerState.Moving:
+                    Move(player);
+                    break;
+                case PlayerState.Flying:
+                    Fly(player);
+                    break;
+                   
+
+            }
+            (char,int) pos = player.GetMove();
+
+
+        }
+
+        private changePlayerTurn(){
+            IPlayer temp_player = currentPlayer;
+            currentPlayer = EnemyPlayer;
+        }
+        public void StartGame(){
+            while(true){
+               // printBoard()
+                Play(currentPlayer, currentPlayer.State);
+                changePlayerTurn();
+            }
+        }
+        public IPlayer Winner()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class IlligalMoveException : ApplicationException { }
@@ -123,11 +247,12 @@ namespace Morabaraba_9001
     public class Board : IBoard
     {
 
-        public Dictionary<(char, int), ITile> allTiles;
-        private IEnumerable<IEnumerable<ITile>> allBoardMills;
+        Dictionary<(char, int), ITile> allTiles;
+        IEnumerable<IEnumerable<ITile>> allBoardMills;
         public Board()
         {
             allTiles = new Dictionary<(char, int), ITile>();
+            allBoardMills = new List<IEnumerable<ITile>>();
             ITile A1 = allTiles[('A', 1)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) });
             ITile A4 = allTiles[('A', 4)] = new Tile(null, new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) });
             ITile A7 = allTiles[('A', 7)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) });
@@ -183,7 +308,9 @@ namespace Morabaraba_9001
             IEnumerable<ITile> CA57 = new List<ITile> { C5, B6, A7 };
             IEnumerable<ITile> GE13 = new List<ITile> { G1, F2, E3 };
             IEnumerable<ITile> EG57 = new List<ITile> { E5, F6, G7 };
-                   
+            allBoardMills = new List<IEnumerable<ITile>>{
+                AA17, BB26, CC35, DD13, DD57, EE35, FF26, GG17, AG11, BF22,
+                CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible mills    
 
 
         }
