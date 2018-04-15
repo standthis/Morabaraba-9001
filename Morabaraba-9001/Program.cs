@@ -99,26 +99,6 @@ namespace Morabaraba_9001
             }
         }
 
-        public class Cow : ICow
-        {
-            public Cow(Color c, Pos pos, Pos[] possibleMoves)
-            {
-                Color = c;
-                Pos = pos;
-                PossibleMoves = possibleMoves;
-            }
-
-            public IEnumerable<Pos> PossibleMoves { get; }
-            public Color Color { get; set; }
-
-            public Pos Pos { get; private set; }
-
-            public IEnumerable<Pos> AvailableMoves(IBoard board)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         static void Main(string[] args)
         {
             Console.WriteLine("Morabaraba!");
