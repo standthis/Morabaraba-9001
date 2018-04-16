@@ -14,7 +14,7 @@ namespace Morabaraba_9001.Test
         public void ABoardHas24EmptyTilesAtStart()
         {
             Board b = new Board();
-            Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
+            Assert.That(b.AllTiles.Values.Where(tile => tile.Cow == null).Count() == 24);
         }
 
 
