@@ -11,7 +11,7 @@ namespace Morabaraba_9001.Test
     public class Tests
     {
         [Test]
-        public void ABoardHas24EmptyTiles()
+        public void ABoardHas24EmptyTilesAtStart()
         {
             Board b = new Board();
             Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
@@ -21,11 +21,17 @@ namespace Morabaraba_9001.Test
         [Test]
         public void ThePlayerWithDarkCowsMovesFirst()
         {
-
+            Player rick = new Player("theRick", Color.dark);
+            Player peter = new Player("peter Pan", Color.light);
+            Board b = new Board();
+            Referee louise = new Referee(rick, peter, b);
+            Referee martin = new Referee(peter, rick, b);
+            Assert.That(louise.CurrentPlayer == rick);
+            Assert.That(martin.CurrentPlayer == rick);
         }
 
         [Test]
-        public void CowsCanOnlyBePlacesOnEmptySpaces()
+        public void CowsCanOnlyBePlacesOnEmptyTiles()
         {
 
         }
