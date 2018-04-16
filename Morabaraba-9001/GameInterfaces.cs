@@ -15,7 +15,7 @@ namespace Morabaraba_9001
     {
         //Symbol symbol {get;}
         Color Color { get; }
-        (char, int) Pos { get; set; }
+   
 
     }
     public interface ITile
@@ -29,10 +29,10 @@ namespace Morabaraba_9001
         ICow Occupant((char, int) pos);
         IEnumerable<ITile> Cows(Color c);
         IEnumerable<ITile> Mills(IPlayer player);
-        void MoveCow(ICow cow, (char, int) fromPos, (char, int) toPos);
-        void PlaceCow(ICow cow, (char, int) pos);
-        void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos);
-        void KillCow((char, int) pos);
+        MoveError MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        MoveError PlaceCow(IPlayer player, (char, int) pos);
+        MoveError FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        MoveError KillCow((char, int) killPos, IPlayer player);
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }

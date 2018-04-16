@@ -28,49 +28,16 @@ namespace Morabaraba_9001
             //  if (player.State != PlayerState.Moving)
             //   throw new IncorrectStateException();
             (char, int) toPos, fromPos;
-
-
             fromPos = player.GetMove("Where do you want to move from?: ");
-            if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
-            {
-
-                toPos = player.GetMove("Where do you want to move to?: ");
-                if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
-                {
-
-                    GameBoard.MoveCow(new Cow(player.Color,toPos), fromPos, toPos);
-                    return MoveError.Valid;
-                }
-                else
-                {
-
-                    return MoveError.InValid;//can't move here
-                }
-
-            }
-            else
-            {
-                return MoveError.NoCow;
-            }
-
-
+            toPos = player.GetMove("Where do you want to move to?: ");
+            return GameBoard.MoveCow(player, fromPos, toPos);
 
         }
         private MoveError Place(IPlayer player)
         {
             (char, int) toPos;
             toPos = player.GetMove("Where do you want to place your cow?: ");
-            if (GameBoard.AllTiles[toPos].Cow == null)
-            {
-                GameBoard.PlaceCow(new Cow(player.Color,toPos), toPos);
-                return MoveError.Valid;
-            }
-            else
-            {
-                return MoveError.InValid;
-            }
-
-
+            return GameBoard.PlaceCow(player, toPos);
 
         }
         private MoveError Fly(IPlayer player)
@@ -79,26 +46,8 @@ namespace Morabaraba_9001
             //  throw new IncorrectStateException();
             (char, int) toPos, fromPos;
             fromPos = player.GetMove("Where do you want to fly from?: ");
-            if (GameBoard.AllTiles[fromPos].Cow != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
-            {
-
-                toPos = player.GetMove("Where do you want to fly to?: ");
-                if (GameBoard.AllTiles[toPos].Cow == null)
-                {
-                    GameBoard.FlyCow(new Cow(player.Color,toPos), fromPos, toPos);
-                    return MoveError.Valid;
-                }
-                else
-                {
-                    return MoveError.InValid;//cant move cow here
-                }
-
-            }
-            else
-            {
-                return MoveError.NoCow;//have no cow here
-            }
-
+            toPos = player.GetMove("Where do you want to fly to?: ");
+            return GameBoard.FlyCow(player, fromPos, toPos);
         }
 
 
@@ -145,33 +94,29 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-     /*  let pos = getPos "Which cow do you want to kill?"
-    let playerMill = getPlayerMills player 
-    match (isValidMove pos player.Positions), (isInMill pos playerMill), (canKillCowInMill playerMill player) with
-    | true, true, true | true, false, _ -> removePiece player (getCoords pos)
-    | true, true, _ -> 
-        printfn "Can't kill cow in mill unless all cows are in mills" 
-        killCow player
-    | _ -> 
-        printfn "No valid cow was in pos %A" pos
-        killCow player 
+    //   let pos = getPos "Which cow do you want to kill?"
+    //let playerMill = getPlayerMills player 
+    //match (isValidMove pos player.Positions), (isInMill pos playerMill), (canKillCowInMill playerMill player) with
+    //| true, true, true | true, false, _ -> removePiece player (getCoords pos)
+    //| true, true, _ -> 
+    //    printfn "Can't kill cow in mill unless all cows are in mills" 
+    //    killCow player
+    //| _ -> 
+        //printfn "No valid cow was in pos %A" pos
+        //killCow player 
         public MoveError KillCow()
         {
             (char,int) killPos=CurrentPlayer.GetMove("Which cow do you want to kill?");
-            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(EnemyPlayer);
-            if(GameBoard.AllTiles[killPos].Cow !=null ){
-                if(enemyPlayerMills..Contains())
-            else{
-                return MoveError.NoCow;
-            }
+            return GameBoard.KillCow(killPos);
+    
 
         }
-*/
+
         public bool EndGame()
         {
             throw new NotImplementedException();
         }
 
-       
+     =
     }
 }
