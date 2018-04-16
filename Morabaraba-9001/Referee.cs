@@ -55,6 +55,8 @@ namespace Morabaraba_9001
 
         private MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
+            //if (player.State != PlayerState.Moving)
+            //  throw new IncorrectStateException();
             if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
             {
                 if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
@@ -74,16 +76,20 @@ namespace Morabaraba_9001
         }       
 
 
-        private MoveError Fly(IPlayer player)
+        private MoveError getPlayerFlyAndExecute(IPlayer player)
+        {
+            (char, int) toPos, fromPos;
+            fromPos = player.GetMove("Where do you want to fly from?: ");
+            toPos = player.GetMove("Where do you want to fly to?: ");
+            return Fly(player, toPos, fromPos);
+        }
+
+        private MoveError Fly(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
             //if (player.State != PlayerState.Flying)
             //  throw new IncorrectStateException();
-            (char, int) toPos, fromPos;
-            fromPos = player.GetMove("Where do you want to fly from?: ");
             if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
             {
-
-                toPos = player.GetMove("Where do you want to fly to?: ");
                 if (GameBoard.AllTiles[toPos].Cow == null)
                 {
                     GameBoard.FlyCow(new Cow(player.Color,toPos), fromPos, toPos);
@@ -93,15 +99,12 @@ namespace Morabaraba_9001
                 {
                     return MoveError.InValid;//cant move cow here
                 }
-
             }
             else
             {
                 return MoveError.NoCow;//have no cow here
             }
-
         }
-
 
 
         public MoveError Play(IPlayer player, PlayerState state)
