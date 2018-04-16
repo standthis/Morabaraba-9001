@@ -15,6 +15,7 @@ namespace Morabaraba9001
     {
         //Symbol symbol {get;}
         Color Color { get; }
+        (char, int) Pos { get; set; }
 
     }
     public interface ITile
@@ -42,13 +43,16 @@ namespace Morabaraba9001
     {
         string Name { get; }
         Color Color { get; }
-        (char, int) GetMove(string what);
+
         int CowsUnPlaced { get; }
         int CowsOnBoard { get; }
         PlayerState State { get; }
+
+        List<ICow> Cows { get; }
+        (char, int) GetMove(string what);
         bool DecrementCowsOnBoard();
         bool DecrementCowsPlaced();
-        bool AddCow();
+        bool AddCowToBoard();
     }
 
 
