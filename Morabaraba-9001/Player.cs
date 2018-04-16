@@ -14,7 +14,7 @@ namespace Morabaraba_9001
             Cows = new List<ICow>();
             for (int i = 0; i < 12; i++)
             {
-                Cows.Add(new Cow(color,('_',0)));
+                Cows.Add(new Cow(Color));
             }
 
         }

@@ -113,9 +113,34 @@ namespace Morabaraba_9001
         }
 
 
-        public void KillCow((char, int) pos)
+        public MoveError KillCow((char, int) killPos, IPlayer player)
         {
-            AllTiles[pos].Cow = null;
+
+            IEnumerable<ITile> enemyPlayerMills = Mills(player);
+            if (AllTiles[killPos].Cow != null)
+            {
+                if (enemyPlayerMills.Contains(AllTiles[killPos]))
+                {
+                    if (enemyPlayerMills.Count() == player.CowsOnBoard)
+                    {
+                        AllTiles[killPos].Cow = null;
+                        return MoveError.Valid;
+                    }
+                    else
+                    {
+                        //can't kill cow in mill
+                        return MoveError.InValid;
+                    }
+                }
+                else{
+                    return MoveError.NoCow;
+                }
+            }
+                else
+                {
+                    return MoveError.NoCow;
+                }
+            
         }
 
 
@@ -126,7 +151,7 @@ namespace Morabaraba_9001
                 if (AllTiles[toPos].Cow == null)
                 {
                     AllTiles[fromPos].Cow = null;
-                    AllTiles[toPos].Cow = new Cow(player.Color, toPos);
+                    AllTiles[toPos].Cow = new Cow(player.Color);
                     return MoveError.Valid;
                 }
                 else
@@ -148,7 +173,7 @@ namespace Morabaraba_9001
                 if (AllTiles[toPos].Cow == null && AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
                 {
                     AllTiles[fromPos].Cow = null;
-                    AllTiles[toPos].Cow = new Cow(player.Color, toPos);
+                    AllTiles[toPos].Cow = new Cow(player.Color);
                     return MoveError.Valid;
                 }
                 else
@@ -167,7 +192,7 @@ namespace Morabaraba_9001
         {
             if (AllTiles[pos].Cow == null)
             {
-                AllTiles[pos].Cow = new Cow(player.Color, pos);
+                AllTiles[pos].Cow = new Cow(player.Color);
                 return MoveError.Valid;
             }
             else
