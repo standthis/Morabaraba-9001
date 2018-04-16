@@ -119,7 +119,7 @@ namespace Morabaraba_9001
                     return getPlayerMoveAndExecute(player);
 
                 case PlayerState.Flying:
-                    return Fly(player);
+                    return getPlayerFlyAndExecute(player);
 
                 default:
                     throw new Exception("Invalid state");
