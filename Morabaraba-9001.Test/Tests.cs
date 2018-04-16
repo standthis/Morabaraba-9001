@@ -11,12 +11,11 @@ namespace Morabaraba_9001.Test
     public class Tests
     {
         [Test]
-        public void ABoardHas24EmptyTilesAtStart()
+        public void BoardIsEmptyAtStart()
         {
             Board b = new Board();
-            Assert.That(b.AllTiles.Values.Where(tile => tile.Cow == null).Count() == 24);
+            Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
         }
-
 
         [Test]
         public void ThePlayerWithDarkCowsMovesFirst()
