@@ -30,8 +30,14 @@ namespace Morabaraba_9001.Test
             Assert.That(martin.CurrentPlayer.Color == Color.dark);
         }
 
+        static object[] legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles =
+        {
+
+        };
+
         [Test]
-        public void CowsCanOnlyBePlacesOnEmptyTiles()
+        [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
+        public void CowsCanOnlyBePlacedOnEmptyTiles()
         {
 
         }
