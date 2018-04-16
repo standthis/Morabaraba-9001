@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Morabaraba9001
+namespace Morabaraba_9001
 {
     public enum Color { dark, light }
 

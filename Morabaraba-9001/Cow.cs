@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Morabaraba9001
+namespace Morabaraba_9001
 {
 
     public class Cow : ICow
