@@ -32,7 +32,7 @@ namespace Morabaraba_9001.Test
 
         static object[] legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles =
         {
-
+            new object[] { ('A', 1), true, MoveError.Valid }
         };
         [Test]
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
