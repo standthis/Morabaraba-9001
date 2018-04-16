@@ -171,5 +171,10 @@ namespace Morabaraba_9001
         {
             throw new NotImplementedException();
         }
+
+        public MoveError KillCow()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
