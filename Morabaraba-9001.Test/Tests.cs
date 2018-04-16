@@ -26,8 +26,8 @@ namespace Morabaraba_9001.Test
             Board b = new Board();
             Referee louise = new Referee(rick, peter, b);
             Referee martin = new Referee(peter, rick, b);
-            Assert.That(louise.CurrentPlayer == rick);
-            Assert.That(martin.CurrentPlayer == rick);
+            Assert.That(louise.CurrentPlayer.Color == Color.dark);
+            Assert.That(martin.CurrentPlayer.Color == Color.dark);
         }
 
         [Test]
