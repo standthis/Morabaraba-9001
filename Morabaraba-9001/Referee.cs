@@ -23,6 +23,26 @@ namespace Morabaraba_9001
         }
 
 
+        private MoveError getPlayerMoveAndExecute(IPlayer player)
+        {
+            (char, int) toPos;
+            toPos = player.GetMove("Where do you want to place your cow?: ");
+            return Place(player, toPos);
+        }
+
+        private MoveError Place(IPlayer player, (char, int) toPos)
+        {
+            if (GameBoard.AllTiles[toPos].Cow == null)
+            {
+                GameBoard.PlaceCow(new Cow(player.Color, toPos), toPos);
+                return MoveError.Valid;
+            }
+            else
+            {
+                return MoveError.InValid;
+            }
+        }
+
         private MoveError Move(IPlayer player)
         {
             //  if (player.State != PlayerState.Moving)
@@ -52,27 +72,8 @@ namespace Morabaraba_9001
             {
                 return MoveError.NoCow;
             }
+        }       
 
-
-
-        }
-        private MoveError Place(IPlayer player)
-        {
-            (char, int) toPos;
-            toPos = player.GetMove("Where do you want to place your cow?: ");
-            if (GameBoard.AllTiles[toPos].Cow == null)
-            {
-                GameBoard.PlaceCow(new Cow(player.Color,toPos), toPos);
-                return MoveError.Valid;
-            }
-            else
-            {
-                return MoveError.InValid;
-            }
-
-
-
-        }
         private MoveError Fly(IPlayer player)
         {
             //if (player.State != PlayerState.Flying)
