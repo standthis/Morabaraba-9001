@@ -6,6 +6,7 @@ namespace Morabaraba_9001
 {
     public class Referee : IReferee
     {
+
         public IPlayer CurrentPlayer { get; private set; }
         public IPlayer EnemyPlayer { get; private set; }
         public IBoard GameBoard { get; }
@@ -19,18 +20,19 @@ namespace Morabaraba_9001
                 CurrentPlayer = p2;
             }
             GameBoard = board;
-
         }
 
 
-        private MoveError getPlayerPlacementAndExecute(IPlayer player)
+        private MoveError getPlayerMoveAndPlace(IPlayer player)
         {
             (char, int) toPos;
+
             toPos = player.GetMove("Where do you want to place your cow?: ");
+
             return Place(player, toPos);
         }
 
-        private MoveError Place(IPlayer player, (char, int) toPos)
+        public MoveError Place(IPlayer player, (char, int) toPos)
         {
             if (GameBoard.AllTiles[toPos].Cow == null)
             {
@@ -44,16 +46,17 @@ namespace Morabaraba_9001
         }
 
 
-        private MoveError getPlayerMoveAndExecute(IPlayer player)
+        private MoveError getPlayerMoveAndMove(IPlayer player)
         {
             (char, int) toPos, fromPos;
 
             fromPos = player.GetMove("Where do you want to move from?: ");
             toPos = player.GetMove("Where do you want to move to?: ");
+
             return Move(player, toPos, fromPos);
         }
 
-        private MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
+        public MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
             //if (player.State != PlayerState.Moving)
             //  throw new IncorrectStateException();
@@ -76,15 +79,17 @@ namespace Morabaraba_9001
         }       
 
 
-        private MoveError getPlayerFlyAndExecute(IPlayer player)
+        private MoveError getPlayerMoveAndFly(IPlayer player)
         {
             (char, int) toPos, fromPos;
+
             fromPos = player.GetMove("Where do you want to fly from?: ");
             toPos = player.GetMove("Where do you want to fly to?: ");
+
             return Fly(player, toPos, fromPos);
         }
 
-        private MoveError Fly(IPlayer player, (char, int) toPos, (char, int) fromPos)
+        public MoveError Fly(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
             //if (player.State != PlayerState.Flying)
             //  throw new IncorrectStateException();
@@ -109,23 +114,20 @@ namespace Morabaraba_9001
 
         public MoveError Play(IPlayer player, PlayerState state)
         {
-
             switch (state)
             {
                 case PlayerState.Placing:
-                    return getPlayerPlacementAndExecute(player);
+                    return getPlayerMoveAndPlace(player);
 
                 case PlayerState.Moving:
-                    return getPlayerMoveAndExecute(player);
+                    return getPlayerMoveAndMove(player);
 
                 case PlayerState.Flying:
-                    return getPlayerFlyAndExecute(player);
+                    return getPlayerMoveAndFly(player);
 
                 default:
                     throw new Exception("Invalid state");
             }
-
-
         }
 
 
@@ -136,6 +138,8 @@ namespace Morabaraba_9001
             CurrentPlayer = EnemyPlayer;
             EnemyPlayer = temp_player;
         }
+
+
         public void StartGame()
         {
             while (true)
@@ -145,6 +149,8 @@ namespace Morabaraba_9001
                 ChangePlayerTurn();
             }
         }
+
+
         public IPlayer Winner()
         {
             throw new NotImplementedException();
@@ -172,10 +178,12 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
+
         public MoveError KillCow(IPlayer player)
         {
             throw new NotImplementedException();
         }
+
 
         public MoveError KillCow()
         {
