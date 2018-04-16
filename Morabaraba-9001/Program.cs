@@ -29,7 +29,8 @@ namespace Morabaraba_9001
         string Name { get; }
         Color Color { get; }
         (char, int) GetMove(string what);
-        int Unplayed { get; }
+        int CowsUnPlaced { get; }
+        int CowsOnBoard { get; }
         PlayerState State { get; }
     }
     public interface ICow
@@ -73,14 +74,16 @@ namespace Morabaraba_9001
         {
             Name = name;
             Color = color;
-            Unplayed = 12;
+            CowsUnPlaced = 12;
+            CowsOnBoard = 0;
         }
 
         public string Name { get; }
 
         public Color Color { get; }
 
-        public int Unplayed { get; private set; }
+        public int CowsUnPlaced { get; set; }
+        public int CowsOnBoard { get; set; }
 
         public PlayerState State { get; }
 
