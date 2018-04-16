@@ -23,7 +23,7 @@ namespace Morabaraba_9001.Test
         {
             Player rick = new Player("theRick", Color.dark);
             Player peter = new Player("peter Pan", Color.light);
-            Board b = new Board();
+            IBoard b = Substitute.For<IBoard>();
             Referee louise = new Referee(rick, peter, b);
             Referee martin = new Referee(peter, rick, b);
             Assert.That(louise.CurrentPlayer.Color == Color.dark);
