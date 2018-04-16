@@ -41,9 +41,13 @@ namespace Morabaraba_9001.Test
             IPlayer player = Substitute.For<IPlayer>();
             //Player player = new Player("Morty", Color.dark);
             IBoard board = Substitute.For<IBoard>();
-            Referee mrRef = new Referee(player, player, board);
-            
 
+            if (empty == false)
+            {
+                ICow cow = Substitute.For<ICow>();
+                board.PlaceCow(cow, pos);
+            }
+            
         }
 
         [Test]
