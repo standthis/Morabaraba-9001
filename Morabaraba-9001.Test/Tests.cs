@@ -10,6 +10,8 @@ namespace Morabaraba_9001.Test
     [TestFixture]
     public class Tests
     {
+
+        //TESTS FOR DURING PLACEMENT
         [Test]
         public void BoardIsEmptyAtStart()
         {
@@ -64,7 +66,7 @@ namespace Morabaraba_9001.Test
 
         }
         
-        // During moving 
+        //TESTS FOR DURING MOVING
         // Incomplete 
         [Test]
         public void ACowCanOnlyMoveToAnotherConnectedSpace(Color c, (char,int) pos)
@@ -78,6 +80,92 @@ namespace Morabaraba_9001.Test
 
             }
             b.Cows(c).Returns(new ITile[] {  });  
+
+        }
+
+        [Test]
+        public void ACowCanOnlyMoveToAnEmptySpace()
+        {
+
+        }
+
+        [Test]
+        public void MovingDoesNotDecreaseOrIncreaseTheNumberOfTilesOnTheBoard()
+        {
+
+        }
+
+        //TESTS FOR DURING FLYING
+        [Test]
+        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard()
+        {
+
+        }
+
+        //GENERAL TESTING
+        [Test]
+        public void AMillFormsWhen3CowsOfTheSameColorAreInARow()
+        {
+
+        }
+
+        [Test]
+        public void AMillIsNotFormedWhen3CowsInALineAreDifferentColors()
+        {
+
+        }
+
+        [Test]
+        public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine()
+        {
+
+        }
+
+        [Test]
+        public void ShootingOnlyOccursInTheTurnTheMillIsCreatedAndNotInTheNextTurnItStillExists()
+        {
+
+        }
+
+        [Test]
+        public void ACowInAMillCannotBeShotWhenNonMillCowsExist()
+        {
+
+        }
+
+        [Test]
+        public void ACowInAMillCanBeShotWhenOnlyCowsInMillsExist()
+        {
+
+        }
+
+        [Test]
+        public void APlayerCannotShootTheirOwnCows()
+        {
+
+        }
+
+        [Test]
+        public void APlayerCannotShootAnEmptySpace()
+        {
+
+        }
+
+        [Test]
+        public void ShotCowsAreRemovedFromTheBoard()
+        {
+
+        }
+
+        [Test]
+        public void AWinOccursIfAnOpponentCannotMove()
+        {
+
+        }
+
+        [Test]
+        public void AWinOccursIfAPlayerIsNotInPlacingAndHasLessThan3Cows()
+        {
 
         }
     }
