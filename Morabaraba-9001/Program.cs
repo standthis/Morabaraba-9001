@@ -5,7 +5,11 @@ using System.Linq;
 namespace Morabaraba_9001
 {
 
-
+    public interface IPos
+    {
+        char getRow();
+        int getCol();
+    }
     public interface IBoard
     {
         ICow Occupant((char, int) pos);
@@ -25,8 +29,12 @@ namespace Morabaraba_9001
         string Name { get; }
         Color Color { get; }
         (char, int) GetMove(string what);
-        int Unplayed { get; }
+        int CowsUnPlaced { get; }
+        int CowsOnBoard { get; }
         PlayerState State { get; }
+        void DecrementCowsOnBoard();
+        void DecrementCowsPlaced();
+        void addCow();
     }
     public interface ICow
     {
@@ -43,7 +51,7 @@ namespace Morabaraba_9001
     {
         IPlayer Winner();
         // IPlayer noMove();
-        void Play(IPlayer player, PlayerState state);
+        MoveError Play(IPlayer player, PlayerState state);
         void changePlayerTurn();
         void StartGame();
         // IPlayer player_1 { get; set; }
@@ -62,6 +70,7 @@ namespace Morabaraba_9001
 
     public enum PlayerState { Placing, Moving, Flying }
 
+    public enum MoveError { NoCow, InValid, Valid}
 
     public class Player : IPlayer
     {
@@ -69,16 +78,19 @@ namespace Morabaraba_9001
         {
             Name = name;
             Color = color;
-            Unplayed = 12;
+            CowsUnPlaced = 12;
+            CowsOnBoard = 0;
+            State = PlayerState.Placing;
         }
 
         public string Name { get; }
 
         public Color Color { get; }
 
-        public int Unplayed { get; private set; }
+        public int CowsUnPlaced { get; private set; }
+        public int CowsOnBoard { get; private set; }
 
-        public PlayerState State { get; }
+        public PlayerState State { get; private set; }
 
         public (char, int) GetMove(string what)
         {
@@ -103,6 +115,44 @@ namespace Morabaraba_9001
                 return GetMove(what);
             }
 
+        
+        }
+        public void addCow(){
+            CowsOnBoard += 1;
+            if(CowsOnBoard>12){ //can't have more than 12 cows
+                throw new Exception("Can't have more than 12 cows on the board!"); 
+            }
+
+
+        }
+        public void DecrementCowsOnBoard()
+        {
+            CowsOnBoard -= 1;
+            if (State == PlayerState.Moving)
+            {
+                if (CowsOnBoard == 3)
+                {
+                    State = PlayerState.Flying;
+                }
+
+            }
+            else if(State == PlayerState.Flying){
+
+                if(CowsOnBoard <2){
+                    throw new Exception("Cant have only 1 cow left, game should have ended!"); 
+                }
+            }
+        }
+        public void DecrementCowsPlaced(){
+            CowsUnPlaced -= 1;
+
+            if(CowsUnPlaced==0){
+                State = PlayerState.Moving;
+            }
+            if (CowsUnPlaced < 0)
+            {
+                throw new Exception("Can't place more than 12 cows on the board!"); 
+            }
         }
 
     }
@@ -119,6 +169,7 @@ namespace Morabaraba_9001
                 Cow = cow;
                 PossibleMoves = possibleMoves;
             }
+
 
 
         }
@@ -144,113 +195,106 @@ namespace Morabaraba_9001
             }
 
 
-            private void Move(IPlayer player)
+        private MoveError Move(IPlayer player)
             {
                 //  if (player.State != PlayerState.Moving)
                 //   throw new IncorrectStateException();
                 (char, int) toPos, fromPos;
-                bool valid = false;
-                while (!valid)
+
+
+                fromPos = player.GetMove("Where do you want to move from?: ");
+                if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
                 {
-                    fromPos = player.GetMove("Where do you want to move from?: ");
-                    if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+
+                    toPos = player.GetMove("Where do you want to move to?: ");
+                    if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
                     {
-
-                        toPos = player.GetMove("Where do you want to move to?: ");
-                        if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
-                        {
-                            valid = true;
-                            GameBoard.MoveCow(new Cow(player.Color), fromPos, toPos);
-                        }
-                        else
-                        {
-
-                            //can't move here
-                        }
-
+                        
+                        GameBoard.MoveCow(new Cow(player.Color), fromPos, toPos);
+                        return MoveError.Valid;
                     }
                     else
                     {
-                        //have no cow here
+
+                        return MoveError.InValid;//can't move here
                     }
 
                 }
+                else
+                {
+                     return MoveError.NoCow;
+                }
+
+                
 
             }
-            private void Place(IPlayer player)
+        private MoveError Place(IPlayer player)
             {
-                //   if (player.State != PlayerState.Placing)
-                //     throw new IncorrectStateException();
-                (char, int) toPos;
-                bool valid = false;
-                while (!valid)
-                {
+                   (char, int) toPos;
                     toPos = player.GetMove("Where do you want to place your cow?: ");
                     if (GameBoard.AllTiles[toPos].Cow == null)
                     {
                         GameBoard.PlaceCow(new Cow(player.Color), toPos);
-                        valid = true;
+                return MoveError.Valid;
                     }
-
+                else{
+                return MoveError.InValid;
                 }
 
+
+
             }
-            private void Fly(IPlayer player)
+        private MoveError Fly(IPlayer player)
             {
                 //if (player.State != PlayerState.Flying)
                 //  throw new IncorrectStateException();
                 (char, int) toPos, fromPos;
-                bool valid = false;
-                while (!valid)
+                fromPos = player.GetMove("Where do you want to fly from?: ");
+                if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
                 {
-                    fromPos = player.GetMove("Where do you want to fly from?: ");
-                    if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+
+                    toPos = player.GetMove("Where do you want to fly to?: ");
+                    if (GameBoard.AllTiles[toPos].Cow == null)
                     {
-
-                        toPos = player.GetMove("Where do you want to fly to?: ");
-                        if (GameBoard.AllTiles[toPos].Cow == null)
-                        {
-                            GameBoard.FlyCow(new Cow(player.Color), fromPos, toPos);
-
-                            valid = true;
-                        }
-                        else
-                        {
-                            //cant move cow here
-                        }
-
+                        GameBoard.FlyCow(new Cow(player.Color), fromPos, toPos);
+                        return MoveError.Valid;
                     }
                     else
                     {
-                        //have no cow here
+                        return MoveError.InValid;//cant move cow here
                     }
 
                 }
+                else
+                {
+                    return MoveError.NoCow;//have no cow here
+                }
 
-            }
+                }
 
-            public void Play(IPlayer player, PlayerState state)
+            
+
+        public MoveError Play(IPlayer player, PlayerState state)
             {
 
                 switch (state)
                 {
                     case PlayerState.Placing:
-                        Place(player);
-                        break;
+                        return Place(player);
+
                     case PlayerState.Moving:
-                        Move(player);
-                        break;
+                        return Move(player);
                     case PlayerState.Flying:
-                        Fly(player);
-                        break;
+                        return Fly(player);
 
-
+                    default:
+                        throw new Exception("Invalid state");
                 }
 
 
-
             }
-
+             
+          
             public void changePlayerTurn()
             {
                 //swap who's turn it is
@@ -277,6 +321,7 @@ namespace Morabaraba_9001
 
         public class Board : IBoard
         {
+
             public Dictionary<(char, int), ITile> AllTiles { get; }
             public IEnumerable<IEnumerable<ITile>>    AllBoardMills { get; }
             public Board()
@@ -316,7 +361,6 @@ namespace Morabaraba_9001
                 ITile G7 = AllTiles[('G', 7)] = new Tile(null, new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) });
 
 
-
                 IEnumerable<ITile> AA17 = new List<ITile> { A1, A4, A7 };                                                                     //all coordinate combinations that can form a mill (if all are occupied by the same player)
                 IEnumerable<ITile> BB26 = new List<ITile> { B2, B4, B6 };
                 IEnumerable<ITile> CC35 = new List<ITile> { C3, C4, C5 };
@@ -339,17 +383,16 @@ namespace Morabaraba_9001
                 IEnumerable<ITile> CA57 = new List<ITile> { C5, B6, A7 };
                 IEnumerable<ITile> GE13 = new List<ITile> { G1, F2, E3 };
                 IEnumerable<ITile> EG57 = new List<ITile> { E5, F6, G7 };
-
                 AllBoardMills = new List<IEnumerable<ITile>>{
                 AA17, BB26, CC35, DD13, DD57, EE35, FF26, GG17, AG11, BF22,
                 CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible mills    
 
 
             }
-            
             public ICow Occupant((char, int) pos)
             {
                 return AllTiles[pos].Cow;
+
             }
 
 
@@ -357,6 +400,7 @@ namespace Morabaraba_9001
             {
 
                 return AllTiles.Values.Where(tile => tile.Cow.Color == c).ToArray();
+
 
             }
 
@@ -375,6 +419,7 @@ namespace Morabaraba_9001
                     }
                 }
                 return retMills;
+
             }
 
             public void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos)
@@ -430,7 +475,8 @@ namespace Morabaraba_9001
                 //Console.WriteLine(b.allTiles.Values.Where(tile => tile.Cow == null).Count());
                 //Console.ReadKey();
             }
-        }   
+
+        }
 
     }
 
