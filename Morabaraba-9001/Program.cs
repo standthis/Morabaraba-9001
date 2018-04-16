@@ -5,7 +5,6 @@ using System.Linq;
 namespace Morabaraba_9001
 {
 
-
         public class Program
         {
             static void Main(string[] args)
@@ -19,6 +18,3 @@ namespace Morabaraba_9001
         }
 
     }
-
-
-
