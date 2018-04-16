@@ -106,16 +106,12 @@ namespace Morabaraba_9001
 
         }
 
-        public void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos)
-        {
-            AllTiles[fromPos].Cow = null;
-            AllTiles[toPos].Cow = cow;
-        }
-
+       
         public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
         {
             return AllTiles[pos].PossibleMoves;
         }
+
 
         public void KillCow((char, int) pos)
         {
@@ -123,20 +119,55 @@ namespace Morabaraba_9001
         }
 
 
-
-        public void MoveCow(ICow cow, (char, int) fromPos, (char, int) toPos)
+        public MoveError FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos)
         {
-            AllTiles[fromPos].Cow = null;
-            AllTiles[toPos].Cow = cow;
+            if (AllTiles[fromPos] != null && AllTiles[fromPos].Cow.Color == player.Color)
+            {
+                if (AllTiles[toPos].Cow == null)
+                {
+                    AllTiles[fromPos].Cow = null;
+                    AllTiles[toPos].Cow = new Cow(player.Color, toPos);
+                    return MoveError.Valid;
+                }
+                else
+                {
+                    return MoveError.InValid;//cant move cow here
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;//have no cow here
+            }
         }
 
 
+        public MoveError MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos)
+        {
+            if (AllTiles[fromPos] != null && AllTiles[fromPos].Cow.Color == player.Color)
+            {
+                if (AllTiles[toPos].Cow == null && AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
+                {
+                    AllTiles[fromPos].Cow = null;
+                    AllTiles[toPos].Cow = new Cow(player.Color, toPos);
+                    return MoveError.Valid;
+                }
+                else
+                {
+                    return MoveError.InValid;//can't move here
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;
+            }
+        }
+        
 
-        public MoveError PlaceCow(ICow cow, (char, int) pos)
+        public MoveError PlaceCow(IPlayer player, (char, int) pos)
         {
             if (AllTiles[pos].Cow == null)
             {
-                AllTiles[pos].Cow = cow;
+                AllTiles[pos].Cow = new Cow(player.Color, pos);
                 return MoveError.Valid;
             }
             else
