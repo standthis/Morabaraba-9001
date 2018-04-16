@@ -34,12 +34,20 @@ namespace Morabaraba_9001.Test
         {
 
         };
-
         [Test]
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
-        public void CowsCanOnlyBePlacedOnEmptyTiles()
+        public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool empty, MoveError expected)
         {
+            IPlayer player = Substitute.For<IPlayer>();
+            //Player player = new Player("Morty", Color.dark);
+            IBoard board = Substitute.For<IBoard>();
 
+            if (empty == false)
+            {
+                ICow cow = Substitute.For<ICow>();
+                board.PlaceCow(cow, pos);
+            }
+            
         }
 
         [Test]
