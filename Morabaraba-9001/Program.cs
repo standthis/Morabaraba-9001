@@ -32,6 +32,8 @@ namespace Morabaraba_9001
         int CowsUnPlaced { get; }
         int CowsOnBoard { get; }
         PlayerState State { get; }
+        void DecrementCowsOnBoard();
+        void DecrementCowsPlaced();
     }
     public interface ICow
     {
@@ -76,16 +78,17 @@ namespace Morabaraba_9001
             Color = color;
             CowsUnPlaced = 12;
             CowsOnBoard = 0;
+            State = PlayerState.Placing;
         }
 
         public string Name { get; }
 
         public Color Color { get; }
 
-        public int CowsUnPlaced { get; set; }
-        public int CowsOnBoard { get; set; }
+        public int CowsUnPlaced { get; private set; }
+        public int CowsOnBoard { get; private set; }
 
-        public PlayerState State { get; }
+        public PlayerState State { get; private set; }
 
         public (char, int) GetMove(string what)
         {
@@ -110,6 +113,19 @@ namespace Morabaraba_9001
                 return GetMove(what);
             }
 
+        }
+        public void DecrementCowsOnBoard(){
+            if(State == PlayerState.Moving)
+        }
+        public void DecrementCowsPlaced(){
+            CowsUnPlaced -= 1;
+            if(CowsUnPlaced==0){
+                State = PlayerState.Moving;
+            }
+            if (CowsUnPlaced < 0)
+            {
+                //throw exceptiion
+            }
         }
 
     }
@@ -244,6 +260,8 @@ namespace Morabaraba_9001
                 {
                     case PlayerState.Placing:
                         Place(player);
+                        
+                        player.CowsUnPlaced-=1;
                         break;
                     case PlayerState.Moving:
                         Move(player);
@@ -258,7 +276,8 @@ namespace Morabaraba_9001
 
 
             }
-
+             
+          
             public void changePlayerTurn()
             {
                 //swap who's turn it is
@@ -287,7 +306,7 @@ namespace Morabaraba_9001
         {
 
             public Dictionary<(char, int), ITile> AllTiles { get; }
-        public IEnumerable<IEnumerable<ITile>>    AllBoardMills { get; }
+            public IEnumerable<IEnumerable<ITile>>    AllBoardMills { get; }
             public Board()
             {
                 AllTiles = new Dictionary<(char, int), ITile>();
