@@ -53,5 +53,22 @@ namespace Morabaraba_9001.Test
         {
 
         }
+        
+        // During moving 
+        // Incomplete 
+        [Test]
+        public void ACowCanOnlyMoveToAnotherConnectedSpace(Color c, (char,int) pos)
+        {
+            ICow cow = new Cow(c, pos);
+            IBoard b = Substitute.For<IBoard>();
+            IPlayer p = new Player("player", c);
+
+            (char,int)[] posMoves = b.AllTiles[pos].PossibleMoves.ToArray();
+            foreach ((char,int) tile in posMoves){
+
+            }
+            b.Cows(c).Returns(new ITile[] {  });  
+
+        }
     }
 }
