@@ -59,13 +59,11 @@ namespace Morabaraba9001
     public interface IReferee
     {
         IPlayer Winner();
-        // IPlayer noMove();
         MoveError Play(IPlayer player, PlayerState state);
-        void changePlayerTurn();
+        MoveError KillCow(IPlayer player);
+        bool EndGame();
+        void ChangePlayerTurn();
         void StartGame();
-        // IPlayer player_1 { get; set; }
-        //IPlayer player_2 { get; set; }
-
         IBoard GameBoard { get; }
         IPlayer EnemyPlayer { get; }
         IPlayer CurrentPlayer { get; }
