@@ -107,7 +107,7 @@ namespace Morabaraba_9001
         public MoveError KillCow()
         {
             (char,int) killPos=CurrentPlayer.GetMove("Which cow do you want to kill?");
-            return GameBoard.KillCow(killPos);
+            return GameBoard.KillCow(killPos,EnemyPlayer);
     
 
         }
@@ -117,6 +117,6 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-     =
+     
     }
 }

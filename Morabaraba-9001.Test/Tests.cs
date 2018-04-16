@@ -15,6 +15,7 @@ namespace Morabaraba_9001.Test
         {
             Board b = new Board();
             Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
+            Referee referee;
         }
 
         [Test]
