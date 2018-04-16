@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace Morabaraba9001
 {
     public class Player : IPlayer
@@ -10,8 +11,14 @@ namespace Morabaraba9001
             CowsUnPlaced = 12;
             CowsOnBoard = 0;
             State = PlayerState.Placing;
-        }
+            Cows = new List<ICow>();
+            for (int i = 0; i < 12; i++)
+            {
+                Cows.Add(new Cow(color,('_',0)));
+            }
 
+        }
+        public List<ICow> Cows { get; private set; }
         public string Name { get; }
 
         public Color Color { get; }
@@ -46,7 +53,7 @@ namespace Morabaraba9001
 
 
         }
-        public bool AddCow()
+        public bool AddCowToBoard()
         {
             CowsOnBoard += 1;
             if (CowsOnBoard > 12)
