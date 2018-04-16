@@ -36,18 +36,21 @@ namespace Morabaraba_9001.Test
         };
         [Test]
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
-        public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool empty, MoveError expected)
+        public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)
         {
             IPlayer player = Substitute.For<IPlayer>();
             //Player player = new Player("Morty", Color.dark);
             IBoard board = Substitute.For<IBoard>();
-
-            if (empty == false)
+            MoveError result = MoveError.InValid;
+            if (isOpenBoardSpace == true)
             {
-                ICow cow = Substitute.For<ICow>();
-                board.PlaceCow(cow, pos);
+                board.AllTiles[pos].Returns((ITile)null);
             }
-            
+            else
+            {
+                board.AllTiles[pos].Returns(Arg.Any<ITile>());
+            }
+            result = board.PlaceCow(player, pos);
         }
 
         [Test]
