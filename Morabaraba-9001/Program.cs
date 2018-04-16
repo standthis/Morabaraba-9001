@@ -4,138 +4,317 @@ using System.Linq;
 
 namespace Morabaraba_9001
 {
-   
-        public interface IPos
+
+
+    public interface IBoard
+    {
+        ICow Occupant((char, int) pos);
+        IEnumerable<ITile> Cows(Color c);
+        IEnumerable<ITile> Mills(IPlayer player);
+        void MoveCow(ICow cow, (char, int) fromPos, (char, int) toPos);
+        void PlaceCow(ICow cow, (char, int) pos);
+        void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos);
+        void KillCow((char, int) pos);
+        IEnumerable<(char, int)> PossibleMoves((char, int) pos);
+        Dictionary<(char, int), ITile> AllTiles { get; }
+        IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+        //    Dictionary<(char, int), ICow> allCows { get; }
+    }
+    public interface IPlayer
+    {
+        string Name { get; }
+        Color Color { get; }
+        (char, int) GetMove(string what);
+        int Unplayed { get; }
+        PlayerState State { get; }
+    }
+    public interface ICow
+    {
+        //Symbol symbol {get;}
+        Color Color { get; }
+
+    }
+    public interface ITile
+    {
+        ICow Cow { get; set; }
+        IEnumerable<(char, int)> PossibleMoves { get; }
+    }
+    public interface IReferee
+    {
+        IPlayer Winner();
+        // IPlayer noMove();
+        void Play(IPlayer player, PlayerState state);
+        void changePlayerTurn();
+        void StartGame();
+        // IPlayer player_1 { get; set; }
+        //IPlayer player_2 { get; set; }
+
+        IBoard GameBoard { get; }
+        IPlayer EnemyPlayer { get; }
+        IPlayer CurrentPlayer { get; }
+
+
+    }
+
+    public enum Color { dark, light }
+
+    public enum Symbol { x, o }
+
+    public enum PlayerState { Placing, Moving, Flying }
+
+
+    public class Player : IPlayer
+    {
+        public Player(string name, Color color)
         {
-            char getRow();
-            int getCol();
+            Name = name;
+            Color = color;
+            Unplayed = 12;
         }
-        public interface IBoard
+
+        public string Name { get; }
+
+        public Color Color { get; }
+
+        public int Unplayed { get; private set; }
+
+        public PlayerState State { get; }
+
+        public (char, int) GetMove(string what)
         {
-            ICow Occupant((char, int) pos);
-            IEnumerable<ITile> Cows(Color c);
-            IEnumerable<ITile> Mills(IPlayer player);
-            void MoveCow(ICow cow, (char,int) fromPos, (char,int) toPos);
-            void PlaceCow(ICow cow, (char,int) pos);
-            void FlyCow(ICow cow, (char,int) fromPos, (char,int) toPos);
-            void KillCow((char,int) pos);
-            IEnumerable<(char,int)> PossibleMoves((char,int) pos);
-            //    Dictionary<(char, int), ICow> allCows { get; }
-        }
+            Console.WriteLine(what);
+            Console.Write("Row: ");
+            char rowInput = Console.ReadKey().KeyChar;
+            bool is_char = Char.TryParse(rowInput + "", out rowInput);
+            Console.WriteLine();
+            Console.Write("Column: ");
+            char getCol = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+            int col;
+            bool is_numeric = System.Int32.TryParse(getCol + "", out col);
+            if (is_numeric && is_char)
+            {
+                return (Char.ToUpper(rowInput), col);
 
-
-        public enum Color { dark, light }
-
-        public enum Symbol { x, o }
-
-        public enum PlayerState { Placing, Moving, Flying }
-
-        public interface IPlayer
-        {
-            string Name { get; }
-            Color Color { get; }
-            (char, int) GetMove();
-            int Unplayed { get; }
-            PlayerState State { get; }
-            IEnumerable<IPos> Cows { get; }
-        }
-
-        public interface ICow
-        {
-            //Symbol symbol {get;}
-            Color Color { get; }
-            IPos Pos { get; }
+            }
+            else
+            {
+                Console.WriteLine("Row requires a character and Col requires a number.Please enter valid input ");
+                return GetMove(what);
+            }
 
         }
-        public interface ITile
-        {
-            ICow Cow { get; set; }
-            IEnumerable<(char,int)> PossibleMoves { get; }
 
-        }
+    }
+
+
+
         public class Tile : ITile
         {
 
-            private ICow cow;
-            private IEnumerable<(char, int)> possibleMoves;
+            public ICow Cow { get; set; }
+            public IEnumerable<(char, int)> PossibleMoves { get; private set; }
             public Tile(ICow cow, IEnumerable<(char, int)> possibleMoves)
             {
-                this.cow = cow;
-                this.possibleMoves = possibleMoves;
-            }
-
-            public ICow Cow { 
-                get 
-                {
-
-                    return cow;
-                }
-
-                set{
-                    cow = value;   
-                }
+                Cow = cow;
+                PossibleMoves = possibleMoves;
             }
 
 
-
-            public IEnumerable<(char, int)> PossibleMoves
-            {
-                get{
-                    return possibleMoves;
-                   }
-            }
-
-           
         }
 
-        public interface IReferee
+
+
+        public class Referee : IReferee
         {
-            IPlayer Winner();
-            IPlayer noMove();
-            IPlayer getCurrentPlayer();
-            void Play();
+            public IPlayer CurrentPlayer { get; private set; }
+            public IPlayer EnemyPlayer { get; private set; }
+            public IBoard GameBoard { get; }
+
+
+            public Referee(IPlayer p1, IPlayer p2, IBoard board)
+            {
+                CurrentPlayer = p1;
+                if (p2.Color == Color.dark)
+                {
+                    CurrentPlayer = p2;
+                }
+                GameBoard = board;
+
+            }
+
+
+            private void Move(IPlayer player)
+            {
+                //  if (player.State != PlayerState.Moving)
+                //   throw new IncorrectStateException();
+                (char, int) toPos, fromPos;
+                bool valid = false;
+                while (!valid)
+                {
+                    fromPos = player.GetMove("Where do you want to move from?: ");
+                    if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+                    {
+
+                        toPos = player.GetMove("Where do you want to move to?: ");
+                        if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
+                        {
+                            valid = true;
+                            GameBoard.MoveCow(new Cow(player.Color), fromPos, toPos);
+                        }
+                        else
+                        {
+
+                            //can't move here
+                        }
+
+                    }
+                    else
+                    {
+                        //have no cow here
+                    }
+
+                }
+
+            }
+            private void Place(IPlayer player)
+            {
+                //   if (player.State != PlayerState.Placing)
+                //     throw new IncorrectStateException();
+                (char, int) toPos;
+                bool valid = false;
+                while (!valid)
+                {
+                    toPos = player.GetMove("Where do you want to place your cow?: ");
+                    if (GameBoard.AllTiles[toPos].Cow == null)
+                    {
+                        GameBoard.PlaceCow(new Cow(player.Color), toPos);
+                        valid = true;
+                    }
+
+                }
+
+            }
+            private void Fly(IPlayer player)
+            {
+                //if (player.State != PlayerState.Flying)
+                //  throw new IncorrectStateException();
+                (char, int) toPos, fromPos;
+                bool valid = false;
+                while (!valid)
+                {
+                    fromPos = player.GetMove("Where do you want to fly from?: ");
+                    if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+                    {
+
+                        toPos = player.GetMove("Where do you want to fly to?: ");
+                        if (GameBoard.AllTiles[toPos].Cow == null)
+                        {
+                            GameBoard.FlyCow(new Cow(player.Color), fromPos, toPos);
+
+                            valid = true;
+                        }
+                        else
+                        {
+                            //cant move cow here
+                        }
+
+                    }
+                    else
+                    {
+                        //have no cow here
+                    }
+
+                }
+
+            }
+
+            public void Play(IPlayer player, PlayerState state)
+            {
+
+                switch (state)
+                {
+                    case PlayerState.Placing:
+                        Place(player);
+                        break;
+                    case PlayerState.Moving:
+                        Move(player);
+                        break;
+                    case PlayerState.Flying:
+                        Fly(player);
+                        break;
+
+
+                }
+
+
+
+            }
+
+            public void changePlayerTurn()
+            {
+                //swap who's turn it is
+                IPlayer temp_player = CurrentPlayer;
+                CurrentPlayer = EnemyPlayer;
+                EnemyPlayer = temp_player;
+            }
+            public void StartGame()
+            {
+                while (true)
+                {
+                    // printBoard()
+                    Play(CurrentPlayer, CurrentPlayer.State);
+                    changePlayerTurn();
+                }
+            }
+            public IPlayer Winner()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public class IlligalMoveException : ApplicationException { }
 
         public class Board : IBoard
         {
-
-            public Dictionary<(char, int), ITile> allTiles;
-            private IEnumerable<IEnumerable<ITile>> allBoardMills;
+            public Dictionary<(char, int), ITile> AllTiles { get; }
+            public IEnumerable<IEnumerable<ITile>>    AllBoardMills { get; }
             public Board()
             {
-                ITile A1 = allTiles[('A', 1)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) });
-                ITile A4 = allTiles[('A', 4)] = new Tile(null, new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) });
-                ITile A7 = allTiles[('A', 7)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) });
+                AllTiles = new Dictionary<(char, int), ITile>();
+                AllBoardMills = new List<IEnumerable<ITile>>();
+                ITile A1 = AllTiles[('A', 1)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) });
+                ITile A4 = AllTiles[('A', 4)] = new Tile(null, new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) });
+                ITile A7 = AllTiles[('A', 7)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) });
 
-                ITile B2 = allTiles[('B', 2)] = new Tile(null, new List<(char, int)> { ('A', 1), ('B', 4), ('C', 3), ('D', 2) });
-                ITile B4 = allTiles[('B', 4)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 2), ('B', 6), ('C', 4) });
-                ITile B6 = allTiles[('B', 6)] = new Tile(null, new List<(char, int)> { ('A', 7), ('B', 4), ('D', 6), ('C', 5) });
+                ITile B2 = AllTiles[('B', 2)] = new Tile(null, new List<(char, int)> { ('A', 1), ('B', 4), ('C', 3), ('D', 2) });
+                ITile B4 = AllTiles[('B', 4)] = new Tile(null, new List<(char, int)> { ('A', 4), ('B', 2), ('B', 6), ('C', 4) });
+                ITile B6 = AllTiles[('B', 6)] = new Tile(null, new List<(char, int)> { ('A', 7), ('B', 4), ('D', 6), ('C', 5) });
 
-                ITile C3 = allTiles[('C', 3)] = new Tile(null, new List<(char, int)> { ('B', 2), ('C', 4), ('D', 3) });
-                ITile C4 = allTiles[('C', 4)] = new Tile(null, new List<(char, int)> { ('B', 4), ('C', 3), ('C', 5) });
-                ITile C5 = allTiles[('C', 5)] = new Tile(null, new List<(char, int)> { ('B', 6), ('C', 4), ('D', 5) });
+                ITile C3 = AllTiles[('C', 3)] = new Tile(null, new List<(char, int)> { ('B', 2), ('C', 4), ('D', 3) });
+                ITile C4 = AllTiles[('C', 4)] = new Tile(null, new List<(char, int)> { ('B', 4), ('C', 3), ('C', 5) });
+                ITile C5 = AllTiles[('C', 5)] = new Tile(null, new List<(char, int)> { ('B', 6), ('C', 4), ('D', 5) });
 
-                ITile D1 = allTiles[('D', 1)] = new Tile(null, new List<(char, int)> { ('A', 1), ('D', 2), ('G', 1) });
-                ITile D2 = allTiles[('D', 2)] = new Tile(null, new List<(char, int)> { ('B', 2), ('D', 1), ('D', 3), ('F', 2) });
-                ITile D3 = allTiles[('D', 3)] = new Tile(null, new List<(char, int)> { ('C', 3), ('D', 2), ('E', 3) });
+                ITile D1 = AllTiles[('D', 1)] = new Tile(null, new List<(char, int)> { ('A', 1), ('D', 2), ('G', 1) });
+                ITile D2 = AllTiles[('D', 2)] = new Tile(null, new List<(char, int)> { ('B', 2), ('D', 1), ('D', 3), ('F', 2) });
+                ITile D3 = AllTiles[('D', 3)] = new Tile(null, new List<(char, int)> { ('C', 3), ('D', 2), ('E', 3) });
 
-                ITile D5 = allTiles[('D', 5)] = new Tile(null, new List<(char, int)> { ('C', 5), ('D', 6), ('E', 5) });
-                ITile D6 = allTiles[('D', 6)] = new Tile(null, new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7), ('F', 6) });
-                ITile D7 = allTiles[('D', 7)] = new Tile(null, new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
+                ITile D5 = AllTiles[('D', 5)] = new Tile(null, new List<(char, int)> { ('C', 5), ('D', 6), ('E', 5) });
+                ITile D6 = AllTiles[('D', 6)] = new Tile(null, new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7), ('F', 6) });
+                ITile D7 = AllTiles[('D', 7)] = new Tile(null, new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
 
-                ITile E3 = allTiles[('E', 3)] = new Tile(null, new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
-                ITile E4 = allTiles[('E', 4)] = new Tile(null, new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) });
-                ITile E5 = allTiles[('E', 5)] = new Tile(null, new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) });
+                ITile E3 = AllTiles[('E', 3)] = new Tile(null, new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
+                ITile E4 = AllTiles[('E', 4)] = new Tile(null, new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) });
+                ITile E5 = AllTiles[('E', 5)] = new Tile(null, new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) });
 
-                ITile F2 = allTiles[('F', 2)] = new Tile(null, new List<(char, int)> { ('D', 2), ('E', 3), ('F', 4), ('G', 1) });
-                ITile F4 = allTiles[('F', 4)] = new Tile(null, new List<(char, int)> { ('E', 4), ('F', 2), ('F', 6), ('G', 4) });
-                ITile F6 = allTiles[('F', 6)] = new Tile(null, new List<(char, int)> { ('D', 6), ('E', 5), ('F', 4), ('G', 7) });
+                ITile F2 = AllTiles[('F', 2)] = new Tile(null, new List<(char, int)> { ('D', 2), ('E', 3), ('F', 4), ('G', 1) });
+                ITile F4 = AllTiles[('F', 4)] = new Tile(null, new List<(char, int)> { ('E', 4), ('F', 2), ('F', 6), ('G', 4) });
+                ITile F6 = AllTiles[('F', 6)] = new Tile(null, new List<(char, int)> { ('D', 6), ('E', 5), ('F', 4), ('G', 7) });
 
-                ITile G1 = allTiles[('G', 1)] = new Tile(null, new List<(char, int)> { ('D', 1), ('F', 2), ('G', 4) });
-                ITile G4 = allTiles[('G', 4)] = new Tile(null, new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) });
-                ITile G7 = allTiles[('G', 7)] = new Tile(null, new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) });
+                ITile G1 = AllTiles[('G', 1)] = new Tile(null, new List<(char, int)> { ('D', 1), ('F', 2), ('G', 4) });
+                ITile G4 = AllTiles[('G', 4)] = new Tile(null, new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) });
+                ITile G7 = AllTiles[('G', 7)] = new Tile(null, new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) });
+
 
 
                 IEnumerable<ITile> AA17 = new List<ITile> { A1, A4, A7 };                                                                     //all coordinate combinations that can form a mill (if all are occupied by the same player)
@@ -160,92 +339,100 @@ namespace Morabaraba_9001
                 IEnumerable<ITile> CA57 = new List<ITile> { C5, B6, A7 };
                 IEnumerable<ITile> GE13 = new List<ITile> { G1, F2, E3 };
                 IEnumerable<ITile> EG57 = new List<ITile> { E5, F6, G7 };
-                allBoardMills = new List<IEnumerable<ITile>> {
+
+                AllBoardMills = new List<IEnumerable<ITile>>{
                 AA17, BB26, CC35, DD13, DD57, EE35, FF26, GG17, AG11, BF22,
-                CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible millsible mill combinations
-
-                   
+                CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible mills    
 
 
-                }
+            }
+            
             public ICow Occupant((char, int) pos)
             {
-            return allTiles[pos].Cow;
-               
+                return AllTiles[pos].Cow;
             }
+
 
             public IEnumerable<ITile> Cows(Color c)
             {
-            
-                return allTiles.Values.Where(tile => tile.Cow.Color == c ).ToArray();
-               
+
+                return AllTiles.Values.Where(tile => tile.Cow.Color == c).ToArray();
 
             }
-           
+
             public IEnumerable<ITile> Mills(IPlayer player)
             {
-                IEnumerable<ITile> retMills= new List<ITile>();
-                foreach(IEnumerable<ITile> mill in allBoardMills){
-                    for (int i = 0; i < mill.Count();i++){
+                IEnumerable<ITile> retMills = new List<ITile>();
+                foreach (IEnumerable<ITile> mill in AllBoardMills)
+                {
+                    for (int i = 0; i < mill.Count(); i++)
+                    {
                         ITile currentTile = mill.ElementAt(i);
-                        if(currentTile.Cow.Color == player.Color && !retMills.Contains(currentTile)){
+                        if (currentTile.Cow.Color == player.Color && !retMills.Contains(currentTile))
+                        {
                             retMills.Append(currentTile);
                         }
                     }
                 }
-            return retMills;
-                        
+                return retMills;
             }
 
-            public void FlyCow(ICow cow, (char,int) fromPos, (char,int) toPos)
+            public void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos)
             {
-                allTiles[fromPos].Cow = null;
-                allTiles[toPos].Cow = cow;
+                AllTiles[fromPos].Cow = null;
+                AllTiles[toPos].Cow = cow;
             }
 
-            public IEnumerable<(char,int)> PossibleMoves((char,int) pos)
+            public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
             {
-                return allTiles[pos].PossibleMoves; 
+                return AllTiles[pos].PossibleMoves;
             }
 
-            public void KillCow((char,int) pos)
+            public void KillCow((char, int) pos)
             {
-                allTiles[pos].Cow = null;
+                AllTiles[pos].Cow = null;
             }
 
-         
 
-            public void MoveCow(ICow cow, (char,int) fromPos, (char,int) toPos)
+
+            public void MoveCow(ICow cow, (char, int) fromPos, (char, int) toPos)
             {
-                allTiles[fromPos].Cow = null;
-                allTiles[toPos].Cow = cow;
+                AllTiles[fromPos].Cow = null;
+                AllTiles[toPos].Cow = cow;
             }
 
-          
 
-            public void PlaceCow(ICow cow, (char,int) pos)
+
+            public void PlaceCow(ICow cow, (char, int) pos)
             {
-                allTiles[pos].Cow = cow;
+                AllTiles[pos].Cow = cow;
             }
         }
 
         public class Cow : ICow
         {
-            public Cow(Color c, IPos pos)
+            public Cow(Color c)
             {
                 Color = c;
-                Pos = pos;
             }
 
             public Color Color { get; set; }
 
-            public IPos Pos { get; set; }
+
         }
-    public class Program
-    {
-        static void Main(string[] args)
+
+        public class Program
         {
-            Console.WriteLine("Morabaraba!");
-        }
+            static void Main(string[] args)
+            {
+                Console.WriteLine("Morabaraba!");
+                //Board b = new Board();
+                //Console.WriteLine(b.allTiles.Values.Where(tile => tile.Cow == null).Count());
+                //Console.ReadKey();
+            }
+        }   
+
     }
-}
+
+
+
