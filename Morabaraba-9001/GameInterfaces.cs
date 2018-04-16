@@ -30,7 +30,7 @@ namespace Morabaraba_9001
         IEnumerable<ITile> Cows(Color c);
         IEnumerable<ITile> Mills(IPlayer player);
         void MoveCow(ICow cow, (char, int) fromPos, (char, int) toPos);
-        void PlaceCow(ICow cow, (char, int) pos);
+        MoveError PlaceCow(ICow cow, (char, int) pos);
         void FlyCow(ICow cow, (char, int) fromPos, (char, int) toPos);
         void KillCow((char, int) pos);
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);

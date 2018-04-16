@@ -132,9 +132,17 @@ namespace Morabaraba_9001
 
 
 
-        public void PlaceCow(ICow cow, (char, int) pos)
+        public MoveError PlaceCow(ICow cow, (char, int) pos)
         {
-            AllTiles[pos].Cow = cow;
+            if (AllTiles[pos].Cow == null)
+            {
+                AllTiles[pos].Cow = cow;
+                return MoveError.Valid;
+            }
+            else
+            {
+                return MoveError.InValid;
+            }
         }
     }
 
