@@ -23,7 +23,7 @@ namespace Morabaraba_9001
         }
 
 
-        private MoveError getPlayerMoveAndExecute(IPlayer player)
+        private MoveError getPlayerPlacementAndExecute(IPlayer player)
         {
             (char, int) toPos;
             toPos = player.GetMove("Where do you want to place your cow?: ");
@@ -43,36 +43,36 @@ namespace Morabaraba_9001
             }
         }
 
-        private MoveError Move(IPlayer player)
+
+        private MoveError getPlayerMoveAndExecute(IPlayer player)
         {
-            //  if (player.State != PlayerState.Moving)
-            //   throw new IncorrectStateException();
             (char, int) toPos, fromPos;
 
-
             fromPos = player.GetMove("Where do you want to move from?: ");
+            toPos = player.GetMove("Where do you want to move to?: ");
+            return Move(player, toPos, fromPos);
+        }
+
+        private MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
+        {
             if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
             {
-
-                toPos = player.GetMove("Where do you want to move to?: ");
                 if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
                 {
-
                     GameBoard.MoveCow(new Cow(player.Color,toPos), fromPos, toPos);
                     return MoveError.Valid;
                 }
                 else
                 {
-
                     return MoveError.InValid;//can't move here
                 }
-
             }
             else
             {
                 return MoveError.NoCow;
             }
         }       
+
 
         private MoveError Fly(IPlayer player)
         {
@@ -110,10 +110,11 @@ namespace Morabaraba_9001
             switch (state)
             {
                 case PlayerState.Placing:
-                    return Place(player);
+                    return getPlayerPlacementAndExecute(player);
 
                 case PlayerState.Moving:
-                    return Move(player);
+                    return getPlayerMoveAndExecute(player);
+
                 case PlayerState.Flying:
                     return Fly(player);
 
