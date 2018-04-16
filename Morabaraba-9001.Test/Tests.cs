@@ -17,7 +17,6 @@ namespace Morabaraba_9001.Test
             Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
         }
 
-        //merge testing is a go!
 
         [Test]
         public void ThePlayerWithDarkCowsMovesFirst()
@@ -42,10 +41,5 @@ namespace Morabaraba_9001.Test
         {
 
         }
-
-        //public void mergeTest
-        //testing same line merge
-        // Second test modified!
-
     }
 }

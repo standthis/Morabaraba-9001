@@ -436,8 +436,7 @@ namespace Morabaraba_9001
                 //Console.WriteLine(b.allTiles.Values.Where(tile => tile.Cow == null).Count());
                 //Console.ReadKey();
             }
-
-        }
+        }   
 
     }
 
