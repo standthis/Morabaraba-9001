@@ -48,7 +48,7 @@ namespace Morabaraba9001
         PlayerState State { get; }
         bool DecrementCowsOnBoard();
         bool DecrementCowsPlaced();
-        bool addCow();
+        bool AddCow();
     }
 
 

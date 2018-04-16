@@ -46,7 +46,7 @@ namespace Morabaraba9001
 
 
         }
-        public bool addCow()
+        public bool AddCow()
         {
             CowsOnBoard += 1;
             if (CowsOnBoard > 12)
