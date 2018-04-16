@@ -5,11 +5,7 @@ using System.Linq;
 namespace Morabaraba_9001
 {
 
-    public interface IPos
-    {
-        char getRow();
-        int getCol();
-    }
+   
     public interface IBoard
     {
         ICow Occupant((char, int) pos);
@@ -24,6 +20,8 @@ namespace Morabaraba_9001
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
         //    Dictionary<(char, int), ICow> allCows { get; }
     }
+
+
     public interface IPlayer
     {
         string Name { get; }
