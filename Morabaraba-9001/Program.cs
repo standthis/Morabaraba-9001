@@ -32,9 +32,9 @@ namespace Morabaraba_9001
         int CowsUnPlaced { get; }
         int CowsOnBoard { get; }
         PlayerState State { get; }
-        void DecrementCowsOnBoard();
-        void DecrementCowsPlaced();
-        void addCow();
+        bool DecrementCowsOnBoard();
+        bool DecrementCowsPlaced();
+        bool addCow();
     }
     public interface ICow
     {
@@ -117,15 +117,16 @@ namespace Morabaraba_9001
 
         
         }
-        public void addCow(){
+        public bool addCow(){
             CowsOnBoard += 1;
             if(CowsOnBoard>12){ //can't have more than 12 cows
-                throw new Exception("Can't have more than 12 cows on the board!"); 
+                return false;
             }
+            return true;
 
 
         }
-        public void DecrementCowsOnBoard()
+        public bool DecrementCowsOnBoard()
         {
             CowsOnBoard -= 1;
             if (State == PlayerState.Moving)
@@ -139,20 +140,23 @@ namespace Morabaraba_9001
             else if(State == PlayerState.Flying){
 
                 if(CowsOnBoard <2){
-                    throw new Exception("Cant have only 1 cow left, game should have ended!"); 
+                    
+                    return false;
                 }
             }
+            return true;
         }
-        public void DecrementCowsPlaced(){
+        public bool DecrementCowsPlaced(){
             CowsUnPlaced -= 1;
 
             if(CowsUnPlaced==0){
                 State = PlayerState.Moving;
             }
-            if (CowsUnPlaced < 0)
+            else if (CowsUnPlaced < 0)
             {
-                throw new Exception("Can't place more than 12 cows on the board!"); 
+                return false;
             }
+            return true;
         }
 
     }
