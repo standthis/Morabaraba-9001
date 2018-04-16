@@ -32,7 +32,7 @@ namespace Morabaraba_9001
             return Place(player, toPos);
         }
 
-        private MoveError Place(IPlayer player, (char, int) toPos)
+        public MoveError Place(IPlayer player, (char, int) toPos)
         {
             if (GameBoard.AllTiles[toPos].Cow == null)
             {
@@ -56,7 +56,7 @@ namespace Morabaraba_9001
             return Move(player, toPos, fromPos);
         }
 
-        private MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
+        public MoveError Move(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
             //if (player.State != PlayerState.Moving)
             //  throw new IncorrectStateException();
@@ -89,7 +89,7 @@ namespace Morabaraba_9001
             return Fly(player, toPos, fromPos);
         }
 
-        private MoveError Fly(IPlayer player, (char, int) toPos, (char, int) fromPos)
+        public MoveError Fly(IPlayer player, (char, int) toPos, (char, int) fromPos)
         {
             //if (player.State != PlayerState.Flying)
             //  throw new IncorrectStateException();
