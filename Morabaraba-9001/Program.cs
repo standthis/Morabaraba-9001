@@ -113,9 +113,12 @@ namespace Morabaraba_9001
                 return GetMove(what);
             }
 
+        
         }
         public void DecrementCowsOnBoard(){
-            if(State == PlayerState.Moving)
+            if(State == PlayerState.Moving){
+                
+            }
         }
         public void DecrementCowsPlaced(){
             CowsUnPlaced -= 1;
@@ -261,7 +264,7 @@ namespace Morabaraba_9001
                     case PlayerState.Placing:
                         Place(player);
                         
-                        player.CowsUnPlaced-=1;
+                        //player.CowsUnPlaced-=1;
                         break;
                     case PlayerState.Moving:
                         Move(player);
