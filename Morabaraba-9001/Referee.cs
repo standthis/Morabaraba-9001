@@ -79,7 +79,7 @@ namespace Morabaraba_9001
             //  throw new IncorrectStateException();
             (char, int) toPos, fromPos;
             fromPos = player.GetMove("Where do you want to fly from?: ");
-            if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+            if (GameBoard.AllTiles[fromPos].Cow != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
             {
 
                 toPos = player.GetMove("Where do you want to fly to?: ");
@@ -145,7 +145,7 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-    /*    let pos = getPos "Which cow do you want to kill?"
+     /*  let pos = getPos "Which cow do you want to kill?"
     let playerMill = getPlayerMills player 
     match (isValidMove pos player.Positions), (isInMill pos playerMill), (canKillCowInMill playerMill player) with
     | true, true, true | true, false, _ -> removePiece player (getCoords pos)
@@ -157,19 +157,21 @@ namespace Morabaraba_9001
         killCow player 
         public MoveError KillCow()
         {
-            (char,int) killPos=player.GetMove("Which cow do you want to kill?");
-            GameBoard.Mills(player)
+            (char,int) killPos=CurrentPlayer.GetMove("Which cow do you want to kill?");
+            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(EnemyPlayer);
+            if(GameBoard.AllTiles[killPos].Cow !=null ){
+                if(enemyPlayerMills..Contains())
+            else{
+                return MoveError.NoCow;
+            }
 
-        }*/
-
+        }
+*/
         public bool EndGame()
         {
             throw new NotImplementedException();
         }
 
-        public MoveError KillCow(IPlayer player)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
