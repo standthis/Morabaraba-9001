@@ -18,7 +18,29 @@ namespace Morabaraba_9001.Test
         {
             new object[] { ('A', 1), true },
             new object[] { ('A', 4), true },
-            new object[] { ('A', 7), true }
+            new object[] { ('A', 7), true },
+            new object[] { ('B', 2), true },
+            new object[] { ('B', 4), true },
+            new object[] { ('B', 6), true },
+            new object[] { ('C', 3), true },
+            new object[] { ('C', 4), true },
+            new object[] { ('C', 5), true },
+            new object[] { ('D', 1), true },
+            new object[] { ('D', 2), true },
+            new object[] { ('D', 3), true },
+            new object[] { ('D', 5), true },
+            new object[] { ('D', 6), true },
+            new object[] { ('D', 7), true },
+            new object[] { ('E', 3), true },
+            new object[] { ('E', 4), true },
+            new object[] { ('E', 5), true },
+            new object[] { ('F', 2), true },
+            new object[] { ('F', 4), true },
+            new object[] { ('F', 6), true },
+            new object[] { ('G', 1), true },
+            new object[] { ('G', 4), true },
+            new object[] { ('G', 7), true },
+               
         };
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
@@ -53,7 +75,7 @@ namespace Morabaraba_9001.Test
             new object[] { ('A', 1), true, MoveError.Valid }
         };
         [Test]
-        [TestCaseSource("legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles")]
+        [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)//Louise
         {
             Player player;
@@ -67,6 +89,7 @@ namespace Morabaraba_9001.Test
             }
             
             IReferee mockReferee = Substitute.For<IReferee>();
+
 
             MoveError result = player.placeCow(pos, mockReferee);//try place a cow in the given position
 
