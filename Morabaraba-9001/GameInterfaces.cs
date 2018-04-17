@@ -13,13 +13,16 @@ namespace Morabaraba_9001
 
     public enum MoveError { NoCow, InValid, Valid }
 
+    public enum cowStatus { Unplaced, Placed, Dead }
+
     public interface ICow
     {
         //Symbol symbol {get;}
         Color Color { get; }
-   
-
+        (char, int) pos { get; set; }
+        cowStatus status { get; set; }
     }
+
     public interface ITile
     {
         IEnumerable<(char, int)> PossibleMoves { get; }
