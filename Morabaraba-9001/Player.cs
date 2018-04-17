@@ -60,18 +60,6 @@ namespace Morabaraba_9001
             }
         }
 
-        public bool hasCowAtPos((char, int) pos)
-        {
-            for(int i = 0; i < 12; i++)
-            {
-                if (Cows[i].pos.Equals(pos))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
         public void moveCow((char, int) fromPos, (char, int) toPos)
         {
             for (int i = 0; i < 12; i++)
@@ -79,6 +67,41 @@ namespace Morabaraba_9001
                 if (Cows[i].pos.Equals(fromPos))
                 {
                     Cows[i].pos = toPos;
+                    break;
+                }
+            }
+        }
+
+        public bool hasCowAtPos((char, int) pos)
+        {
+            for(int i = 0; i < 12; i++)
+            {
+                if (Cows[i].pos.Equals(pos) && Cows[i].status.Equals(cowStatus.Placed))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public int numCowsOnBoard()
+        {
+            int count = 0;
+            for(int i = 0; i < 12; i++)
+            {
+                if (Cows[i].status.Equals(cowStatus.Placed)) count++;
+            }
+            return count;
+        }
+
+        public void killCow((char, int) pos)
+        {
+            for(int i = 0; i < 12; i++)
+            {
+                if (Cows[i].pos.Equals(pos))
+                {
+                    Cows[i].pos = ('Z', 0);
+                    Cows[i].status = cowStatus.Dead;
                     break;
                 }
             }

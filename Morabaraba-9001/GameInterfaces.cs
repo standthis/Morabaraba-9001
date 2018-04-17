@@ -53,6 +53,8 @@ namespace Morabaraba_9001
         void placeCow((char, int) toPos);
         void moveCow((char, int) fromPos, (char, int) toPos);
         bool hasCowAtPos((char, int) pos);
+        int numCowsOnBoard();
+        void killCow((char, int) pos)
 
     }
 

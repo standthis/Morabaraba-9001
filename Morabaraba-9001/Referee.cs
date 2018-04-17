@@ -143,28 +143,19 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-    //   let pos = getPos "Which cow do you want to kill?"
-    //let playerMill = getPlayerMills player 
-    //match (isValidMove pos player.Positions), (isInMill pos playerMill), (canKillCowInMill playerMill player) with
-    //| true, true, true | true, false, _ -> removePiece player (getCoords pos)
-    //| true, true, _ -> 
-    //    printfn "Can't kill cow in mill unless all cows are in mills" 
-    //    killCow player
-    //| _ -> 
-        //printfn "No valid cow was in pos %A" pos
-        //killCow player 
-        public MoveError KillCow(IPlayer player)
+
+        public MoveError KillCow()
         {
             (char,int) killPos = CurrentPlayer.GetMove("Which cow do you want to kill?");
-            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(player);
+            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(EnemyPlayer);
 
-            if (GameBoard.AllTiles[killPos].Cow != null)
+            if (EnemyPlayer.hasCowAtPos(killPos))
             {
                 if (enemyPlayerMills.Contains(GameBoard.AllTiles[killPos]))
                 {
-                    if (enemyPlayerMills.Count() == player.CowsOnBoard)
+                    if (enemyPlayerMills.Count() == EnemyPlayer.numCowsOnBoard())
                     {
-                        GameBoard.KillCow(killPos);
+                        EnemyPlayer.killCow(killPos);
                         return MoveError.Valid;
                     }
                     else
@@ -173,18 +164,18 @@ namespace Morabaraba_9001
                         return MoveError.InValid;
                     }
                 }
-                else{
-                    return MoveError.NoCow;
-                }
-            }
                 else
                 {
-                    return MoveError.NoCow;
+                    EnemyPlayer.killCow(killPos);
+                    return MoveError.Valid;
                 }
-
-    
-
+            }
+            else
+            {
+                return MoveError.NoCow;
+            }
         }
+
         public bool PlayerCanMove(){
             if (GameBoard.Cows(EnemyPlayer.Color).Any(tile => tile.PossibleMoves.Any(pos => GameBoard.AllTiles[pos].Cow != null)))
                 {
