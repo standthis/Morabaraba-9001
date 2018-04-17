@@ -16,8 +16,8 @@ namespace Morabaraba_9001
         //Symbol symbol {get;}
         Color Color { get; }
    
-
     }
+
     public interface ITile
     {
         ICow Cow { get; set; }

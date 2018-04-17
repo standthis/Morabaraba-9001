@@ -71,7 +71,7 @@ namespace Morabaraba_9001.Test
         [Test]
         public void ACowCanOnlyMoveToAnotherConnectedSpace(Color c, (char,int) pos)
         {
-            ICow cow = new Cow(c, pos);
+            ICow cow = new Cow(c);
             IBoard b = Substitute.For<IBoard>();
             IPlayer p = new Player("player", c);
 
