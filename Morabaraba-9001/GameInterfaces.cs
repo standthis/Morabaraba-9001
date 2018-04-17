@@ -59,16 +59,14 @@ namespace Morabaraba_9001
     {
         IPlayer Winner();
         MoveError Play(IPlayer player, PlayerState state);
-        MoveError KillCow(IPlayer player);
+        MoveError KillCow();
         GameEnd EndGame();
-        bool PlayerCanMove();
+        bool PlayerCanMove(IPlayer player);
         void ChangePlayerTurn();
         void StartGame();
         IBoard GameBoard { get; }
         IPlayer EnemyPlayer { get; }
         IPlayer CurrentPlayer { get; }
-
-
     }
 
 

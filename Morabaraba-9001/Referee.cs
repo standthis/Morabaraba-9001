@@ -198,19 +198,14 @@ namespace Morabaraba_9001
         {
             if (EnemyPlayer.State == PlayerState.Moving)
             {
-                if (!PlayerCanMove())
+                if (!PlayerCanMove(EnemyPlayer))
                     return GameEnd.CantMove;
                
-                if (EnemyPlayer.CowsOnBoard == 2)
+                if (EnemyPlayer.numCowsOnBoard() == 2)
                     return GameEnd.KilledOff;
-                      
             }
                 return GameEnd.NoEnd;
         }
           
-           
-        
-
-     
     }
 }
