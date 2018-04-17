@@ -51,7 +51,7 @@ namespace Morabaraba_9001
         bool hasCowAtPos((char, int) pos);
         int numCowsOnBoard();
         MoveError killCow((char, int) pos,IReferee referee);
-        void changePlayerState();
+        PlayerState changePlayerState();
     }
 
 

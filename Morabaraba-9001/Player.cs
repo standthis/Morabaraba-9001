@@ -59,18 +59,7 @@ namespace Morabaraba_9001
                 return GetMove(what);
             }
         }
-
-        public void changePlayerState()
-        {
-            if(State == PlayerState.Placing)
-            {
-                State = PlayerState.Moving;
-            }
-            else if(State == PlayerState.Moving)
-            {
-                State = PlayerState.Flying;
-            }
-        }
+       
 
         public MoveError placeCow((char, int) toPos, IReferee referee)
         {
