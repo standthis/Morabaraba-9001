@@ -50,7 +50,7 @@ namespace Morabaraba_9001.Test
             IBoard board = Substitute.For<IBoard>();
             Referee referee = new Referee(player, player, board);
             bool result = referee.emptyTile(pos);
-            Assert.That(result = expected);
+            Assert.That(result == expected);
         }
 
         [Test]
