@@ -41,8 +41,8 @@ namespace Morabaraba_9001.Test
 
             IBoard b = Substitute.For<IBoard>();//create mock board
             
-            Referee ref1 = new Referee(darkPlayer, lightPlayer, b);//create 2 refs (game instances) in only the 2 possible ways a ref can be created with the same 2 players
-            Referee ref2 = new Referee(lightPlayer, darkPlayer, b);
+            IReferee ref1 = new Referee(darkPlayer, lightPlayer, b);//create 2 refs (game instances) in only the 2 possible ways a ref can be created with the same 2 players
+            IReferee ref2 = new Referee(lightPlayer, darkPlayer, b);
             
             Assert.That(ref1.CurrentPlayer.Color == Color.dark);//check that for both refs, the CurrentPlayer (starting player as no moves have been made) is the dark one
             Assert.That(ref2.CurrentPlayer.Color == Color.dark);
@@ -95,7 +95,7 @@ namespace Morabaraba_9001.Test
         [Test]
         public void AMaximumOf12PlacementsPerPlayer() // matt 
         {
-
+            
         }
 
         [Test]
@@ -103,8 +103,10 @@ namespace Morabaraba_9001.Test
         {
             IBoard b = Substitute.For<IBoard>();
             IPlayer p1 = Substitute.For<IPlayer>();
+            p1.Color.Returns(Color.dark);
             p1.State.Returns(PlayerState.Placing);            
             IPlayer p2 = Substitute.For<IPlayer>();
+            p2.Color.Returns(Color.light);
             IReferee myRef = new Referee(p1, p2, b);
             MoveError result = myRef.Move(p1, ('A', 0), ('A', 0));
             Assert.AreEqual(result, MoveError.InValid);
