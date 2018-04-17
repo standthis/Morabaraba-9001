@@ -9,33 +9,33 @@ namespace Morabaraba_9001
 
     public enum PlayerState { Placing, Moving, Flying }
 
+    public enum GameEnd { NoEnd, CantMove, KilledOff }
+
     public enum MoveError { NoCow, InValid, Valid }
+
+    public enum cowStatus { Unplaced, Placed, Dead }
 
     public interface ICow
     {
         //Symbol symbol {get;}
         Color Color { get; }
-   
+        (char, int) pos { get; set; }
+        cowStatus status { get; set; }
     }
 
     public interface ITile
     {
-        ICow Cow { get; set; }
+        (char, int) Pos { get; }
         IEnumerable<(char, int)> PossibleMoves { get; }
     }
 
     public interface IBoard
     {
-        ICow Occupant((char, int) pos);
-        IEnumerable<ITile> Cows(Color c);
         IEnumerable<ITile> Mills(IPlayer player);
-        MoveError MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        MoveError PlaceCow(IPlayer player, (char, int) pos);
-        MoveError FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        MoveError KillCow((char, int) killPos, IPlayer player);
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+
         //    Dictionary<(char, int), ICow> allCows { get; }
     }
 
@@ -43,16 +43,15 @@ namespace Morabaraba_9001
     {
         string Name { get; }
         Color Color { get; }
-
-        int CowsUnPlaced { get; }
-        int CowsOnBoard { get; }
         PlayerState State { get; }
-
         List<ICow> Cows { get; }
         (char, int) GetMove(string what);
-        bool DecrementCowsOnBoard();
-        bool DecrementCowsPlaced();
-        bool AddCowToBoard();
+        void placeCow((char, int) toPos);
+        void moveCow((char, int) fromPos, (char, int) toPos);
+        bool hasCowAtPos((char, int) pos);
+        int numCowsOnBoard();
+        void killCow((char, int) pos);
+
     }
 
 
@@ -61,14 +60,13 @@ namespace Morabaraba_9001
         IPlayer Winner();
         MoveError Play(IPlayer player, PlayerState state);
         MoveError KillCow();
-        bool EndGame();
+        GameEnd EndGame();
+        bool PlayerCanMove(IPlayer player);
         void ChangePlayerTurn();
         void StartGame();
         IBoard GameBoard { get; }
         IPlayer EnemyPlayer { get; }
         IPlayer CurrentPlayer { get; }
-
-
     }
 
 

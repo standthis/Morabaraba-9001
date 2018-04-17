@@ -8,23 +8,18 @@ namespace Morabaraba_9001
         {
             Name = name;
             Color = color;
-            CowsUnPlaced = 12;
-            CowsOnBoard = 0;
             State = PlayerState.Placing;
             Cows = new List<ICow>();
             for (int i = 0; i < 12; i++)
             {
                 Cows.Add(new Cow(Color));
             }
-
         }
+
         public List<ICow> Cows { get; private set; }
         public string Name { get; }
 
         public Color Color { get; }
-
-        public int CowsUnPlaced { get; private set; }
-        public int CowsOnBoard { get; private set; }
 
         public PlayerState State { get; private set; }
 
@@ -50,62 +45,69 @@ namespace Morabaraba_9001
                 Console.WriteLine("Row requires a character and Col requires a number.Please enter valid input ");
                 return GetMove(what);
             }
-
-
         }
-        public bool AddCowToBoard()
+
+        public void placeCow((char, int) toPos)
         {
-            CowsOnBoard += 1;
-            if (CowsOnBoard > 12)
-            { //can't have more than 12 cows
-                return false;
-            }
-            return true;
-
-
-        }
-        public bool DecrementCowsOnBoard()
-        {
-            CowsOnBoard -= 1;
-            if (State == PlayerState.Moving)
+            for(int i = 0; i < 12; i++)
             {
-                if (CowsOnBoard == 3)
+                if (Cows[i].status == cowStatus.Unplaced)
                 {
-                    State = PlayerState.Flying;
-                }
-
-            }
-            else if (State == PlayerState.Flying)
-            {
-
-                if (CowsOnBoard < 2)
-                {
-
-                    return false;
+                    Cows[i].pos = toPos;
+                    Cows[i].status = cowStatus.Placed;
+                    break;
                 }
             }
-            return true;
         }
-        public bool DecrementCowsPlaced()
-        {
-            CowsUnPlaced -= 1;
 
-            if (CowsUnPlaced == 0)
+        public void moveCow((char, int) fromPos, (char, int) toPos)
+        {
+            for (int i = 0; i < 12; i++)
             {
-                State = PlayerState.Moving;
+                if (Cows[i].pos.Equals(fromPos))
+                {
+                    Cows[i].pos = toPos;
+                    break;
+                }
             }
-            else if (CowsUnPlaced < 0)
+        }
+
+        public bool hasCowAtPos((char, int) pos)
+        {
+            for(int i = 0; i < 12; i++)
             {
-                return false;
+                if (Cows[i].pos.Equals(pos) && Cows[i].status.Equals(cowStatus.Placed))
+                {
+                    return true;
+                }
             }
-            return true;
+            return false;
+        }
+        
+        public int numCowsOnBoard()
+        {
+            int count = 0;
+            for(int i = 0; i < 12; i++)
+            {
+                if (Cows[i].status.Equals(cowStatus.Placed)) count++;
+            }
+            return count;
+        }
+
+        public void killCow((char, int) pos)
+        {
+            for(int i = 0; i < 12; i++)
+            {
+                if (Cows[i].pos.Equals(pos))
+                {
+                    Cows[i].pos = ('Z', 0);
+                    Cows[i].status = cowStatus.Dead;
+                    break;
+                }
+            }
         }
 
     }
-
-
-
-
-
+    
 }
 
