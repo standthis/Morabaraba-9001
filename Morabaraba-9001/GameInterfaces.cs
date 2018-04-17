@@ -9,7 +9,9 @@ namespace Morabaraba_9001
 
     public enum PlayerState { Placing, Moving, Flying }
 
-    public enum MoveError { NoCow, InValid, Valid, Cant_Move }
+    public enum GameEnd { NoEnd, CantMove, KilledOff }
+
+    public enum MoveError { NoCow, InValid, Valid }
 
     public interface ICow
     {
@@ -62,7 +64,7 @@ namespace Morabaraba_9001
         IPlayer Winner();
         MoveError Play(IPlayer player, PlayerState state);
         MoveError KillCow();
-        bool EndGame();
+        GameEnd EndGame();
         bool PlayerCanMove();
         void ChangePlayerTurn();
         void StartGame();
