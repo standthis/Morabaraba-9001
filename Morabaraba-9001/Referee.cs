@@ -176,15 +176,24 @@ namespace Morabaraba_9001
             }
         }
 
-        public bool PlayerCanMove(){
-            if (GameBoard.Cows(EnemyPlayer.Color).Any(tile => tile.PossibleMoves.Any(pos => GameBoard.AllTiles[pos].Cow != null)))
+        public bool PlayerCanMove(IPlayer player) {
+            for (int i = 0; i < 12; i++)
+            {
+                if (player.Cows[i].status == cowStatus.Placed)
                 {
-                    return true;
+                    IEnumerable<(char, int)> posMoves = GameBoard.PossibleMoves(player.Cows[i].pos);
+                    for (int j = 0; j < posMoves.Count(); j++)
+                    {
+                        if (emptyTile(posMoves.ElementAt<(char, int)>(i)))
+                        {
+                            return true;
+                        }
+                    }
                 }
-                return false;
-         
-
+            }
+            return false;
         }
+
         public GameEnd EndGame()
         {
             if (EnemyPlayer.State == PlayerState.Moving)
