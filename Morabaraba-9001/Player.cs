@@ -76,6 +76,7 @@ namespace Morabaraba_9001
                     break;
                 }
             }
+            changePlayerState();
             return MoveError.Valid;
         }
 
@@ -105,6 +106,7 @@ namespace Morabaraba_9001
                     break;
                 }
             }
+            changePlayerState();
             return MoveError.Valid;
         }
 
@@ -147,18 +149,18 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
-        public PlayerState changePlayerState()
+        public void changePlayerState()
         {
-            if (this.Cows.All(cow => cow.status == cowStatus.Placed)
-            && this.State == PlayerState.Placing){
-                return PlayerState.Moving;
+            if (this.Cows.All(cow => (cow.status == cowStatus.Placed || cow.status == cowStatus.Dead)) && this.State == PlayerState.Placing)
+            {
+                State = PlayerState.Moving;
             }
             else if (this.State == PlayerState.Moving &&
             this.Cows.Count == 3){
-                return PlayerState.Flying;
+                State = PlayerState.Flying;
             }
             else {
-                return this.State;
+                State = this.State;
             }
         }
     }
