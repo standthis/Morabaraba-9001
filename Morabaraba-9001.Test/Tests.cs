@@ -21,7 +21,7 @@ namespace Morabaraba_9001.Test
             new object[] { ('A', 7), true }
         };
         [Test]
-        [TestCaseSource("legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles")]
+        [TestCaseSource(nameof(allBoardPositions))]
         public void BoardIsEmptyAtStart((char, int) pos, bool expected)//Louise
         {
             IPlayer player = Substitute.For<IPlayer>();
