@@ -93,7 +93,7 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void AMaximumOf12PlacementsPerPlayer() 
+        public void AMaximumOf12PlacementsPerPlayer() // matt 
         {
 
         }
@@ -101,7 +101,13 @@ namespace Morabaraba_9001.Test
         [Test]
         public void CowsCannotBeMovedDuringPlacement() // matt 
         {
-
+            IBoard b = Substitute.For<IBoard>();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            p1.State.Returns(PlayerState.Placing);            
+            IPlayer p2 = Substitute.For<IPlayer>();
+            IReferee myRef = new Referee(p1, p2, b);
+            MoveError result = myRef.Move(p1, ('A', 0), ('A', 0));
+            Assert.AreEqual(result, MoveError.InValid);
         }
         
         //TESTS FOR DURING MOVING
