@@ -52,6 +52,9 @@ namespace Morabaraba_9001
         int numCowsOnBoard();
         MoveError killCow((char, int) pos,IReferee referee);
 
+        void changePlayerState(IPlayer player);
+
+
     }
 
 

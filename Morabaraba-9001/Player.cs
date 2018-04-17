@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 namespace Morabaraba_9001
 {
     public class Player : IPlayer
@@ -146,6 +147,20 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
+        public PlayerState changePlayerState()
+        {
+            if (this.Cows.All(cow => cow.status == cowStatus.Placed)
+            && this.State == PlayerState.Placing){
+                return PlayerState.Moving;
+            }
+            else if (this.State == PlayerState.Moving &&
+            this.Cows.Count == 3){
+                return PlayerState.Flying;
+            }
+            else {
+                return this.State;
+            }
+        }
     }
     
 }
