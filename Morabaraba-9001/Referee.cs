@@ -29,25 +29,71 @@ namespace Morabaraba_9001
             //   throw new IncorrectStateException();
             (char, int) toPos, fromPos;
             fromPos = player.GetMove("Where do you want to move from?: ");
-            toPos = player.GetMove("Where do you want to move to?: ");
-            return GameBoard.MoveCow(player, fromPos, toPos);
-
+            if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+            {
+                toPos = player.GetMove("Where do you want to move to?: ");
+                if (GameBoard.AllTiles[toPos].Cow == null && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
+                {
+                    GameBoard.MoveCow(player, fromPos, toPos);
+                    return MoveError.Valid;
+                }
+                else
+                {
+                    return MoveError.InValid;//can't move here
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;
+            }
         }
+
+           
+           
+          
+
+
         private MoveError Place(IPlayer player)
         {
             (char, int) toPos;
             toPos = player.GetMove("Where do you want to place your cow?: ");
-            return GameBoard.PlaceCow(player, toPos);
-
+            if (GameBoard.AllTiles[toPos].Cow == null)
+            {
+                GameBoard.PlaceCow(player, toPos); 
+                return MoveError.Valid;
+            }
+            else
+            {
+                return MoveError.InValid;
+            }
         }
+
+
+
         private MoveError Fly(IPlayer player)
         {
             //if (player.State != PlayerState.Flying)
             //  throw new IncorrectStateException();
             (char, int) toPos, fromPos;
             fromPos = player.GetMove("Where do you want to fly from?: ");
-            toPos = player.GetMove("Where do you want to fly to?: ");
-            return GameBoard.FlyCow(player, fromPos, toPos);
+            if (GameBoard.AllTiles[fromPos] != null && GameBoard.AllTiles[fromPos].Cow.Color == player.Color)
+            {
+                toPos = player.GetMove("Where do you want to fly to?: ");
+                if (GameBoard.AllTiles[toPos].Cow == null)
+                {
+                    GameBoard.FlyCow(player, fromPos, toPos);
+                    return MoveError.Valid;
+                }
+                else
+                {
+                    return MoveError.InValid;//cant move cow here
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;//have no cow here
+            }
+         
         }
 
 
@@ -104,10 +150,34 @@ namespace Morabaraba_9001
     //| _ -> 
         //printfn "No valid cow was in pos %A" pos
         //killCow player 
-        public MoveError KillCow()
+        public MoveError KillCow(IPlayer player)
         {
             (char,int) killPos=CurrentPlayer.GetMove("Which cow do you want to kill?");
-            return GameBoard.KillCow(killPos,EnemyPlayer);
+            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(player);
+            if (GameBoard.AllTiles[killPos].Cow != null)
+            {
+                if (enemyPlayerMills.Contains(GameBoard.AllTiles[killPos]))
+                {
+                    if (enemyPlayerMills.Count() == player.CowsOnBoard)
+                    {
+                        GameBoard.KillCow(killPos);
+                        return MoveError.Valid;
+                    }
+                    else
+                    {
+                        //can't kill cow in mill
+                        return MoveError.InValid;
+                    }
+                }
+                else{
+                    return MoveError.NoCow;
+                }
+            }
+                else
+                {
+                    return MoveError.NoCow;
+                }
+
     
 
         }

@@ -31,10 +31,10 @@ namespace Morabaraba_9001
         ICow Occupant((char, int) pos);
         IEnumerable<ITile> Cows(Color c);
         IEnumerable<ITile> Mills(IPlayer player);
-        MoveError MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        MoveError PlaceCow(IPlayer player, (char, int) pos);
-        MoveError FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        MoveError KillCow((char, int) killPos, IPlayer player);
+        void MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        void PlaceCow(IPlayer player, (char, int) pos);
+        void FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        void KillCow((char, int) killPos);
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
@@ -63,7 +63,7 @@ namespace Morabaraba_9001
     {
         IPlayer Winner();
         MoveError Play(IPlayer player, PlayerState state);
-        MoveError KillCow();
+        MoveError KillCow(IPlayer player);
         GameEnd EndGame();
         bool PlayerCanMove();
         void ChangePlayerTurn();
