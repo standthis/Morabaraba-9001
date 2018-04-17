@@ -227,7 +227,15 @@ namespace Morabaraba_9001.Test
         [Test]
         public void AMaximumOf12PlacementsPerPlayer() // matt 
         {
-            
+            Player player = new Player("test player", Color.dark);
+            IReferee mockReferee = Substitute.For<IReferee>();
+            (char, int)[] positions = { ('A', 1), ('A', 4), ('A', 7), ('B', 2), ('B', 4), ('B', 6), ('C', 3), ('C', 4), ('C', 5), ('D', 1), ('D', 2), ('D', 3), ('D', 4) };
+            int count = 0;
+            while (player.placeCow(positions[count], mockReferee) == MoveError.Valid)
+            {
+                count++;
+            }
+            Assert.That(count == 0);
         }
 
         [Test]
