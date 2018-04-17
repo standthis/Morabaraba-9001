@@ -60,6 +60,18 @@ namespace Morabaraba_9001
             }
         }
 
+        public void changePlayerState()
+        {
+            if(State == PlayerState.Placing)
+            {
+                State = PlayerState.Moving;
+            }
+            else if(State == PlayerState.Moving)
+            {
+                State = PlayerState.Flying;
+            }
+        }
+
         public MoveError placeCow((char, int) toPos, IReferee referee)
         {
             MoveError error = referee.Place(this, toPos);
