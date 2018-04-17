@@ -40,18 +40,22 @@ namespace Morabaraba_9001.Test
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)
         {
             IPlayer player = Substitute.For<IPlayer>();
-            //Player player = new Player("Morty", Color.dark);
-            IBoard board = Substitute.For<IBoard>();
-            MoveError result = MoveError.InValid;
+            IBoard board = new Board(); //Substitute.For<IBoard>();
             if (isOpenBoardSpace == true)
             {
-                board.AllTiles[pos].Returns((ITile)null);
+                //Dictionary<(char, int), ITile> mocked = new Dictionary<(char, int), ITile>();
+                //ITile tileMock = Substitute.For<ITile>();
+                //tileMock.Cow.Returns((ICow)null);
+                //mocked[pos] = tileMock;
+                //board.AllTiles.Returns(mocked);
+                //board.AllTiles[pos].Cow.Returns((ICow)null);
             }
             else
             {
-                board.AllTiles[pos].Returns(Arg.Any<ITile>());
+                board.AllTiles[pos].Cow.Returns(Arg.Any<ICow>());
             }
-            result = board.PlaceCow(player, pos);
+            MoveError result = board.PlaceCow(player, pos);
+            Assert.That(result == expected);
         }
 
         [Test]
