@@ -17,9 +17,8 @@ namespace Morabaraba_9001
             }
         }
 
-        public Player(PlayerState state, Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
+        public Player(Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
         {
-            State = state;
             Cows = new List<ICow>();
             Cows.Add(cow);
             for (int i = 1; i < 12; i++)
@@ -27,7 +26,7 @@ namespace Morabaraba_9001
                 Cows.Add(new Cow(Color));
             }
         }
-
+        
 
         public List<ICow> Cows { get; private set; }
         public string Name { get; }
@@ -131,7 +130,7 @@ namespace Morabaraba_9001
             return count;
         }
 
-        public MoveError killCow((char, int) pos,IReferee referee)
+        public MoveError killCow((char, int) pos, IReferee referee)
         {
             MoveError error = referee.KillCow(this, pos);
             if (error != MoveError.Valid)

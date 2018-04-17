@@ -16,41 +16,41 @@ namespace Morabaraba_9001.Test
 
         static object[] allBoardPositions =
         {
-            new object[] { ('A', 1), true },
-            new object[] { ('A', 4), true },
-            new object[] { ('A', 7), true },
-            new object[] { ('B', 2), true },
-            new object[] { ('B', 4), true },
-            new object[] { ('B', 6), true },
-            new object[] { ('C', 3), true },
-            new object[] { ('C', 4), true },
-            new object[] { ('C', 5), true },
-            new object[] { ('D', 1), true },
-            new object[] { ('D', 2), true },
-            new object[] { ('D', 3), true },
-            new object[] { ('D', 5), true },
-            new object[] { ('D', 6), true },
-            new object[] { ('D', 7), true },
-            new object[] { ('E', 3), true },
-            new object[] { ('E', 4), true },
-            new object[] { ('E', 5), true },
-            new object[] { ('F', 2), true },
-            new object[] { ('F', 4), true },
-            new object[] { ('F', 6), true },
-            new object[] { ('G', 1), true },
-            new object[] { ('G', 4), true },
-            new object[] { ('G', 7), true },
+            new object[] { ('A', 1) },
+            new object[] { ('A', 4) },
+            new object[] { ('A', 7) },
+            new object[] { ('B', 2) },
+            new object[] { ('B', 4) },
+            new object[] { ('B', 6) },
+            new object[] { ('C', 3) },
+            new object[] { ('C', 4) },
+            new object[] { ('C', 5) },
+            new object[] { ('D', 1) },
+            new object[] { ('D', 2) },
+            new object[] { ('D', 3) },
+            new object[] { ('D', 5) },
+            new object[] { ('D', 6) },
+            new object[] { ('D', 7) },
+            new object[] { ('E', 3) },
+            new object[] { ('E', 4) },
+            new object[] { ('E', 5) },
+            new object[] { ('F', 2) },
+            new object[] { ('F', 4) },
+            new object[] { ('F', 6) },
+            new object[] { ('G', 1) },
+            new object[] { ('G', 4) },
+            new object[] { ('G', 7) },
                
         };
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
-        public void BoardIsEmptyAtStart((char, int) pos, bool expected)//Louise
+        public void BoardIsEmptyAtStart((char, int) pos)//Louise
         {
             IPlayer player = Substitute.For<IPlayer>();
             IBoard board = Substitute.For<IBoard>();
             IReferee referee = new Referee(player, player, board);
             bool result = referee.emptyTile(pos);
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(result, true);
         }
 
         [Test]
@@ -181,6 +181,7 @@ namespace Morabaraba_9001.Test
                 player = new Player("testing player", Color.dark);//if isOpenBoardSpace is true, create a player with unused cows
                 mockReferee.Place(player, pos).Returns(MoveError.Valid);
                 result = player.placeCow(pos, mockReferee);
+
                 Assert.That(player.Cows.Where(x => x.pos.Equals(pos)).Count()==1);
                 Assert.That(result == expected);
             }
@@ -188,9 +189,10 @@ namespace Morabaraba_9001.Test
             {
                 //if isOpenBoardSpace is false, create a player with a cow in the given position
                 //simulaate cow being at position, pos
-                player = new Player(PlayerState.Placing, new Cow(pos));
+                player = new Player(new Cow(pos));
                 mockReferee.Place(player, pos).Returns(MoveError.InValid);
-                result= player.placeCow(pos, mockReferee);
+                result = player.placeCow(pos, mockReferee);
+
                //check that player still has cow
                 Assert.That(player.Cows.Where(x => x.pos.Equals(pos)).Count() == 1);
                 Assert.That(result == expected); //was an invalid move
@@ -244,6 +246,8 @@ namespace Morabaraba_9001.Test
         
         //TESTS FOR DURING MOVING
         // Incomplete 
+
+        
         [Test]
         public void ACowCanOnlyMoveToAnotherConnectedSpace(Color c, (char,int) pos) // matt 
         {
@@ -266,7 +270,7 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void MovingDoesNotDecreaseOrIncreaseTheNumberOfTilesOnTheBoard() // matt
+        public void MovingDoesNotDecreaseOrIncreaseTheNumberOfCowsOnTheBoard() // matt
         {
 
         }
@@ -315,16 +319,24 @@ namespace Morabaraba_9001.Test
 
         }
 
+        
         [Test]
-        public void APlayerCannotShootTheirOwnCows()
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void APlayerCannotShootTheirOwnCows((char, int) pos)
         {
-
+            IReferee mockReferee = Substitute.For<IReferee>();
+            Player player1 = new Player(new Cow(pos));//create a player with a cow in the given position
+            Player player2 = new Player("test player", Color.dark);//create an enemy player
+            
+            MoveError result = player2.killCow(pos, mockReferee);//request for enemy player's cow to be killed at the position where player1's cow actually is
+            Assert.That(result != MoveError.Valid);
         }
 
+        
         [Test]
         public void APlayerCannotShootAnEmptySpace()
         {
-
+            
         }
 
         [Test]
