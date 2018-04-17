@@ -21,13 +21,87 @@ namespace Morabaraba_9001
             GameBoard = board;
 
         }
-
-
-        private MoveError Move(IPlayer player)
+        public MoveError Place(IPlayer player, (char, int) toPos)
         {
+            if (CurrentPlayer.State != PlayerState.Placing)
+            {
+                return MoveError.InValid;
+            }
+
+            if (emptyTile(toPos))
+            {
+                return MoveError.Valid;
+            }
+            else
+            {
+                return MoveError.InValid;
+            }
+        }
+        public MoveError Move(IPlayer player, (char, int) fromPos, (char, int) toPos)
+        {
+            if (CurrentPlayer.State != PlayerState.Moving)
+            {
+                return MoveError.InValid;
+            }
+            if (player.hasCowAtPos(fromPos))
+            {
+                if (emptyTile(toPos) && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
+                {
+
+                    return MoveError.Valid;
+                }
+                else{
+                    return MoveError.InValid;
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;
+            }
+        }
+
+       
+        public MoveError Fly(IPlayer player,(char, int) fromPos, (char, int) toPos)
+        {
+            if (player.State != PlayerState.Flying){
+                return MoveError.InValid;
+            }
+       
+         
+            if (player.hasCowAtPos(fromPos))
+            {
+                if (emptyTile(toPos))
+                {
+
+                    return MoveError.Valid;
+                }
+                else
+                {
+                    return MoveError.InValid;//cant move cow here
+                }
+            }
+            else
+            {
+                return MoveError.NoCow;//have no cow here
+            }
+        }
+       /* public MoveError Place(IPlayer player)
+        {
+            (char, int) toPos = player.GetMove("Where do you want to place your cow?: ");
+            if (emptyTile(toPos))
+            {
+                player.placeCow(toPos);
+                return MoveError.Valid;
+            }
+            else
+            {
+                return MoveError.InValid;
+            }
+        }*/
+
             //  if (player.State != PlayerState.Moving)
             //   throw new IncorrectStateException();
-            (char, int) toPos, fromPos;
+       /*     (char, int) toPos, fromPos;
             fromPos = player.GetMove("Where do you want to move from?: ");
             if (player.hasCowAtPos(fromPos))
             {
@@ -45,23 +119,11 @@ namespace Morabaraba_9001
             else
             {
                 return MoveError.NoCow;
-            }
-        }
+            }*/
+        
         
 
-        private MoveError Place(IPlayer player)
-        {
-            (char, int) toPos = player.GetMove("Where do you want to place your cow?: ");
-            if (emptyTile(toPos))
-            {
-                player.placeCow(toPos); 
-                return MoveError.Valid;
-            }
-            else
-            {
-                return MoveError.InValid;
-            }
-        }
+      
 
         private bool emptyTile((char, int) pos)
         {
@@ -72,63 +134,39 @@ namespace Morabaraba_9001
             return true;
         }
 
-        private MoveError Fly(IPlayer player)
+      
+
+
+        //public MoveError Play(IPlayer player, PlayerState state)
+        //{
+
+        //    switch (state)
+        //    {
+        //        case PlayerState.Placing:
+        //            return Place(player);
+
+        //        case PlayerState.Moving:
+        //            return Move(player);
+
+        //        case PlayerState.Flying:
+        //            return Fly(player);
+
+        //        default:
+        //            throw new Exception("Invalid state");
+        //    }
+
+
+        //}
+
+
+        public void UpdatePlayers(IPlayer currentPlayer,IPlayer enemyPlayer) //update the current player 
         {
-            //if (player.State != PlayerState.Flying)
-            //  throw new IncorrectStateException();
-            (char, int) toPos, fromPos;
-            fromPos = player.GetMove("Where do you want to fly from?: ");
-            if (player.hasCowAtPos(fromPos))
-            {
-                toPos = player.GetMove("Where do you want to fly to?: ");
-                if (emptyTile(toPos))
-                {
-                    player.moveCow(fromPos, toPos);
-                    return MoveError.Valid;
-                }
-                else
-                {
-                    return MoveError.InValid;//cant move cow here
-                }
-            }
-            else
-            {
-                return MoveError.NoCow;//have no cow here
-            }
+            CurrentPlayer = currentPlayer;
+            EnemyPlayer = enemyPlayer;
+           
         }
 
-
-        public MoveError Play(IPlayer player, PlayerState state)
-        {
-
-            switch (state)
-            {
-                case PlayerState.Placing:
-                    return Place(player);
-
-                case PlayerState.Moving:
-                    return Move(player);
-
-                case PlayerState.Flying:
-                    return Fly(player);
-
-                default:
-                    throw new Exception("Invalid state");
-            }
-
-
-        }
-
-
-        public void ChangePlayerTurn()
-        {
-            //swap who's turn it is
-            IPlayer temp_player = CurrentPlayer;
-            CurrentPlayer = EnemyPlayer;
-            EnemyPlayer = temp_player;
-        }
-
-        public void StartGame()
+      /*  public void StartGame()
         {
             while (true)
             {
@@ -136,7 +174,7 @@ namespace Morabaraba_9001
                 Play(CurrentPlayer, CurrentPlayer.State);
                 ChangePlayerTurn();
             }
-        }
+        }*/
 
         public IPlayer Winner()
         {
@@ -144,18 +182,18 @@ namespace Morabaraba_9001
         }
 
 
-        public MoveError KillCow()
+        public MoveError KillCow(IPlayer player, (char,int) killPos)
         {
-            (char,int) killPos = CurrentPlayer.GetMove("Which cow do you want to kill?");
-            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(EnemyPlayer);
+          
+            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(player);
 
-            if (EnemyPlayer.hasCowAtPos(killPos))
+            if (player.hasCowAtPos(killPos))
             {
                 if (enemyPlayerMills.Contains(GameBoard.AllTiles[killPos]))
                 {
-                    if (enemyPlayerMills.Count() == EnemyPlayer.numCowsOnBoard())
+                    if (enemyPlayerMills.Count() == player.numCowsOnBoard())
                     {
-                        EnemyPlayer.killCow(killPos);
+                        
                         return MoveError.Valid;
                     }
                     else
@@ -165,11 +203,9 @@ namespace Morabaraba_9001
                     }
                 }
                 else
-                {
-                    EnemyPlayer.killCow(killPos);
                     return MoveError.Valid;
-                }
-            }
+             }
+
             else
             {
                 return MoveError.NoCow;

@@ -46,11 +46,11 @@ namespace Morabaraba_9001
         PlayerState State { get; }
         List<ICow> Cows { get; }
         (char, int) GetMove(string what);
-        void placeCow((char, int) toPos);
-        void moveCow((char, int) fromPos, (char, int) toPos);
+        MoveError placeCow((char, int) toPos,IReferee referee);
+        MoveError moveCow((char, int) fromPos, (char, int) toPos,IReferee referee);
         bool hasCowAtPos((char, int) pos);
         int numCowsOnBoard();
-        void killCow((char, int) pos)
+        MoveError killCow((char, int) pos,IReferee referee);
 
     }
 
@@ -58,12 +58,16 @@ namespace Morabaraba_9001
     public interface IReferee
     {
         IPlayer Winner();
-        MoveError Play(IPlayer player, PlayerState state);
-        MoveError KillCow();
+        //MoveError Play(IPlayer player, PlayerState state);
+        MoveError Place(IPlayer player, (char, int) toPos);
+        MoveError Move(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        MoveError Fly(IPlayer player, (char, int) fromPos, (char, int) toPos);
+        MoveError KillCow(IPlayer player, (char, int) killPos);
+
         GameEnd EndGame();
         bool PlayerCanMove(IPlayer player);
-        void ChangePlayerTurn();
-        void StartGame();
+        void UpdatePlayers(IPlayer currentPlayer, IPlayer enemyPlayer);
+       // void StartGame();
         IBoard GameBoard { get; }
         IPlayer EnemyPlayer { get; }
         IPlayer CurrentPlayer { get; }
