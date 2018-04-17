@@ -34,16 +34,18 @@ namespace Morabaraba_9001.Test
         [Test]
         public void ThePlayerWithDarkCowsMovesFirst()
         {
-            //IPlayer darkPlayer = Substitute.For<IPlayer>();
-            //IPlayer lightPlayer = Substitute.For<IPlayer>();
+            IPlayer darkPlayer = Substitute.For<IPlayer>();//create 2 mock players, one light and one dark
+            IPlayer lightPlayer = Substitute.For<IPlayer>();
+            darkPlayer.Color.Returns(Color.dark);
+            lightPlayer.Color.Returns(Color.light);
 
-            Player rick = new Player("theRick", Color.dark);
-            Player peter = new Player("peter Pan", Color.light);
-            IBoard b = Substitute.For<IBoard>();
-            Referee louise = new Referee(rick, peter, b);
-            Referee martin = new Referee(peter, rick, b);
-            Assert.That(louise.CurrentPlayer.Color == Color.dark);
-            Assert.That(martin.CurrentPlayer.Color == Color.dark);
+            IBoard b = Substitute.For<IBoard>();//create mock board
+            
+            Referee ref1 = new Referee(darkPlayer, lightPlayer, b);//create 2 refs (game instances) in only the 2 possible ways a ref can be created with the same 2 players
+            Referee ref2 = new Referee(lightPlayer, darkPlayer, b);
+            
+            Assert.That(ref1.CurrentPlayer.Color == Color.dark);//check that for both refs, the CurrentPlayer (starting player as no moves have been made) is the dark one
+            Assert.That(ref2.CurrentPlayer.Color == Color.dark);
         }
 
         static object[] legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles =
