@@ -235,7 +235,7 @@ namespace Morabaraba_9001.Test
             {
                 count++;
             }
-            Assert.That(count == 0);
+            Assert.That(count == 0);//needs to be ==12, the fact it passes as ==0 is a clue to why it fails otherwise. Think mockReferee needs .Returns.
         }
 
         [Test]
