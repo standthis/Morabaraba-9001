@@ -21,7 +21,7 @@ namespace Morabaraba_9001.Test
             new object[] { ('A', 7), true }
         };
         [Test]
-        [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
+        [TestCaseSource("legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles")]
         public void BoardIsEmptyAtStart((char, int) pos, bool expected)//Louise
         {
             IPlayer player = Substitute.For<IPlayer>();
@@ -53,24 +53,41 @@ namespace Morabaraba_9001.Test
             new object[] { ('A', 1), true, MoveError.Valid }
         };
         [Test]
-        [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
+        [TestCaseSource("legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles")]
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)//Louise
         {
-            IPlayer player = Substitute.For<IPlayer>();
-            IBoard board = new Board(); //Substitute.For<IBoard>();
-            if (isOpenBoardSpace == true)
+            Player player;
+            if (isOpenBoardSpace)
             {
+                player = new Player("testing player", Color.dark);//if isOpenBoardSpace is true, create a player with unused cows
+            }
+            else
+            {
+                player = new Player(PlayerState.Placing, new Cow(pos));//if isOpenBoardSpace is false, create a player with a cow in the given position
+            }
+            
+            IReferee mockReferee = Substitute.For<IReferee>();
+
+            MoveError result = player.placeCow(pos, mockReferee);//try place a cow in the given position
+
+            Assert.That(result == expected);
+            
+
+            //IPlayer player = Substitute.For<IPlayer>();
+            //IBoard board = new Board(); //Substitute.For<IBoard>();
+            //if (isOpenBoardSpace == true)
+            //{
                 //Dictionary<(char, int), ITile> mocked = new Dictionary<(char, int), ITile>();
                 //ITile tileMock = Substitute.For<ITile>();
                 //tileMock.Cow.Returns((ICow)null);
                 //mocked[pos] = tileMock;
                 //board.AllTiles.Returns(mocked);
                 //board.AllTiles[pos].Cow.Returns((ICow)null);
-            }
-            else
-            {
+            //}
+            //else
+            //{
                // board.AllTiles[pos].Cow.Returns(Arg.Any<ICow>());
-            }
+            //}
             //MoveError result = board.PlaceCow(player, pos);
             //Assert.That(result == expected);
         }

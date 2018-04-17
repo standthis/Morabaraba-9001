@@ -16,9 +16,9 @@ namespace Morabaraba_9001
             }
         }
 
-        public Player(Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
+        public Player(PlayerState state, Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
         {
-            State = PlayerState.Placing;
+            State = state;
             Cows = new List<ICow>();
             Cows.Add(cow);
             for (int i = 1; i < 12; i++)
