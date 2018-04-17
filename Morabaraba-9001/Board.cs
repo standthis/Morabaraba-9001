@@ -8,9 +8,9 @@ namespace Morabaraba_9001
 
         public Dictionary<(char, int), ITile> AllTiles { get; }
         public IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+
         public Board()
         {
-
             // All tiles on the board
             AllTiles = new Dictionary<(char, int), ITile>();
             AllBoardMills = new List<IEnumerable<ITile>>();
@@ -74,8 +74,7 @@ namespace Morabaraba_9001
             AllBoardMills = new List<IEnumerable<ITile>>{
                 AA17, BB26, CC35, DD13, DD57, EE35, FF26, GG17, AG11, BF22,
                 CE33, AC44, EG44, CE55, BF66, AG77, AC13, CA57, GE13, EG57}; //list of all possible mills    
-
-
+            
         }
         
 
@@ -101,44 +100,7 @@ namespace Morabaraba_9001
         {
             return AllTiles[pos].PossibleMoves;
         }
-
-
-        public void KillCow((char, int) killPos)
-        {
-
-                 //AllTiles[killPos].Cow = null;
-
-        }
-
-
-        public void FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos)
-        {
-                //AllTiles[fromPos].Cow = null;
-                //AllTiles[toPos].Cow = new Cow(player.Color);
-              
-           
-        }
-
-
-        public void MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos)
-        {
-
-                //AllTiles[fromPos].Cow = null;
-                //AllTiles[toPos].Cow = new Cow(player.Color);
-
-        }
         
-
-        public void PlaceCow(IPlayer player, (char, int) pos)
-        {
-               // AllTiles[pos].Cow = new Cow(player.Color);
-        }
     }
-
-
-
-
-
-   
-
+    
 }

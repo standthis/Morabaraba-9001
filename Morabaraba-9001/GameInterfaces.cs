@@ -32,10 +32,6 @@ namespace Morabaraba_9001
     public interface IBoard
     {
         IEnumerable<ITile> Mills(IPlayer player);
-        void MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        void PlaceCow(IPlayer player, (char, int) pos);
-        void FlyCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
-        void KillCow((char, int) killPos);
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
