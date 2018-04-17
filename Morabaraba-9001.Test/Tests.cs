@@ -345,9 +345,15 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void ShotCowsAreRemovedFromTheBoard()
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void ShotCowsAreRemovedFromTheBoard((char, int) pos)
         {
+            IReferee mockReferee = Substitute.For<IReferee>();
+            Player player = new Player(new Cow(pos));//create an enemy player (the player being shot) with a cow at the given position
 
+            player.killCow(pos, mockReferee);//kill enemy player's cow at position given 
+
+            Assert.That(player.Cows.Contains(new Cow(pos)) == false);//check if player has a cow at that position
         }
 
         [Test]
