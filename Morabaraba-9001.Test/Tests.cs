@@ -48,9 +48,9 @@ namespace Morabaraba_9001.Test
         {
             IPlayer player = Substitute.For<IPlayer>();
             IBoard board = Substitute.For<IBoard>();
-            Referee referee = new Referee(player, player, board);
+            IReferee referee = new Referee(player, player, board);
             bool result = referee.emptyTile(pos);
-            Assert.That(result == expected);
+            Assert.AreEqual(result, expected);
         }
 
         [Test]
