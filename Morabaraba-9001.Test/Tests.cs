@@ -332,11 +332,16 @@ namespace Morabaraba_9001.Test
             Assert.That(result != MoveError.Valid);
         }
 
-        
+        //is passing, but probably not for the right reasons. I'm sleepy. Think I need to somehow assert the space is empty that I'm trying to shoot.
         [Test]
-        public void APlayerCannotShootAnEmptySpace()
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void APlayerCannotShootAnEmptySpace((char, int) pos)
         {
-            
+            IReferee mockReferee = Substitute.For<IReferee>();
+            Player player = new Player("test player", Color.dark);//create an enemy player (the player being shot)
+
+            MoveError result = player.killCow(pos, mockReferee);//request for enemy player's cow to be killed at the position where no cow has been created for
+            Assert.That(result != MoveError.Valid);
         }
 
         [Test]
