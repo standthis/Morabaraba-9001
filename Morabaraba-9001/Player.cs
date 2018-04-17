@@ -62,26 +62,23 @@ namespace Morabaraba_9001
 
         public MoveError placeCow((char, int) toPos, IReferee referee)
         {
-            if (State == PlayerState.Placing)
+            MoveError error = referee.Place(this, toPos);
+            if (error != MoveError.Valid)
             {
-                MoveError error = referee.Place(this, toPos);
-                if (error != MoveError.Valid)
-                {
-                    return error;
-                }
-                for (int i = 0; i < 12; i++)
-                {
-                    if (Cows[i].status == cowStatus.Unplaced)
-                    {
-                        Cows[i].pos = toPos;
-                        Cows[i].status = cowStatus.Placed;
-                        break;
-                    }
-                }
-                changePlayerState();
-                return MoveError.Valid;
+                return error;
             }
-            return MoveError.InValid;//if not in placing state
+
+            for (int i = 0; i < 12; i++)
+            {
+                if (Cows[i].status == cowStatus.Unplaced)
+                {
+                    Cows[i].pos = toPos;
+                    Cows[i].status = cowStatus.Placed;
+                    break;
+                }
+            }
+            changePlayerState();
+            return MoveError.Valid;
         }
 
         public MoveError moveCow((char, int) fromPos, (char, int) toPos, IReferee referee)
@@ -95,15 +92,12 @@ namespace Morabaraba_9001
                     return error;
                 }
             }
+
             if(State == PlayerState.Flying){
                 MoveError error = referee.Fly(this, fromPos, toPos);
                 if(error != MoveError.Valid){
                     return error;
                 }
-            }
-            else
-            {
-                return MoveError.InValid;//if not in moving or flying state
             }
            
             for (int i = 0; i < 12; i++)
@@ -133,7 +127,7 @@ namespace Morabaraba_9001
         public int numCowsOnBoard()
         {
             int count = 0;
-            for(int i = 0; i < 12; i++)
+            for (int i = 0; i < 12; i++)
             {
                 if (Cows[i].status.Equals(cowStatus.Placed)) count++;
             }
@@ -145,7 +139,7 @@ namespace Morabaraba_9001
             MoveError error = referee.KillCow(this, pos);
             if (error != MoveError.Valid)
                 return error;
-            for(int i = 0; i < 12; i++)
+            for (int i = 0; i < 12; i++)
             {
                 if (Cows[i].pos.Equals(pos))
                 {
