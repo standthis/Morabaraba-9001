@@ -6,8 +6,11 @@ namespace Morabaraba_9001
     {
         
         public IEnumerable<(char, int)> PossibleMoves { get; private set; }
-        public Tile(IEnumerable<(char, int)> possibleMoves)
+        public (char, int) Pos { get; }
+
+        public Tile((char, int) pos, IEnumerable<(char, int)> possibleMoves)
         {
+            Pos = pos;
             PossibleMoves = possibleMoves;
         }
 

@@ -155,8 +155,9 @@ namespace Morabaraba_9001
         //killCow player 
         public MoveError KillCow(IPlayer player)
         {
-            (char,int) killPos=CurrentPlayer.GetMove("Which cow do you want to kill?");
+            (char,int) killPos = CurrentPlayer.GetMove("Which cow do you want to kill?");
             IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(player);
+
             if (GameBoard.AllTiles[killPos].Cow != null)
             {
                 if (enemyPlayerMills.Contains(GameBoard.AllTiles[killPos]))

@@ -25,13 +25,12 @@ namespace Morabaraba_9001
 
     public interface ITile
     {
+        (char, int) Pos { get; }
         IEnumerable<(char, int)> PossibleMoves { get; }
     }
 
     public interface IBoard
     {
-        ICow Occupant((char, int) pos);
-        IEnumerable<ITile> Cows(Color c);
         IEnumerable<ITile> Mills(IPlayer player);
         void MoveCow(IPlayer player, (char, int) fromPos, (char, int) toPos);
         void PlaceCow(IPlayer player, (char, int) pos);
