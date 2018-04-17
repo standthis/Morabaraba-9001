@@ -113,16 +113,25 @@ namespace Morabaraba_9001
         }
         public bool PlayerCanMove(){
             if (GameBoard.Cows(EnemyPlayer.Color).Any(tile => tile.PossibleMoves.Any(pos => GameBoard.AllTiles[pos].Cow != null)))
-            {
-                return true;
-            }
-            return false;
+                {
+                    return true;
+                }
+                return false;
+         
 
         }
-        public bool EndGame()
+        public GameEnd EndGame()
         {
-
-            return true;
+            if (EnemyPlayer.State == PlayerState.Moving)
+            {
+                if (!PlayerCanMove())
+                    return GameEnd.CantMove;
+               
+                if (EnemyPlayer.CowsOnBoard == 2)
+                    return GameEnd.KilledOff;
+                      
+            }
+                return GameEnd.NoEnd;
         }
           
            
