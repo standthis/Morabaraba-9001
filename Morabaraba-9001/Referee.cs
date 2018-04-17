@@ -14,9 +14,11 @@ namespace Morabaraba_9001
         public Referee(IPlayer p1, IPlayer p2, IBoard board)
         {
             CurrentPlayer = p1;
+            EnemyPlayer = p2;
             if (p2.Color == Color.dark)
             {
                 CurrentPlayer = p2;
+                EnemyPlayer = p1;
             }
             GameBoard = board;
 
@@ -174,7 +176,8 @@ namespace Morabaraba_9001
                 Play(CurrentPlayer, CurrentPlayer.State);
                 ChangePlayerTurn();
             }
-        }*/
+        }
+        */
 
         public IPlayer Winner()
         {
