@@ -48,16 +48,13 @@ namespace Morabaraba_9001
     {
         string Name { get; }
         Color Color { get; }
-
-        int CowsUnPlaced { get; }
-        int CowsOnBoard { get; }
         PlayerState State { get; }
-
         List<ICow> Cows { get; }
         (char, int) GetMove(string what);
-        bool DecrementCowsOnBoard();
-        bool DecrementCowsPlaced();
-        bool AddCowToBoard();
+        void placeCow((char, int) toPos);
+        void moveCow((char, int) fromPos, (char, int) toPos);
+        bool hasCowAtPos((char, int) pos);
+
     }
 
 
