@@ -185,13 +185,13 @@ namespace Morabaraba_9001
         public MoveError KillCow(IPlayer player, (char,int) killPos)
         {
           
-            IEnumerable<ITile> enemyPlayerMills = GameBoard.Mills(player);
+            IEnumerable<ITile> playerMills = GameBoard.Mills(player);
 
             if (player.hasCowAtPos(killPos))
             {
-                if (enemyPlayerMills.Contains(GameBoard.AllTiles[killPos]))
+                if (playerMills.Contains(GameBoard.AllTiles[killPos]))
                 {
-                    if (enemyPlayerMills.Count() == player.numCowsOnBoard())
+                    if (playerMills.Count() == player.numCowsOnBoard())
                     {
                         
                         return MoveError.Valid;
