@@ -22,7 +22,6 @@ namespace Morabaraba_9001
     }
     public interface ITile
     {
-        ICow Cow { get; set; }
         IEnumerable<(char, int)> PossibleMoves { get; }
     }
 
