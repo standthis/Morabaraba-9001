@@ -9,7 +9,7 @@ namespace Morabaraba_9001
 
     public enum PlayerState { Placing, Moving, Flying }
 
-    public enum MoveError { NoCow, InValid, Valid }
+    public enum MoveError { NoCow, InValid, Valid, Cant_Move }
 
     public interface ICow
     {
@@ -36,6 +36,7 @@ namespace Morabaraba_9001
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+
         //    Dictionary<(char, int), ICow> allCows { get; }
     }
 
@@ -62,6 +63,7 @@ namespace Morabaraba_9001
         MoveError Play(IPlayer player, PlayerState state);
         MoveError KillCow();
         bool EndGame();
+        bool PlayerCanMove();
         void ChangePlayerTurn();
         void StartGame();
         IBoard GameBoard { get; }

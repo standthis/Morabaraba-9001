@@ -111,11 +111,22 @@ namespace Morabaraba_9001
     
 
         }
+        public bool PlayerCanMove(){
+            if (GameBoard.Cows(EnemyPlayer.Color).Any(tile => tile.PossibleMoves.Any(pos => GameBoard.AllTiles[pos].Cow != null)))
+            {
+                return true;
+            }
+            return false;
 
+        }
         public bool EndGame()
         {
-            throw new NotImplementedException();
+
+            return true;
         }
+          
+           
+        
 
      
     }
