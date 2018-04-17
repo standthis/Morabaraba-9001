@@ -12,16 +12,31 @@ namespace Morabaraba_9001.Test
     {
 
         //TESTS FOR DURING PLACEMENT
-        [Test]
-        public void BoardIsEmptyAtStart()//Louise
+        
+
+        static object[] allBoardPositions =
         {
-            Board b = new Board();
-            Assert.That(b.AllTiles.Values.Where(tile => tile.Cow != null).Count() == 0);
+            new object[] { ('A', 1), true },
+            new object[] { ('A', 4), true },
+            new object[] { ('A', 7), true }
+        };
+        [Test]
+        [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
+        public void BoardIsEmptyAtStart((char, int) pos, bool expected)//Louise
+        {
+            IPlayer player = Substitute.For<IPlayer>();
+            IBoard board = Substitute.For<IBoard>();
+            Referee referee = new Referee(player, player, board);
+            bool result = referee.emptyTile(pos);
+            Assert.That(result = expected);
         }
 
         [Test]
         public void ThePlayerWithDarkCowsMovesFirst()
         {
+            //IPlayer darkPlayer = Substitute.For<IPlayer>();
+            //IPlayer lightPlayer = Substitute.For<IPlayer>();
+
             Player rick = new Player("theRick", Color.dark);
             Player peter = new Player("peter Pan", Color.light);
             IBoard b = Substitute.For<IBoard>();
@@ -52,10 +67,10 @@ namespace Morabaraba_9001.Test
             }
             else
             {
-                board.AllTiles[pos].Cow.Returns(Arg.Any<ICow>());
+               // board.AllTiles[pos].Cow.Returns(Arg.Any<ICow>());
             }
-            MoveError result = board.PlaceCow(player, pos);
-            Assert.That(result == expected);
+            //MoveError result = board.PlaceCow(player, pos);
+            //Assert.That(result == expected);
         }
 
         [Test]
@@ -83,7 +98,7 @@ namespace Morabaraba_9001.Test
             foreach ((char,int) tile in posMoves){
 
             }
-            b.Cows(c).Returns(new ITile[] {  });  
+//            b.Cows(c).Returns(new ITile[] {  });  
 
         }
 

@@ -67,6 +67,7 @@ namespace Morabaraba_9001
         IBoard GameBoard { get; }
         IPlayer EnemyPlayer { get; }
         IPlayer CurrentPlayer { get; }
+        bool emptyTile((char, int) pos);
     }
 
 

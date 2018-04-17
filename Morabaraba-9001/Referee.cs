@@ -63,7 +63,7 @@ namespace Morabaraba_9001
             }
         }
 
-        private bool emptyTile((char, int) pos)
+        public bool emptyTile((char, int) pos)
         {
             if (CurrentPlayer.hasCowAtPos(pos) || EnemyPlayer.hasCowAtPos(pos))
             {
