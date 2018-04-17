@@ -72,28 +72,135 @@ namespace Morabaraba_9001.Test
 
         static object[] legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles =
         {
-            new object[] { ('A', 1), true, MoveError.Valid }
+            new object[] { ('A', 1), true, MoveError.Valid },
+            new object[] { ('A', 4), true, MoveError.Valid },
+            new object[] { ('A', 7), true, MoveError.Valid },
+
+            new object[] { ('B', 2), true, MoveError.Valid },
+            new object[] { ('B', 4), true, MoveError.Valid },
+            new object[] { ('B', 6), true, MoveError.Valid },
+
+            new object[] { ('C', 3), true, MoveError.Valid },
+            new object[] { ('C', 4), true, MoveError.Valid },
+            new object[] { ('C', 5), true, MoveError.Valid },
+
+            new object[] { ('D', 1), true, MoveError.Valid },
+            new object[] { ('D', 2), true, MoveError.Valid },
+            new object[] { ('D', 3), true, MoveError.Valid },
+            new object[] { ('D', 5), true, MoveError.Valid },
+            new object[] { ('D', 6), true, MoveError.Valid },
+            new object[] { ('D', 7), true, MoveError.Valid },
+
+            new object[] { ('E', 3), true, MoveError.Valid },
+            new object[] { ('E', 4), true, MoveError.Valid },
+            new object[] { ('E', 5), true, MoveError.Valid },
+
+            new object[] { ('F', 2), true, MoveError.Valid },
+            new object[] { ('F', 4), true, MoveError.Valid },
+            new object[] { ('F', 6), true, MoveError.Valid },
+
+            new object[] { ('G', 1), true, MoveError.Valid },
+            new object[] { ('G', 4), true, MoveError.Valid },
+            new object[] { ('G', 7), true, MoveError.Valid },
+
+
+            new object[] { ('A', 1), false, MoveError.InValid },
+            new object[] { ('A', 4), false, MoveError.InValid },
+            new object[] { ('A', 7), false, MoveError.InValid },
+
+            new object[] { ('B', 2), false, MoveError.InValid },
+            new object[] { ('B', 4), false, MoveError.InValid },
+            new object[] { ('B', 6), false, MoveError.InValid },
+            new object[] { ('A', 1), false, MoveError.InValid },
+            new object[] { ('A', 4), false, MoveError.InValid },
+            new object[] { ('A', 7), false, MoveError.InValid },
+
+            new object[] { ('B', 2), false, MoveError.InValid },
+            new object[] { ('B', 4), false, MoveError.InValid },
+            new object[] { ('B', 6), false, MoveError.InValid },
+
+            new object[] { ('C', 3), false, MoveError.InValid },
+            new object[] { ('C', 4), false, MoveError.InValid },
+            new object[] { ('C', 5), false, MoveError.InValid },
+
+            new object[] { ('D', 1), false, MoveError.InValid },
+            new object[] { ('D', 2), false, MoveError.InValid },
+            new object[] { ('D', 3), false, MoveError.InValid },
+            new object[] { ('D', 5), false, MoveError.InValid },
+            new object[] { ('D', 6), false, MoveError.InValid },
+            new object[] { ('D', 7), false, MoveError.InValid },
+
+            new object[] { ('E', 3), false, MoveError.InValid },
+            new object[] { ('E', 4), false, MoveError.InValid },
+            new object[] { ('E', 5), false, MoveError.InValid },
+
+            new object[] { ('F', 2), false, MoveError.InValid },
+            new object[] { ('F', 4), false, MoveError.InValid },
+            new object[] { ('F', 6), false, MoveError.InValid },
+
+            new object[] { ('G', 1), false, MoveError.InValid },
+            new object[] { ('G', 4), false, MoveError.InValid },
+            new object[] { ('G', 7), false, MoveError.InValid },
+            new object[] { ('C', 3), false, MoveError.InValid },
+            new object[] { ('C', 4), false, MoveError.InValid },
+            new object[] { ('C', 5), false, MoveError.InValid },
+
+            new object[] { ('D', 1), false, MoveError.InValid },
+            new object[] { ('D', 2), false, MoveError.InValid },
+            new object[] { ('D', 3), false, MoveError.InValid },
+            new object[] { ('D', 5), false, MoveError.InValid },
+            new object[] { ('D', 6), false, MoveError.InValid },
+            new object[] { ('D', 7), false, MoveError.InValid },
+
+            new object[] { ('E', 3), false, MoveError.InValid },
+            new object[] { ('E', 4), false, MoveError.InValid },
+            new object[] { ('E', 5), false, MoveError.InValid },
+
+            new object[] { ('F', 2), false, MoveError.InValid },
+            new object[] { ('F', 4), false, MoveError.InValid },
+            new object[] { ('F', 6), false, MoveError.InValid },
+
+            new object[] { ('G', 1), false, MoveError.InValid },
+            new object[] { ('G', 4), false, MoveError.InValid },
+            new object[] { ('G', 7), false, MoveError.InValid },
+
+            new object[] { ('H', 7), false, MoveError.InValid }
+
+
         };
         [Test]
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)//Louise
         {
-            Player player;
+            IPlayer player;
+            IReferee mockReferee = Substitute.For<IReferee>();
+           
+            MoveError result;
             if (isOpenBoardSpace)
             {
                 player = new Player("testing player", Color.dark);//if isOpenBoardSpace is true, create a player with unused cows
+                mockReferee.Place(player, pos).Returns(MoveError.Valid);
+                result = player.placeCow(pos, mockReferee);
+                Assert.That(player.Cows.Where(x => x.pos.Equals(pos)).Count()==1);
+                Assert.That(result == expected);
             }
             else
             {
-                player = new Player(PlayerState.Placing, new Cow(pos));//if isOpenBoardSpace is false, create a player with a cow in the given position
+                //if isOpenBoardSpace is false, create a player with a cow in the given position
+                //simulaate cow being at position, pos
+                player = new Player(PlayerState.Placing, new Cow(pos));
+                mockReferee.Place(player, pos).Returns(MoveError.InValid);
+                result= player.placeCow(pos, mockReferee);
+               //check that player still has cow
+                Assert.That(player.Cows.Where(x => x.pos.Equals(pos)).Count() == 1);
+                Assert.That(result == expected); //was an invalid move
             }
             
-            IReferee mockReferee = Substitute.For<IReferee>();
 
 
-            MoveError result = player.placeCow(pos, mockReferee);//try place a cow in the given position
+             //try place a cow in the given position
 
-            Assert.That(result == expected);
+          
             
 
             //IPlayer player = Substitute.For<IPlayer>();
