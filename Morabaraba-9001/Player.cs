@@ -47,8 +47,13 @@ namespace Morabaraba_9001
             }
         }
 
-        public void placeCow((char, int) toPos)
+        public MoveError placeCow((char, int) toPos, IReferee referee)
         {
+            MoveError error = referee.Place(this, toPos);
+            if (error != MoveError.Valid)
+            {
+                return error;
+            }
             for(int i = 0; i < 12; i++)
             {
                 if (Cows[i].status == cowStatus.Unplaced)
@@ -58,10 +63,27 @@ namespace Morabaraba_9001
                     break;
                 }
             }
+            return MoveError.Valid;
         }
 
-        public void moveCow((char, int) fromPos, (char, int) toPos)
+        public MoveError moveCow((char, int) fromPos, (char, int) toPos, IReferee referee)
         {
+
+            if (State == PlayerState.Moving)
+            {
+                MoveError error = referee.Move(this, fromPos, toPos);
+                if (error != MoveError.Valid)
+                {
+                    return error;
+                }
+            }
+            if(State == PlayerState.Flying){
+                MoveError error = referee.Fly(this, fromPos, toPos);
+                if(error != MoveError.Valid){
+                    return error;
+                }
+            }
+           
             for (int i = 0; i < 12; i++)
             {
                 if (Cows[i].pos.Equals(fromPos))
@@ -70,6 +92,7 @@ namespace Morabaraba_9001
                     break;
                 }
             }
+            return MoveError.Valid;
         }
 
         public bool hasCowAtPos((char, int) pos)
@@ -94,8 +117,11 @@ namespace Morabaraba_9001
             return count;
         }
 
-        public void killCow((char, int) pos)
+        public MoveError killCow((char, int) pos,IReferee referee)
         {
+            MoveError error = referee.KillCow(this, pos);
+            if (error != MoveError.Valid)
+                return error;
             for(int i = 0; i < 12; i++)
             {
                 if (Cows[i].pos.Equals(pos))
@@ -105,6 +131,7 @@ namespace Morabaraba_9001
                     break;
                 }
             }
+            return MoveError.Valid;
         }
 
     }
