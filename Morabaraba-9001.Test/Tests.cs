@@ -39,8 +39,7 @@ namespace Morabaraba_9001.Test
             new object[] { ('F', 6) },
             new object[] { ('G', 1) },
             new object[] { ('G', 4) },
-            new object[] { ('G', 7) },
-               
+            new object[] { ('G', 7) }
         };
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
@@ -277,10 +276,81 @@ namespace Morabaraba_9001.Test
 
         }
 
-        [Test]
-        public void MovingDoesNotDecreaseOrIncreaseTheNumberOfCowsOnTheBoard() // matt
-        {
 
+        public object[] toAndFromPositions =
+        {
+            new object[] { ('A', 1), ('A', 4) },
+            new object[] { ('A', 1), ('B', 2) },
+            new object[] { ('A', 1), ('D', 1) },
+            new object[] { ('A', 4), ('A', 1) },
+            new object[] { ('A', 4), ('A', 7) },
+            new object[] { ('A', 4), ('B', 4) },
+            new object[] { ('A', 7), ('A', 4) },
+            new object[] { ('A', 7), ('B', 6) },
+            new object[] { ('A', 7), ('D', 7) },
+            new object[] { ('B', 2), ('A', 1) },
+            new object[] { ('B', 2), ('B', 4) },
+            new object[] { ('B', 2), ('C', 3) },
+            new object[] { ('B', 2), ('D', 2) },
+            new object[] { ('B', 4), ('A', 4) },
+            new object[] { ('B', 4), ('B', 2) },
+            new object[] { ('B', 4), ('B', 6) },
+            new object[] { ('B', 4), ('C', 4) },
+            new object[] { ('B', 6), ('A', 7) },
+            new object[] { ('B', 6), ('B', 4) },
+            new object[] { ('B', 6), ('D', 6) },
+            new object[] { ('B', 6), ('C', 5) },
+            new object[] { ('C', 3), ('B', 2) },
+            new object[] { ('C', 3), ('C', 4) },
+            new object[] { ('C', 3), ('D', 3) },
+            new object[] { ('C', 4), ('B', 4) },
+            new object[] { ('C', 4), ('C', 3) },
+            new object[] { ('C', 4), ('C', 5) },
+            new object[] { ('C', 5), ('B', 6) },
+            new object[] { ('C', 5), ('C', 4) },
+            new object[] { ('C', 5), ('D', 5) },
+            new object[] { ('D', 1), ('A', 1) },
+            new object[] { ('D', 1), ('D', 2) },
+            new object[] { ('D', 1), ('G', 1) },
+            new object[] { ('D', 2), ('B', 2) },
+            new object[] { ('D', 2), ('D', 1) },
+            new object[] { ('D', 2), ('D', 3) },
+            new object[] { ('D', 2), ('F', 2) },
+            new object[] { ('D', 3), ('C', 3) },
+            new object[] { ('D', 3), ('D', 2) },
+            new object[] { ('D', 3), ('E', 3) },
+            new object[] { ('D', 5), ('C', 5) },
+            new object[] { ('D', 5), ('D', 6) },
+            new object[] { ('D', 5), ('E', 5) },
+            new object[] { ('D', 6), ('B', 6) },
+            new object[] { ('D', 6), ('D', 5) },
+            new object[] { ('D', 6), ('D', 7) },
+            new object[] { ('D', 6), ('F', 6) },
+            new object[] { ('D', 7), ('A', 7) },
+            new object[] { ('D', 7), ('D', 6) },
+            new object[] { ('D', 7), ('G', 7) },
+            new object[] { ('E', 3), ('A', 7) },
+            new object[] { ('E', 3), ('D', 6) },
+            new object[] { ('E', 3), ('G', 7) },
+            new object[] { ('E', 4), ('E', 3) },
+            new object[] { ('E', 5) },
+            new object[] { ('F', 2) },
+            new object[] { ('F', 4) },
+            new object[] { ('F', 6) },
+            new object[] { ('G', 1) },
+            new object[] { ('G', 4) },
+            new object[] { ('G', 7) }
+        };
+
+        [Test]
+        [TestCaseSource(nameof(toAndFromPositions))]
+        public void MovingDoesNotDecreaseOrIncreaseTheNumberOfCowsOnTheBoard((char, int) fromPos, (char, int) toPos) //Louise
+        {
+            Player player = new Player(new Cow(fromPos));
+            IReferee mockReferee = Substitute.For<IReferee>();
+            Assert.That(player.numCowsOnBoard() == 1);//check that we're starting with just one player on the board
+            player.moveCow(fromPos, toPos, mockReferee);
+            Assert.That(player.numCowsOnBoard() == 1);
         }
 
         //TESTS FOR DURING FLYING
