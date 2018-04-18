@@ -165,7 +165,7 @@ namespace Morabaraba_9001.Test
             new object[] { ('G', 4), false, MoveError.InValid },
             new object[] { ('G', 7), false, MoveError.InValid },
 
-            new object[] { ('H', 7), false, MoveError.InValid }
+          //  new object[] { ('H', 7), false, MoveError.InValid }
 
 
         };
@@ -248,57 +248,13 @@ namespace Morabaraba_9001.Test
         [Test]
         public void CowsCannotBeMovedDuringPlacement() // matt 
         {
-            IBoard b = Substitute.For<IBoard>();
-            IPlayer p1 = Substitute.For<IPlayer>();
-            p1.Color.Returns(Color.dark);
-            p1.State.Returns(PlayerState.Placing);
-            IPlayer p2 = Substitute.For<IPlayer>();
-            p2.Color.Returns(Color.light);
-            IReferee myRef = new Referee(p1, p2, b);
-            MoveError result = myRef.Move(p1, ('A', 0), ('A', 0));
-            Assert.AreEqual(result, MoveError.InValid);
+
+            IPlayer p1 = new Player("Test_Player1", Color.dark);
+            Assert.AreEqual(p1.moveCow(Arg.Any<(char, int)>(), Arg.Any<(char, int)>(), Arg.Any<IReferee>(),Arg.Any<PlayerState>()), MoveError.InValid);
         }
 
-        //TESTS FOR DURING MOVING
-        // Incomplete 
-        static object[] connectedSpaceTest = {
-        new object [] {('A', 1), new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) }},
-        new object [] {('A', 4), new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) }},
-        new object [] {('A', 7), new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) }},
-
-        new object [] {('B', 2), new List<(char, int)> { ('A', 1), ('B', 4), ('C', 3),('D', 2) }},
-        new object [] {('B', 4), new List<(char, int)> { ('A', 4), ('B', 2), ('B', 6),('C', 4) }},
-        new object [] {('B', 6), new List<(char, int)> { ('A', 7), ('B', 4), ('D', 6),('C', 5) }},
-
-
-        new object [] {('C', 3), new List<(char, int)> { ('B', 2), ('C', 4), ('D', 3) }},
-        new object [] {('C', 4), new List<(char, int)> { ('B', 4), ('C', 3), ('C', 5) }},
-        new object [] {('C', 5), new List<(char, int)> { ('B', 6), ('C', 4), ('D', 5) }},
-
-        new object [] {('D', 1), new List<(char, int)> { ('A', 1), ('D', 2), ('G', 1) }},
-        new object [] {('D', 2), new List<(char, int)> { ('B', 2), ('D', 1), ('D', 3),('F', 2) }},
-        new object [] {('D', 3), new List<(char, int)> { ('C', 3), ('D', 2), ('E', 3) }},
-
-        new object [] {('D', 5), new List<(char, int)> { ('C', 5), ('D', 6), ('E', 5) }},
-        new object [] {('D', 6), new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7),('F', 6) }},
-        new object [] {('D', 7), new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) }},
-
-        new object [] {('E', 3), new List<(char, int)> { ('F', 2), ('D', 3), ('E', 4) }},
-        new object [] {('E', 4), new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) }},
-        new object [] {('E', 5), new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) }},
-
-        new object [] {('F', 2), new List<(char, int)> { ('D', 2), ('E', 3), ('F', 4), ('G', 1) }},
-        new object [] {('F', 4), new List<(char, int)> { ('E', 4), ('F', 2), ('F', 6), ('G', 4) }},
-        new object [] {('F', 6), new List<(char, int)> { ('D', 6), ('E', 5), ('F', 4), ('G', 7) }},
-
-        new object [] {('G', 1), new List<(char, int)> { ('D', 1), ('F', 2), ('G', 4) }},
-        new object [] {('G', 4), new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) }},
-        new object [] {('G', 7), new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) }},
-        
-        
          
 
-        };
 
         //[Test]
 
@@ -339,8 +295,7 @@ namespace Morabaraba_9001.Test
                
         
             }
-            
-//>>>>>>> c9eb01a08e56501522de22b2c0f2361b248ddb28
+
         }
 
         [Test]
@@ -456,19 +411,33 @@ namespace Morabaraba_9001.Test
         [Test]
         public void AMillFormsWhen3CowsOfTheSameColorAreInARow()
         {
-
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 1)), new Cow(('A', 4)), new Cow(('A', 7)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == true);
+            //  A1, A4, A7
         }
 
         [Test]
         public void AMillIsNotFormedWhen3CowsInALineAreDifferentColors()
         {
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 7)), new Cow(('A', 7)) });
+            p2.Cows.Returns(new List<ICow> { new Cow(('A', 4)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == false);
 
         }
 
         [Test]
         public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine()
         {
-
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 1)), new Cow(('A', 4)), new Cow(('D', 1)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == false);
         }
 
         [Test]
