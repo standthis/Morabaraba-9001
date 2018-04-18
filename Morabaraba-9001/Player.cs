@@ -17,6 +17,7 @@ namespace Morabaraba_9001
             }
         }
 
+
         public Player(Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
         {
             Cows = new List<ICow>();
@@ -34,6 +35,7 @@ namespace Morabaraba_9001
         public Color Color { get; }
 
         public PlayerState State { get; private set; }
+
 
         public (char, int) GetMove(string what)
         {
@@ -81,9 +83,9 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
+
         public MoveError moveCow((char, int) fromPos, (char, int) toPos, IReferee referee)
         {
-
             if (State == PlayerState.Moving)
             {
                 MoveError error = referee.Move(this, fromPos, toPos);
@@ -112,6 +114,7 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
+
         public bool hasCowAtPos((char, int) pos)
         {
             for(int i = 0; i < 12; i++)
@@ -134,6 +137,7 @@ namespace Morabaraba_9001
             return count;
         }
 
+
         public MoveError killCow((char, int) pos, IReferee referee)
         {
             MoveError error = referee.KillCow(this, pos);
@@ -151,17 +155,19 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
+
         public void changePlayerState()
         {
             if (this.Cows.All(cow => (cow.status == cowStatus.Placed || cow.status == cowStatus.Dead)) && this.State == PlayerState.Placing)
             {
                 State = PlayerState.Moving;
             }
-            else if (this.State == PlayerState.Moving &&
-            this.Cows.Count == 3){
+            else if (this.State == PlayerState.Moving && this.Cows.Count == 3)
+            {
                 State = PlayerState.Flying;
             }
-            else {
+            else
+            {
                 State = this.State;
             }
         }
