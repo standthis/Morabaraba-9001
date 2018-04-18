@@ -172,23 +172,28 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)//Louise
         {
-            IPlayer player;
+            IPlayer player_1, player_2;
+            IBoard board = new Board();
+            player_1 = new Player("testing player_1", Color.dark, board);
+            player_2 = new Player("testing player_2", Color.dark, board);
+          
             IReferee mockReferee = Substitute.For<IReferee>();
            
-            MoveError result;
+            MoveError result_1,result_2;
             if (isOpenBoardSpace)
             {
-                player = new Player("testing player", Color.dark);//if isOpenBoardSpace is true, create a player with unused cows
-                mockReferee.Place(player, pos).Returns(MoveError.Valid);
-                result = player.placeCow(pos, mockReferee);
-                Assert.That(player.Cows.Where(x => x.pos.Equals(pos)).Count()==1);
+                //if isOpenBoardSpace is true, create a player with unused cows
+                mockReferee.Place(Arg.Any<IPlayer>(), pos).Returns(MoveError.Valid);
+                result_1 = player_1.placeCow(pos, mockReferee);
+
+                Assert.That(player_1.Cows.Where(x => x.pos.Equals(pos)).Count()==1);
                 Assert.That(result == expected);
             }
             else
             {
                 //if isOpenBoardSpace is false, create a player with a cow in the given position
                 //simulaate cow being at position, pos
-                player = new Player(PlayerState.Placing, new Cow(pos));
+                player_1.Cows[0].pos = pos;
                 mockReferee.Place(player, pos).Returns(MoveError.InValid);
                 result= player.placeCow(pos, mockReferee);
                //check that player still has cow

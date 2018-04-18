@@ -1,0 +1,11 @@
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.csprojResolveAssemblyReference.cache
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.csproj.CoreCompileInputs.cache
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.AssemblyInfoInputs.cache
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.AssemblyInfo.cs
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/bin/Debug/netcoreapp2.0/Morabaraba-9001.deps.json
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/bin/Debug/netcoreapp2.0/Morabaraba-9001.runtimeconfig.json
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/bin/Debug/netcoreapp2.0/Morabaraba-9001.runtimeconfig.dev.json
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/bin/Debug/netcoreapp2.0/Morabaraba-9001.dll
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/bin/Debug/netcoreapp2.0/Morabaraba-9001.pdb
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.dll
+/Users/Martin/Morabaraba-9001/Morabaraba-9001/obj/Debug/netcoreapp2.0/Morabaraba-9001.pdb

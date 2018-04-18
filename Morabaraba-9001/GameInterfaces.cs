@@ -26,6 +26,7 @@ namespace Morabaraba_9001
     public interface ITile
     {
         (char, int) Pos { get; }
+        bool Occupied { get; set; }
         IEnumerable<(char, int)> PossibleMoves { get; }
     }
 
@@ -35,6 +36,7 @@ namespace Morabaraba_9001
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+        bool isOccupied((char, int) pos);
 
         //    Dictionary<(char, int), ICow> allCows { get; }
     }
@@ -43,6 +45,7 @@ namespace Morabaraba_9001
     {
         string Name { get; }
         Color Color { get; }
+        IBoard Board { get; }
         PlayerState State { get; }
         List<ICow> Cows { get; }
         (char, int) GetMove(string what);

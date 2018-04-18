@@ -1,0 +1,21 @@
+﻿<Properties StartupConfiguration="{6F6578B9-771D-467E-BF32-7D6CBC47A163}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Morabaraba-9001.Test/Tests.cs">
+    <Files>
+      <File FileName="Morabaraba-9001/Program.cs" Line="1" Column="1" />
+      <File FileName="Morabaraba-9001.Test/Tests.cs" Line="182" Column="70" />
+      <File FileName="Morabaraba-9001/GameInterfaces.cs" Line="1" Column="1" />
+      <File FileName="Morabaraba-9001/Board.cs" Line="9" Column="62" />
+      <File FileName="Morabaraba-9001/Tile.cs" Line="1" Column="1" />
+      <File FileName="Morabaraba-9001/Referee.cs" Line="34" Column="14" />
+      <File FileName="Morabaraba-9001/Cow.cs" Line="1" Column="1" />
+      <File FileName="Morabaraba-9001/Player.cs" Line="58" Column="38" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Morabaraba-9001 PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
