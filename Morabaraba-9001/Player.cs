@@ -86,6 +86,11 @@ namespace Morabaraba_9001
 
         public MoveError moveCow((char, int) fromPos, (char, int) toPos, IReferee referee)
         {
+            if (State == PlayerState.Placing)
+            {
+                return MoveError.InValid;
+            }
+
             if (State == PlayerState.Moving)
             {
                 MoveError error = referee.Move(this, fromPos, toPos);
@@ -94,6 +99,8 @@ namespace Morabaraba_9001
                     return error;
                 }
             }
+
+
 
             if(State == PlayerState.Flying){
                 MoveError error = referee.Fly(this, fromPos, toPos);

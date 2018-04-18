@@ -240,16 +240,10 @@ namespace Morabaraba_9001.Test
         [Test]
         public void CowsCannotBeMovedDuringPlacement() // matt 
         {
-            IBoard b = Substitute.For<IBoard>();
-            IPlayer p1 = Substitute.For<IPlayer>();
-            p1.Color.Returns(Color.dark);
-            p1.State.Returns(PlayerState.Placing);            
-            IPlayer p2 = Substitute.For<IPlayer>();
-            p2.Color.Returns(Color.light);
-            IReferee myRef = new Referee(p1, p2, b);
-            MoveError result = myRef.Move(p1, ('A', 0), ('A', 0));
-            Assert.AreEqual(result, MoveError.InValid);
+            IPlayer p1 = new Player("Test_Player1", Color.dark);
+            Assert.AreEqual(p1.moveCow(Arg.Any<(char, int)>(), Arg.Any<(char, int)>(), Arg.Any<IReferee>()), MoveError.InValid);
         }
+
         
         //TESTS FOR DURING MOVING
         // Incomplete 
