@@ -382,19 +382,33 @@ namespace Morabaraba_9001.Test
         [Test]
         public void AMillFormsWhen3CowsOfTheSameColorAreInARow()
         {
-
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 1)), new Cow(('A', 4)), new Cow(('A', 7)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == true);
+            //  A1, A4, A7
         }
 
         [Test]
         public void AMillIsNotFormedWhen3CowsInALineAreDifferentColors()
         {
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 7)), new Cow(('A', 7)) });
+            p2.Cows.Returns(new List<ICow> { new Cow(('A', 4)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == false);
 
         }
 
         [Test]
         public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine()
         {
-
+            IBoard b = new Board();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Cows.Returns(new List<ICow> { new Cow(('A', 1)), new Cow(('A', 4)), new Cow(('D', 1)) });
+            Assert.That(b.MillFormed(p1, ('A', 4)) == false);
         }
 
         [Test]
