@@ -257,18 +257,23 @@ namespace Morabaraba_9001.Test
 
         
         [Test]
-        public void ACowCanOnlyMoveToAnotherConnectedSpace(Color c, (char,int) pos) // matt 
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void ACowCanOnlyMoveToAnotherConnectedSpace((char,int) pos) // not passing 
         {
-            ICow cow = new Cow(c);
-            IBoard b = Substitute.For<IBoard>();
-            IPlayer p = new Player("player", c);
-
-            (char,int)[] posMoves = b.AllTiles[pos].PossibleMoves.ToArray();
-            foreach ((char,int) tile in posMoves){
-
-            }
-//            b.Cows(c).Returns(new ITile[] {  });  
-
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();            
+            IBoard b = new Board();
+ 
+            p1.Color.Returns(Color.dark);
+            p1.State.Returns(PlayerState.Moving);
+            p2.Color.Returns(Color.light);
+            p1.Cows.Add(new Cow(Color.dark));
+            p1.Cows[0].pos = pos; 
+            p1.Cows[0].status = cowStatus.Placed; 
+            IReferee myRef = new Referee(p1, p2, b);
+            //p1.placeCow(pos, myRef);
+            Assert.That(b.AllTiles[pos].PossibleMoves.All(posMove => myRef.Move(p1, pos, posMove) == MoveError.Valid));                                
+            
         }
 
         [Test]
