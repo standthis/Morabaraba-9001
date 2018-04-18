@@ -41,7 +41,7 @@ namespace Morabaraba_9001
         }
         public MoveError Move(IPlayer player, (char, int) fromPos, (char, int) toPos)
         {
-            if (CurrentPlayer.State != PlayerState.Moving)
+            if (player.State != PlayerState.Moving)
             {
                 return MoveError.InValid;
             }
@@ -129,6 +129,13 @@ namespace Morabaraba_9001
 
         public bool emptyTile((char, int) pos)
         {
+            try{
+
+                ITile tmp=GameBoard.AllTiles[pos];
+            }
+            catch (KeyNotFoundException){
+                return true;
+            }
             if (CurrentPlayer.hasCowAtPos(pos) || EnemyPlayer.hasCowAtPos(pos))
             {
                 return false;

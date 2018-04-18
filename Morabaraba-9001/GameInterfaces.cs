@@ -48,7 +48,7 @@ namespace Morabaraba_9001
         List<ICow> Cows { get; }
         (char, int) GetMove(string what);
         MoveError placeCow((char, int) toPos,IReferee referee);
-        MoveError moveCow((char, int) fromPos, (char, int) toPos,IReferee referee);
+        MoveError moveCow((char, int) fromPos, (char, int) toPos,IReferee referee,PlayerState player_state);
         bool hasCowAtPos((char, int) pos);
         int numCowsOnBoard();
         MoveError killCow((char, int) pos,IReferee referee);
