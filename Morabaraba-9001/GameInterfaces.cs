@@ -35,6 +35,7 @@ namespace Morabaraba_9001
         IEnumerable<(char, int)> PossibleMoves((char, int) pos);
         Dictionary<(char, int), ITile> AllTiles { get; }
         IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+        bool MillFormed(IPlayer player, (char, int) pos);
 
         //    Dictionary<(char, int), ICow> allCows { get; }
     }

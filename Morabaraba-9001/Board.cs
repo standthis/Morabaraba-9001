@@ -94,7 +94,14 @@ namespace Morabaraba_9001
             }
             return retMills;
         }
-
+        public bool MillFormed(IPlayer player,(char,int ) pos){
+            IEnumerable<ITile> playersMills = Mills(player);
+            foreach(Tile tile in playersMills){
+                if (tile.Pos.Equals(pos))
+                    return true;
+            }
+            return false;
+        }
        
         public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
         {
