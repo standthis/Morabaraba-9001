@@ -282,7 +282,7 @@ namespace Morabaraba_9001.Test
         }
 
 
-        public object[] toAndFromPositions =
+        static object[] toAndFromPositions =
         {
             new object[] { ('A', 1), ('A', 4) },
             new object[] { ('A', 1), ('B', 2) },
@@ -334,17 +334,36 @@ namespace Morabaraba_9001.Test
             new object[] { ('D', 7), ('A', 7) },
             new object[] { ('D', 7), ('D', 6) },
             new object[] { ('D', 7), ('G', 7) },
-            new object[] { ('E', 3), ('A', 7) },
-            new object[] { ('E', 3), ('D', 6) },
-            new object[] { ('E', 3), ('G', 7) },
+            new object[] { ('E', 3), ('F', 2) },
+            new object[] { ('E', 3), ('D', 3) },
+            new object[] { ('E', 3), ('E', 4) },
             new object[] { ('E', 4), ('E', 3) },
-            new object[] { ('E', 5) },
-            new object[] { ('F', 2) },
-            new object[] { ('F', 4) },
-            new object[] { ('F', 6) },
-            new object[] { ('G', 1) },
-            new object[] { ('G', 4) },
-            new object[] { ('G', 7) }
+            new object[] { ('E', 4), ('F', 4) },
+            new object[] { ('E', 4), ('E', 5) },
+            new object[] { ('E', 5), ('D', 5) },
+            new object[] { ('E', 5), ('E', 4) },
+            new object[] { ('E', 5), ('F', 6) },
+            new object[] { ('F', 2), ('D', 2) },
+            new object[] { ('F', 2), ('E', 3) },
+            new object[] { ('F', 2), ('F', 4) },
+            new object[] { ('F', 2), ('G', 1) },
+            new object[] { ('F', 4), ('E', 4) },
+            new object[] { ('F', 4), ('F', 2) },
+            new object[] { ('F', 4), ('F', 6) },
+            new object[] { ('F', 4), ('G', 4) },
+            new object[] { ('F', 6), ('D', 6) },
+            new object[] { ('F', 6), ('E', 5) },
+            new object[] { ('F', 6), ('F', 4) },
+            new object[] { ('F', 6), ('G', 7) },
+            new object[] { ('G', 1), ('D', 1) },
+            new object[] { ('G', 1), ('F', 2) },
+            new object[] { ('G', 1), ('G', 4) },
+            new object[] { ('G', 4), ('F', 4) },
+            new object[] { ('G', 4), ('G', 1) },
+            new object[] { ('G', 4), ('G', 7) },
+            new object[] { ('G', 7), ('D', 7) },
+            new object[] { ('G', 7), ('F', 6) },
+            new object[] { ('G', 7), ('G', 4) }
         };
 
         [Test]
