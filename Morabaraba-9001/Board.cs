@@ -35,7 +35,7 @@ namespace Morabaraba_9001
             ITile D6 = AllTiles[('D', 6)] = new Tile(('D', 6), new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7), ('F', 6) });
             ITile D7 = AllTiles[('D', 7)] = new Tile(('D', 7), new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
 
-            ITile E3 = AllTiles[('E', 3)] = new Tile(('E', 3), new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
+            ITile E3 = AllTiles[('E', 3)] = new Tile(('E', 3), new List<(char, int)> { ('F', 2), ('D', 3), ('E', 4) });
             ITile E4 = AllTiles[('E', 4)] = new Tile(('E', 4), new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) });
             ITile E5 = AllTiles[('E', 5)] = new Tile(('E', 5), new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) });
 
