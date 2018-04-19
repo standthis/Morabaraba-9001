@@ -5,29 +5,41 @@ namespace Morabaraba_9001
 {
     public class Player : IPlayer
     {
-        public Player(string name, Color color)
+        public Player(string name, Color color,PlayerState state=PlayerState.Placing,List<(char,int)> positions= null)
         {
             Name = name;
             Color = color;
-            State = PlayerState.Placing;
+            State = state;
             Cows = new List<ICow>();
-            for (int i = 0; i < 12; i++)
-            {
-                Cows.Add(new Cow(Color));
+            if(positions!=null){
+                foreach ((char,int) pos in positions)
+                {
+                    Cows.Add(new Cow(this.Color, pos));
+                        
+                }
+                
             }
-        }
-
-
-        public Player(Cow cow)//for testing purposes, instantiate a player with a given cow in it's cow list
-        {
-            Cows = new List<ICow>();
-            Cows.Add(cow);
-            for (int i = 1; i < 12; i++)
+            switch (State)
             {
-                Cows.Add(new Cow(Color));
+                case PlayerState.Placing:
+                    UnplacedCows = 12 - Cows.Count();
+                    break;
+                case PlayerState.Moving:
+                    UnplacedCows = 0;
+                    break;
+                case PlayerState.Flying:
+                    UnplacedCows = 0;
+                    if (numCowsOnBoard() > 3)
+                    {
+                        State = PlayerState.Moving;
+                    }
+
+                    break;
             }
+
+            changePlayerState();
         }
-        
+     
 
         public List<ICow> Cows { get; private set; }
         public string Name { get; }
@@ -35,31 +47,9 @@ namespace Morabaraba_9001
         public Color Color { get; }
 
         public PlayerState State { get; private set; }
+        public int UnplacedCows { get; private set; }
 
-
-        public (char, int) GetMove(string what)
-        {
-            Console.WriteLine(what);
-            Console.Write("Row: ");
-            char rowInput = Console.ReadKey().KeyChar;
-            bool is_char = Char.TryParse(rowInput + "", out rowInput);
-            Console.WriteLine();
-            Console.Write("Column: ");
-            char getCol = Console.ReadKey().KeyChar;
-            Console.WriteLine();
-            int col;
-            bool is_numeric = System.Int32.TryParse(getCol + "", out col);
-            if (is_numeric && is_char)
-            {
-                return (Char.ToUpper(rowInput), col);
-
-            }
-            else
-            {
-                Console.WriteLine("Row requires a character and Col requires a number.Please enter valid input ");
-                return GetMove(what);
-            }
-        }
+    
        
 
         public MoveError placeCow((char, int) toPos, IReferee referee)
@@ -70,15 +60,9 @@ namespace Morabaraba_9001
                 return error;
             }
 
-            for (int i = 0; i < 12; i++)
-            {
-                if (Cows[i].status == cowStatus.Unplaced)
-                {
-                    Cows[i].pos = toPos;
-                    Cows[i].status = cowStatus.Placed;
-                    break;
-                }
-            }
+
+            Cows.Add(new Cow(Color, toPos));
+            UnplacedCows--;
             changePlayerState();
             return MoveError.Valid;
         }
@@ -105,15 +89,9 @@ namespace Morabaraba_9001
                     return error;
                 }
             }
-
-            for (int i = 0; i < 12; i++)
-            {
-                if (Cows[i].pos.Equals(fromPos))
-                {
-                    Cows[i].pos = toPos;
-                    break;
-                }
-            }
+            //get rid of the from positions
+            Cows = Cows.Where(cow => !cow.Pos.Equals(fromPos)).ToList();
+            Cows.Add(new Cow(Color, toPos));
             changePlayerState();
             return MoveError.Valid;
         }
@@ -121,24 +99,12 @@ namespace Morabaraba_9001
 
         public bool hasCowAtPos((char, int) pos)
         {
-            for(int i = 0; i < 12; i++)
-            {
-                if (Cows[i].pos.Equals(pos) && Cows[i].status.Equals(cowStatus.Placed))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return Cows.Any(cow => cow.Pos.Equals(pos));
         }
         
         public int numCowsOnBoard()
         {
-            int count = 0;
-            for (int i = 0; i < 12; i++)
-            {
-                if (Cows[i].status.Equals(cowStatus.Placed)) count++;
-            }
-            return count;
+            return Cows.Count();
         }
 
 
@@ -147,33 +113,24 @@ namespace Morabaraba_9001
             MoveError error = referee.KillCow(this, pos);
             if (error != MoveError.Valid)
                 return error;
-            for (int i = 0; i < 12; i++)
-            {
-                if (Cows[i].pos.Equals(pos))
-                {
-                    Cows[i].pos = ('Z', 0);
-                    Cows[i].status = cowStatus.Dead;
-                    break;
-                }
-            }
+            //Cows.Remove(new Cow(Color, pos));
+            Cows = Cows.Where(cow => !(cow.Pos.Equals(pos))).ToList();
+          
             return MoveError.Valid;
         }
 
-
+        public bool CanMove(IReferee referee){
+            return referee.PlayerCanMove(this);
+        }
         public void changePlayerState()
         {
-            if (this.Cows.All(cow => (cow.status == cowStatus.Placed || cow.status == cowStatus.Dead)) && this.State == PlayerState.Placing)
-            {
+            if(State == PlayerState.Placing && UnplacedCows==0){
                 State = PlayerState.Moving;
             }
-            else if (this.State == PlayerState.Moving && this.Cows.Count == 3)
-            {
+            else if (State == PlayerState.Moving && numCowsOnBoard()==3 ){
                 State = PlayerState.Flying;
             }
-            else
-            {
-                State = this.State;
-            }
+
         }
     }
     

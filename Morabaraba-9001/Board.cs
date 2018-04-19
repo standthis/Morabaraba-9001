@@ -15,37 +15,38 @@ namespace Morabaraba_9001
             AllTiles = new Dictionary<(char, int), ITile>();
             AllBoardMills = new List<IEnumerable<ITile>>();
 
-            ITile A1 = AllTiles[('A', 1)] = new Tile(('A', 1), new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) });
-            ITile A4 = AllTiles[('A', 4)] = new Tile(('A', 4), new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) });
-            ITile A7 = AllTiles[('A', 7)] = new Tile(('A', 7), new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) });
 
-            ITile B2 = AllTiles[('B', 2)] = new Tile(('B', 2), new List<(char, int)> { ('A', 1), ('B', 4), ('C', 3), ('D', 2) });
-            ITile B4 = AllTiles[('B', 4)] = new Tile(('B', 4), new List<(char, int)> { ('A', 4), ('B', 2), ('B', 6), ('C', 4) });
-            ITile B6 = AllTiles[('B', 6)] = new Tile(('B', 6), new List<(char, int)> { ('A', 7), ('B', 4), ('D', 6), ('C', 5) });
+            ITile A1 = AllTiles[('A', 1)] = new Tile(('A', 1), Color.none, new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) });
+            ITile A4 = AllTiles[('A', 4)] = new Tile(('A', 4), Color.none, new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) });
+            ITile A7 = AllTiles[('A', 7)] = new Tile(('A', 7), Color.none, new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) });
 
-            ITile C3 = AllTiles[('C', 3)] = new Tile(('C', 3), new List<(char, int)> { ('B', 2), ('C', 4), ('D', 3) });
-            ITile C4 = AllTiles[('C', 4)] = new Tile(('C', 4), new List<(char, int)> { ('B', 4), ('C', 3), ('C', 5) });
-            ITile C5 = AllTiles[('C', 5)] = new Tile(('C', 5), new List<(char, int)> { ('B', 6), ('C', 4), ('D', 5) });
+            ITile B2 = AllTiles[('B', 2)] = new Tile(('B', 2), Color.none, new List<(char, int)> { ('A', 1), ('B', 4), ('C', 3), ('D', 2) });
+            ITile B4 = AllTiles[('B', 4)] = new Tile(('B', 4), Color.none, new List<(char, int)> { ('A', 4), ('B', 2), ('B', 6), ('C', 4) });
+            ITile B6 = AllTiles[('B', 6)] = new Tile(('B', 6), Color.none, new List<(char, int)> { ('A', 7), ('B', 4), ('D', 6), ('C', 5) });
 
-            ITile D1 = AllTiles[('D', 1)] = new Tile(('D', 1), new List<(char, int)> { ('A', 1), ('D', 2), ('G', 1) });
-            ITile D2 = AllTiles[('D', 2)] = new Tile(('D', 2), new List<(char, int)> { ('B', 2), ('D', 1), ('D', 3), ('F', 2) });
-            ITile D3 = AllTiles[('D', 3)] = new Tile(('D', 3), new List<(char, int)> { ('C', 3), ('D', 2), ('E', 3) });
+            ITile C3 = AllTiles[('C', 3)] = new Tile(('C', 3), Color.none, new List<(char, int)> { ('B', 2), ('C', 4), ('D', 3) });
+            ITile C4 = AllTiles[('C', 4)] = new Tile(('C', 4), Color.none, new List<(char, int)> { ('B', 4), ('C', 3), ('C', 5) });
+            ITile C5 = AllTiles[('C', 5)] = new Tile(('C', 5), Color.none, new List<(char, int)> { ('B', 6), ('C', 4), ('D', 5) });
 
-            ITile D5 = AllTiles[('D', 5)] = new Tile(('D', 5), new List<(char, int)> { ('C', 5), ('D', 6), ('E', 5) });
-            ITile D6 = AllTiles[('D', 6)] = new Tile(('D', 6), new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7), ('F', 6) });
-            ITile D7 = AllTiles[('D', 7)] = new Tile(('D', 7), new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
-       
-            ITile E3 = AllTiles[('E', 3)] = new Tile(('E', 3), new List<(char, int)> { ('F', 2), ('D', 3), ('E', 4) });
-            ITile E4 = AllTiles[('E', 4)] = new Tile(('E', 4), new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) });
-            ITile E5 = AllTiles[('E', 5)] = new Tile(('E', 5), new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) });
+            ITile D1 = AllTiles[('D', 1)] = new Tile(('D', 1), Color.none, new List<(char, int)> { ('A', 1), ('D', 2), ('G', 1) });
+            ITile D2 = AllTiles[('D', 2)] = new Tile(('D', 2), Color.none, new List<(char, int)> { ('B', 2), ('D', 1), ('D', 3), ('F', 2) });
+            ITile D3 = AllTiles[('D', 3)] = new Tile(('D', 3), Color.none, new List<(char, int)> { ('C', 3), ('D', 2), ('E', 3) });
 
-            ITile F2 = AllTiles[('F', 2)] = new Tile(('F', 2), new List<(char, int)> { ('D', 2), ('E', 3), ('F', 4), ('G', 1) });
-            ITile F4 = AllTiles[('F', 4)] = new Tile(('F', 4), new List<(char, int)> { ('E', 4), ('F', 2), ('F', 6), ('G', 4) });
-            ITile F6 = AllTiles[('F', 6)] = new Tile(('F', 6), new List<(char, int)> { ('D', 6), ('E', 5), ('F', 4), ('G', 7) });
+            ITile D5 = AllTiles[('D', 5)] = new Tile(('D', 5), Color.none, new List<(char, int)> { ('C', 5), ('D', 6), ('E', 5) });
+            ITile D6 = AllTiles[('D', 6)] = new Tile(('D', 6), Color.none, new List<(char, int)> { ('B', 6), ('D', 5), ('D', 7), ('F', 6) });
+            ITile D7 = AllTiles[('D', 7)] = new Tile(('D', 7), Color.none, new List<(char, int)> { ('A', 7), ('D', 6), ('G', 7) });
 
-            ITile G1 = AllTiles[('G', 1)] = new Tile(('G', 1), new List<(char, int)> { ('D', 1), ('F', 2), ('G', 4) });
-            ITile G4 = AllTiles[('G', 4)] = new Tile(('G', 4), new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) });
-            ITile G7 = AllTiles[('G', 7)] = new Tile(('G', 7), new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) });
+            ITile E3 = AllTiles[('E', 3)] = new Tile(('E', 3), Color.none, new List<(char, int)> { ('F', 2), ('D', 3), ('E', 4) });
+            ITile E4 = AllTiles[('E', 4)] = new Tile(('E', 4), Color.none, new List<(char, int)> { ('E', 3), ('F', 4), ('E', 5) });
+            ITile E5 = AllTiles[('E', 5)] = new Tile(('E', 5), Color.none, new List<(char, int)> { ('D', 5), ('E', 4), ('F', 6) });
+
+            ITile F2 = AllTiles[('F', 2)] = new Tile(('F', 2), Color.none, new List<(char, int)> { ('D', 2), ('E', 3), ('F', 4), ('G', 1) });
+            ITile F4 = AllTiles[('F', 4)] = new Tile(('F', 4), Color.none, new List<(char, int)> { ('E', 4), ('F', 2), ('F', 6), ('G', 4) });
+            ITile F6 = AllTiles[('F', 6)] = new Tile(('F', 6), Color.none, new List<(char, int)> { ('D', 6), ('E', 5), ('F', 4), ('G', 7) });
+
+            ITile G1 = AllTiles[('G', 1)] = new Tile(('G', 1), Color.none, new List<(char, int)> { ('D', 1), ('F', 2), ('G', 4) });
+            ITile G4 = AllTiles[('G', 4)] = new Tile(('G', 4), Color.none, new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) });
+            ITile G7 = AllTiles[('G', 7)] = new Tile(('G', 7), Color.none, new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) });
 
             //All mills
             IEnumerable<ITile> AA17 = new List<ITile> { A1, A4, A7 };                                                                     //all coordinate combinations that can form a mill (if all are occupied by the same player)
@@ -78,29 +79,75 @@ namespace Morabaraba_9001
         }
         
 
-        public IEnumerable<ITile> Mills(IPlayer player)
+        public List<IEnumerable<ITile>> Mills(IPlayer player)
         {
-            IEnumerable<ITile> retMills = new List<ITile>();
+            List<IEnumerable<ITile>> retMills = new List<IEnumerable<ITile>>();
             foreach (IEnumerable<ITile> mill in AllBoardMills)
             {
+                int count = 0;
                 for (int i = 0; i < mill.Count(); i++)
                 {
                     ITile currentTile = mill.ElementAt(i);
-                    if (player.hasCowAtPos(currentTile.Pos) && !retMills.Contains(currentTile))
+                    if (player.hasCowAtPos(currentTile.Pos))
                     {
-                        retMills.Append(currentTile);
+                        count++;
                     }
+                }
+                if(count==3){
+                    retMills.Add(mill);
                 }
             }
             return retMills;
         }
         public bool MillFormed(IPlayer player,(char,int ) pos){
-            IEnumerable<ITile> playersMills = Mills(player);
-            foreach(Tile tile in playersMills){
-                if (tile.Pos.Equals(pos))
+            List<IEnumerable<ITile>> playersMills = Mills(player);
+      
+            foreach(IEnumerable<ITile> mill in playersMills){
+                int count = 0;
+                for (int i = 0; i < mill.Count(); i++)
+                {
+                    ITile currentTile = mill.ElementAt(i);
+                    if (player.hasCowAtPos(currentTile.Pos))
+                    {
+                        count++;
+                    }
+                }
+                if (count == 3)
+                {
                     return true;
+                }
             }
             return false;
+        }
+        public void Place(IPlayer player,(char,int) pos){
+            AllTiles[pos].color = player.Color;
+        }
+        public void Move(IPlayer player, (char, int) fromPos,(char,int) toPos)
+        {
+            AllTiles[fromPos].color = Color.none;
+            AllTiles[toPos].color = player.Color;
+        }
+     
+
+        public bool isOccupied((char, int) pos)
+        {
+            try
+            {
+                return AllTiles[pos].color != Color.none;
+            }
+            catch(KeyNotFoundException){
+                return false;
+            }
+
+        }
+        public List<ICow> playerCows(IPlayer player){
+            List<ICow> retCows= new List<ICow>();
+            foreach(ITile tile in AllTiles.Values){
+                if(tile.color==player.Color){
+                    retCows.Add(new Cow(tile.color,tile.Pos));
+                }
+            }
+            return retCows;
         }
        
         public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
