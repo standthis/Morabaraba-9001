@@ -47,9 +47,10 @@ namespace Morabaraba_9001
 
         public MoveError Fly((char, int) fromPos, (char, int) toPos)
         {
-            MoveError error = CurrentPlayer.moveCow(fromPos, toPos, Referee, PlayerState.Flying);
+            MoveError error = Referee.Fly(CurrentPlayer, fromPos, toPos);
             if(error == MoveError.Valid){
                 GameBoard.Move(CurrentPlayer, fromPos, toPos);
+                CurrentPlayer.moveCow(fromPos, toPos);
                 changePlayerTurn();
             }
 
@@ -65,10 +66,11 @@ namespace Morabaraba_9001
 
         public MoveError Move((char, int) fromPos, (char, int) toPos)
         {
-            MoveError error = CurrentPlayer.moveCow(fromPos, toPos, Referee, PlayerState.Moving);
+            MoveError error = Referee.Move(CurrentPlayer,fromPos,toPos);
             if (error == MoveError.Valid)
             {
                 GameBoard.Move(CurrentPlayer, fromPos, toPos);
+                CurrentPlayer.moveCow(fromPos, toPos);
                 changePlayerTurn();
             }
 
@@ -78,10 +80,11 @@ namespace Morabaraba_9001
 
         public MoveError Place((char, int) pos){
 
-            MoveError error = CurrentPlayer.placeCow(pos, Referee);
+            MoveError error = Referee.Place(CurrentPlayer,pos);
             if (error == MoveError.Valid)
             {
                 GameBoard.Place(CurrentPlayer, pos);
+                CurrentPlayer.placeCow(pos);
                 changePlayerTurn();
 
             }

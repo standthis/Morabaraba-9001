@@ -52,48 +52,25 @@ namespace Morabaraba_9001
     
        
 
-        public MoveError placeCow((char, int) toPos, IReferee referee)
+        public void placeCow((char, int) toPos)
         {
-            MoveError error = referee.Place(this, toPos);
-            if (error != MoveError.Valid)
-            {
-                return error;
-            }
-
-
+         
             Cows.Add(new Cow(Color, toPos));
             UnplacedCows--;
             changePlayerState();
-            return MoveError.Valid;
+
         }
 
 
-        public MoveError moveCow((char, int) fromPos, (char, int) toPos, IReferee referee, PlayerState player_state)
+        public void moveCow((char, int) fromPos, (char, int) toPos)
         {
 
-            if(player_state==PlayerState.Placing){
-                return MoveError.InValid;
-            }
-            if (player_state == PlayerState.Moving)
-            {
-                MoveError error = referee.Move(this, fromPos, toPos);
-                if (error != MoveError.Valid)
-                {
-                    return error;
-                }
-            }
 
-            if(player_state == PlayerState.Flying){
-                MoveError error = referee.Fly(this, fromPos, toPos);
-                if(error != MoveError.Valid){
-                    return error;
-                }
-            }
             //get rid of the from positions
             Cows = Cows.Where(cow => !cow.Pos.Equals(fromPos)).ToList();
             Cows.Add(new Cow(Color, toPos));
             changePlayerState();
-            return MoveError.Valid;
+
         }
 
 

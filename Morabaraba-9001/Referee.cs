@@ -18,7 +18,8 @@ namespace Morabaraba_9001
         }
         public MoveError Place(IPlayer player, (char, int) toPos)
         {
-            if (player.State != PlayerState.Placing)
+            
+            if (player.State != PlayerState.Placing || player.UnplacedCows<=0)
             {
                 return MoveError.InValid;
             }
