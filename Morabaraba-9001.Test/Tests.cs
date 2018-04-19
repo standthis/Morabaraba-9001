@@ -177,23 +177,22 @@ namespace Morabaraba_9001.Test
 
             IReferee referee = new Referee(board);
 
-            player_1.State.Returns(PlayerState.Placing);
-            player_1.UnplacedCows.Returns(12);
-            player_1.Color.Returns(Color.dark);
-
+           
             IGame game = new Game(board, referee, player_1, player_2);
-
 
             //player_2.Color.Returns(Color.light)
             MoveError result;
             if (isOpenBoardSpace)
             {
                 board.isOccupied(pos).Returns(false);
-
+                game.CurrentPlayer.State.ReturnsForAnyArgs(PlayerState.Placing);
+                game.CurrentPlayer.UnplacedCows.ReturnsForAnyArgs(12);
+                game.CurrentPlayer.Color.Returns(Color.dark);
                 result = game.Place(pos);
                 Assert.AreEqual(expected,result);
-                board.Received().Place(player_1, pos);
-                player_1.Received().placeCow(pos);    
+                board.Received().Place(game.CurrentPlayer, pos);
+                game.CurrentPlayer.Received().placeCow(pos);
+               // game.CurrentPlayer.Received().placeCow(pos);    
             }
             else
             {

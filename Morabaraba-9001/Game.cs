@@ -51,7 +51,6 @@ namespace Morabaraba_9001
             if(error == MoveError.Valid){
                 GameBoard.Move(CurrentPlayer, fromPos, toPos);
                 CurrentPlayer.moveCow(fromPos, toPos);
-                changePlayerTurn();
             }
 
             return error;
@@ -71,7 +70,6 @@ namespace Morabaraba_9001
             {
                 GameBoard.Move(CurrentPlayer, fromPos, toPos);
                 CurrentPlayer.moveCow(fromPos, toPos);
-                changePlayerTurn();
             }
 
             return error;
@@ -85,13 +83,13 @@ namespace Morabaraba_9001
             {
                 GameBoard.Place(CurrentPlayer, pos);
                 CurrentPlayer.placeCow(pos);
-                changePlayerTurn();
+              
 
             }
 
             return error;
         }
-        private void changePlayerTurn(){
+        public void ChangePlayerTurn(){
             IPlayer tmpPlayer = CurrentPlayer;
             CurrentPlayer = OtherPlayer;
             OtherPlayer = tmpPlayer;

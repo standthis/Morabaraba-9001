@@ -91,6 +91,7 @@ namespace Morabaraba_9001
         void StartGame();
         GameEnd EndGame();
         bool IsTileOccupied((char, int) pos);
+        void ChangePlayerTurn();
         IPlayer CurrentPlayer { get; }
         IPlayer OtherPlayer { get; }
 
