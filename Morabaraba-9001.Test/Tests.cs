@@ -180,7 +180,6 @@ namespace Morabaraba_9001.Test
            
             IGame game = new Game(board, referee, player_1, player_2);
 
-            //player_2.Color.Returns(Color.light)
             MoveError result;
             if (isOpenBoardSpace)
             {
@@ -199,11 +198,11 @@ namespace Morabaraba_9001.Test
                 //if isOpenBoardSpace is false, create a player with a cow in the given position
                 //simulaate cow being at position, pos
                 board.isOccupied(pos).Returns(true);
-               
+             
                 result = referee.Place(player_1, pos);
-                //Assert.AreEqual(result, expected);
-               // board.DidNotReceive().Place(player_1, pos);
-                //player_1.DidNotReceive().placeCow(pos);    
+                Assert.AreEqual(result, expected);
+                board.DidNotReceive().Place(player_1, pos);
+                game.CurrentPlayer.DidNotReceive().placeCow(pos);    
 
             }
 
@@ -228,7 +227,7 @@ namespace Morabaraba_9001.Test
             board.isOccupied(Arg.Any<(char, int)>());
             player_1.UnplacedCows.Returns(12);
             for (int i = 0; i < 12;i++){
-               
+                game.Place(('A',1)); 
                 Assert.That(referee.Place(player_1, ('A',1))== MoveError.Valid);
                 player_1.UnplacedCows.Returns(12 - (i+1)); //decrease the number of placed cows
 
