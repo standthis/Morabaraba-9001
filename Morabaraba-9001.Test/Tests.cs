@@ -199,9 +199,9 @@ namespace Morabaraba_9001.Test
                 //simulaate cow being at position, pos
                 board.isOccupied(pos).Returns(true);
              
-                result = referee.Place(player_1, pos);
+                result = referee.Place(game.CurrentPlayer, pos);
                 Assert.AreEqual(result, expected);
-                board.DidNotReceive().Place(player_1, pos);
+                board.DidNotReceive().Place(game.CurrentPlayer, pos);
                 game.CurrentPlayer.DidNotReceive().placeCow(pos);    
 
             }
