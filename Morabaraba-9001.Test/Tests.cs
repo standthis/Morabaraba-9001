@@ -537,12 +537,35 @@ namespace Morabaraba_9001.Test
            // Assert.That(!player.Cows.Any(cow => cow.Pos.Equals(pos))); //player should not cow
           }
 
-        [Test]
-        public void AWinOccursIfAnOpponentCannotMove()
-        {
-
+        
+        public List<ICow> posToCows(List<(char, int)> possies, Color c){
+            List<ICow> result = possies.Select(p => new Cow(c, p)).ToList<ICow>();
+            return result; 
         }
-
+        [Test]
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void AWinOccursIfAnOpponentCannotMove((char, int) pos)
+        {
+            // think about references
+            // Do we need to test every possible NoMove state?
+            IBoard board = new Board();
+            IBoard b = Substitute.For<IBoard>();
+            IReferee mockRef = Substitute.For<IReferee>();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Color.Returns(Color.dark);
+            p2.Color.Returns(Color.light);
+            IGame G = new Game(b, mockRef, p1, p2);
+            G.CurrentPlayer.Color.Returns(Color.dark);
+            G.OtherPlayer.Color.Returns(Color.light);
+            G.CurrentPlayer.State.Returns(PlayerState.Moving);
+            G.OtherPlayer.State.Returns(PlayerState.Moving);
+            G.CurrentPlayer.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
+            G.OtherPlayer.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
+            Assert.AreEqual(G.EndGame(), GameEnd.CantMove);
+            //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            //var list3 = list1.Except(list2).ToList();
+        }
         [Test]
         public void AWinOccursIfAPlayerIsNotInPlacingAndHasLessThan3Cows()
         {
