@@ -77,7 +77,7 @@ namespace Morabaraba_9001
     }
     public interface IGame
     {
-        IPlayer Winner();
+     
         MoveError Place((char,int) pos);
         MoveError Move((char, int) fromPos,(char,int) toPos);
         MoveError Fly((char, int) fromPos,(char,int) toPos);
@@ -85,6 +85,7 @@ namespace Morabaraba_9001
         IReferee Referee { get; }
         IPlayer Player_1 { get; }
         IPlayer Player_2 { get; }
+        IPlayer Winner { get; }
 
         void StartGame();
         GameEnd EndGame();

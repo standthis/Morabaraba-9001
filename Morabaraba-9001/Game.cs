@@ -21,6 +21,7 @@ namespace Morabaraba_9001
                 CurrentPlayer = Player_2;
                 OtherPlayer = Player_1;
             }
+            Winner = null;
         }
 
         public IBoard GameBoard { get; private set; }
@@ -34,9 +35,15 @@ namespace Morabaraba_9001
         public IPlayer CurrentPlayer { get; private set; }
         public IPlayer OtherPlayer { get; private set; }
 
+        public IPlayer Winner { get; private set; }
+
         public GameEnd EndGame()
         {
-            return Referee.EndGame(OtherPlayer);
+            GameEnd result = Referee.EndGame(OtherPlayer);
+            if(result != GameEnd.NoEnd){
+                Winner = CurrentPlayer;
+            }
+            return result;
 
 
         }
@@ -163,9 +170,6 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-        public IPlayer Winner()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
