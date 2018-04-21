@@ -59,7 +59,7 @@ namespace Morabaraba_9001
        
         public MoveError Fly(IPlayer player,(char, int) fromPos, (char, int) toPos)
         {
-            if (player.State != PlayerState.Flying){
+            if (player.State != PlayerState.Flying || player.numCowsOnBoard()!=3){
                 return MoveError.InValid;
             }
        
