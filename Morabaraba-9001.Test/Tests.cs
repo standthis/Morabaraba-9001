@@ -413,8 +413,6 @@ namespace Morabaraba_9001.Test
             game.CurrentPlayer.State.Returns(PlayerState.Moving);
             game.CurrentPlayer.Color.Returns(Color.dark);
 
-
-
             mockBoard.AllTiles.Returns(board.AllTiles);
             //mock a board where only 1 tile is occupied
             mockBoard.isOccupied(fromPos).Returns(true);
@@ -676,18 +674,27 @@ namespace Morabaraba_9001.Test
             // Do we need to test every possible NoMove state?
             IBoard board = new Board();
             IBoard b = Substitute.For<IBoard>();
-            IReferee mockRef = new Referee(board);
+            IReferee myRef = new Referee(board);
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
             p1.Color.Returns(Color.dark);
             p2.Color.Returns(Color.light);
-            IGame G = new Game(b, mockRef, p1, p2);
-            G.CurrentPlayer.Color.Returns(Color.dark);
-            G.OtherPlayer.Color.Returns(Color.light);
-            G.CurrentPlayer.State.Returns(PlayerState.Moving);
-            G.OtherPlayer.State.Returns(PlayerState.Moving);
-            G.CurrentPlayer.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
-            G.OtherPlayer.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
+            Dictionary<(char,int),ITile> newDic = board.AllTiles;
+            foreach (var item in newDic){
+                item.Value.color = Color.dark;
+            }
+            newDic[pos].color = Color.light;
+            p1.Color.Returns(Color.dark);
+            p2.Color.Returns(Color.light);
+            p1.State.Returns(PlayerState.Moving);
+            p2.State.Returns(PlayerState.Moving);
+            b.AllTiles.Returns(newDic);
+            p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
+            p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
+
+            bool result =  myRef.PlayerCanMove(p2);
+            p2.CanMove(myRef).Returns(result);
+            IGame G = new Game(b, myRef, p1, p2);
             Assert.AreEqual(G.EndGame(), GameEnd.CantMove);
             //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
             //var list3 = list1.Except(list2).ToList();
@@ -695,7 +702,19 @@ namespace Morabaraba_9001.Test
         [Test]
         public void AWinOccursIfAPlayerIsNotInPlacingAndHasLessThan3Cows()
         {
-
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            IBoard b = Substitute.For<IBoard>();
+            IReferee mockRef = Substitute.For<IReferee>();
+            p1.State.Returns(PlayerState.Moving);
+            p2.State.Returns(PlayerState.Flying);
+            p1.Color.Returns(Color.dark);
+            p2.Color.Returns(Color.light);
+            p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            p2.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
+            IGame G = new Game(b, mockRef, p1, p2);
+            G.OtherPlayer.numCowsOnBoard().Returns(2);
+            Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
         }
     }
 }
