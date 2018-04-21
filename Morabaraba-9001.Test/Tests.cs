@@ -223,21 +223,19 @@ namespace Morabaraba_9001.Test
 
             IGame game = new Game(board, referee, player_1, player_2);
 
-            player_1.GetState().Returns(PlayerState.Placing);
-
+            game.CurrentPlayer.State.Returns(PlayerState.Placing);
+            game.CurrentPlayer.UnplacedCows.Returns(12);
 
             //mock a board where every position is always free
             board.isOccupied(Arg.Any<(char, int)>()).Returns(false);
 
-            player_1.getUnplacedCows().Returns(12);
-            Assert.AreEqual(game.CurrentPlayer.getUnplacedCows(), 11);
             //try placing a cow 12 times
 
             for (int i = 0; i < 12;i++){
               
                 Assert.That(game.Place(('A', 1))== MoveError.Valid);
-                player_1.Received().placeCow(('A',1));
-                player_1.UnplacedCows.Returns(12 - (i+1)); //decrease the number of placed cows
+                game.CurrentPlayer.Received().placeCow(('A',1));
+                game.CurrentPlayer.UnplacedCows.Returns(12 - (i+1)); //decrease the number of placed cows
 
 
             }
@@ -692,8 +690,8 @@ namespace Morabaraba_9001.Test
             p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
             p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
 
-            bool result =  myRef.PlayerCanMove(p2);
-            p2.CanMove(myRef).Returns(result);
+            //bool result =  myRef.PlayerCanMove(p2);
+           // p2.CanMove(myRef).Returns(result);
             IGame G = new Game(b, myRef, p1, p2);
             Assert.AreEqual(G.EndGame(), GameEnd.CantMove);
             //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
@@ -705,14 +703,14 @@ namespace Morabaraba_9001.Test
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
             IBoard b = Substitute.For<IBoard>();
-            IReferee mockRef = Substitute.For<IReferee>();
+            IReferee referee = new Referee(b);
             p1.State.Returns(PlayerState.Moving);
             p2.State.Returns(PlayerState.Flying);
             p1.Color.Returns(Color.dark);
             p2.Color.Returns(Color.light);
             p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
             p2.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
-            IGame G = new Game(b, mockRef, p1, p2);
+            IGame G = new Game(b, referee, p1, p2);
             G.OtherPlayer.numCowsOnBoard().Returns(2);
             Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
         }
