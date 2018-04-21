@@ -211,6 +211,7 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
+
         public void AMaximumOf12PlacementsPerPlayer() // matt 
         {
 
@@ -223,18 +224,23 @@ namespace Morabaraba_9001.Test
 
             IGame game = new Game(board, referee, player_1, player_2);
 
-            player_1.State.Returns(PlayerState.Placing);
-            board.isOccupied(Arg.Any<(char, int)>());
-            player_1.UnplacedCows.Returns(12);
+            //player_1.State.Returns(PlayerState.Placing);
+
+            //mock a board where every position is always free
+            board.isOccupied(Arg.Any<(char, int)>()).Returns(false); 
+            game.CurrentPlayer.UnplacedCows.Returns(12);
+            //try placing a cow 12 times
+
             for (int i = 0; i < 12;i++){
-                game.Place(('A',1)); 
-                Assert.That(referee.Place(player_1, ('A',1))== MoveError.Valid);
-                player_1.UnplacedCows.Returns(12 - (i+1)); //decrease the number of placed cows
+              
+                Assert.That(game.Place(('A', 1))== MoveError.Valid);
+                game.CurrentPlayer.Received().placeCow(('A',1));
+                game.CurrentPlayer.UnplacedCows.Returns(12 - (i+1)); //decrease the number of placed cows
 
 
             }
             // 13'th place should fail 
-            Assert.That(referee.Place(player_1,('A',1)) == MoveError.InValid);
+            Assert.That(game.Place(('A',1)) == MoveError.InValid);
            
         }
         static object[] legalMoves = {
@@ -271,67 +277,6 @@ namespace Morabaraba_9001.Test
             new object [] {('G', 7), new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) }},
         };
 
-        [Test]
-        public void CowsCannotBeMovedDuringPlacement() // matt 
-        {
-        /*    IBoard board = Substitute.For<IBoard>();
-           
-            IPlayer player = Substitute.For<IPlayer>();
-            IReferee referee = new Referee(board);
-            player.State.Returns(PlayerState.Placing);
-            MoveError error= referee.Move(player, fromPos, toPos);
-            Assert.That(error == MoveError.InValid);
-            player.Received().moveCow(fromPos, toPos, referee, PlayerState.Placing);
-            board.Received().Move(player, fromPos, toPos);*/
-            //Assert.AreEqual(p1.moveCow(Arg.Any<(char, int)>(), Arg.Any<(char, int)>(), Arg.Any<IReferee>(), Arg.Any<PlayerState>()), MoveError.InValid);
-        }
-
-
-
-
-        //[Test]
-
-        //[TestCaseSource(nameof(connectedSpaceTest))]
-        //public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) pos, List<(char, int)> expected) // matt 
-        //{
-        //    IBoard b = new Board();
-        //    IReferee referee = Substitute.For<IReferee>();
-        //    referee.emptyTile(Arg.Is<(char,int)>(x => !x.Equals(pos))).Returns(false);
-        //    IPlayer player = new Player("test player", Color.dark);
-        //    Assert(player.
-        //    Assert.AreEqual(b.PossibleMoves(pos), expected);
-
-
-        //}
-
-        [TestCaseSource(nameof(allBoardPositions))]
-        public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) pos) // not passing 
-        {
-
-        /*    IBoard b = new Board();
-            IPlayer player_1 = new Player("test player 1 ", Color.dark);
-
-            IReferee mockRef = Substitute.For<IReferee>();
-
-            IEnumerable<(char, int)> possibleMoves = b.AllTiles[pos].PossibleMoves;
-            foreach ((char, int) position in possibleMoves)
-            {
-                mockRef.Move(Arg.Any<Player>(), Arg.Any<(char, int)>(), Arg.Any<(char, int)>()).Returns(MoveError.Valid);
-                Assert.That(player_1.moveCow(pos, position, mockRef, PlayerState.Moving) == MoveError.Valid);
-
-
-            }
-            foreach ((char, int) position in b.AllTiles.Values.Select(t => t.Pos).Except(possibleMoves))
-            {
-                mockRef.Move(Arg.Any<Player>(), Arg.Any<(char, int)>(), Arg.Any<(char, int)>()).Returns(MoveError.InValid);
-                Assert.That(player_1.moveCow(pos, position, mockRef, PlayerState.Moving) == MoveError.InValid);
-
-
-
-            }*/
-
-
-        }
 
         static object[] toAndFromPositions =
       {
@@ -461,19 +406,21 @@ namespace Morabaraba_9001.Test
             IReferee referee = new Referee(mockBoard);
             IGame game = new Game(mockBoard,referee,player_1,player_2);
 
+            //mock a player that is moving and has 1 cow at fromPos
             game.CurrentPlayer.hasCowAtPos(fromPos).Returns(true);
             game.CurrentPlayer.State.Returns(PlayerState.Moving);
             game.CurrentPlayer.Color.Returns(Color.dark);
 
 
-            //
+
             mockBoard.AllTiles.Returns(board.AllTiles);
+            //mock a board where only 1 tile is occupied
             mockBoard.isOccupied(fromPos).Returns(true);
                 
             //try moving to possible places
             foreach ((char, int) toPos in possibleMoves)
             {
-              //  mockBoard.isOccupied(toPos).Returns(false);
+          
                 MoveError error = game.Move(fromPos,toPos);
                 Assert.That(error == MoveError.Valid);
                 mockBoard.Received().Move(game.CurrentPlayer,fromPos,toPos);
@@ -483,6 +430,8 @@ namespace Morabaraba_9001.Test
 
 
             }
+            mockBoard.ClearReceivedCalls();
+            game.CurrentPlayer.ClearReceivedCalls();
             //try moving anywhere except from the possible places
             foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(possibleMoves))
             {
@@ -498,8 +447,10 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void ACowCanOnlyMoveToAnEmptySpace() // matt 
+        [TestCaseSource(nameof(legalMoves))]
+        public void ACowCanOnlyMoveToAnEmptySpace((char, int) fromPos,List<(char, int)> possibleMoves) // matt 
         {
+            //what's the difference between this test and moving to connected spaces
 
             IBoard board = new Board(); //used allboardTiles
             IBoard mockBoard = Substitute.For<IBoard>();
@@ -509,6 +460,43 @@ namespace Morabaraba_9001.Test
 
             IReferee referee = new Referee(mockBoard);
             IGame game = new Game(mockBoard, referee, player_1, player_2);
+
+
+            game.CurrentPlayer.hasCowAtPos(fromPos).Returns(true);
+            game.CurrentPlayer.State.Returns(PlayerState.Moving);
+            game.CurrentPlayer.Color.Returns(Color.dark);
+            //mock a completly empty board except for the fromPos
+           
+            mockBoard.AllTiles.Returns(board.AllTiles);
+            //mock a board where only 1 tile is occupied
+            mockBoard.isOccupied(fromPos).Returns(true);
+
+            //try moving to possible places when they are empty
+            foreach ((char, int) toPos in possibleMoves)
+            {
+                MoveError error = game.Move(fromPos, toPos);
+                Assert.That(error == MoveError.Valid);
+                mockBoard.Received().Move(game.CurrentPlayer, fromPos, toPos);
+                game.CurrentPlayer.Received().moveCow(fromPos, toPos);
+            }
+            //mock a completly full board
+            mockBoard.isOccupied(Arg.Any<(char,int)>()).Returns(true);
+
+            mockBoard.ClearReceivedCalls();
+            game.CurrentPlayer.ClearReceivedCalls();
+
+            //try moving to possible places when they are not empty
+
+            foreach ((char, int) toPos in possibleMoves)
+            {
+                MoveError error = game.Move(fromPos, toPos);
+                Assert.That(error == MoveError.InValid);
+                mockBoard.DidNotReceive().Move(game.CurrentPlayer, fromPos, toPos);
+                game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
+
+            }
+
+
 
         }
 
@@ -675,7 +663,7 @@ namespace Morabaraba_9001.Test
             // Do we need to test every possible NoMove state?
             IBoard board = new Board();
             IBoard b = Substitute.For<IBoard>();
-            IReferee mockRef = Substitute.For<IReferee>();
+            IReferee mockRef = new Referee(board);
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
             p1.Color.Returns(Color.dark);
