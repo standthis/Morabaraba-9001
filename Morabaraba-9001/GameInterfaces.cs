@@ -57,7 +57,6 @@ namespace Morabaraba_9001
         bool hasCowAtPos((char, int) pos);
         int numCowsOnBoard();
         MoveError killCow((char, int) pos);
-        bool CanMove(IReferee referee);
         void changePlayerState();
     }
 
@@ -70,9 +69,7 @@ namespace Morabaraba_9001
         MoveError Move(IPlayer player, (char, int) fromPos, (char, int) toPos);
         MoveError Fly(IPlayer player, (char, int) fromPos, (char, int) toPos);
         MoveError KillCow(IPlayer player, (char, int) killPos);
-
-       // GameEnd EndGame();
-        bool PlayerCanMove(IPlayer player);
+        GameEnd EndGame(IPlayer enemyPlayer);
         bool MillFormed(IPlayer player, (char, int) pos);
         IBoard GameBoard { get; }
 

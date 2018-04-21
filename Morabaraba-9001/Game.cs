@@ -36,12 +36,9 @@ namespace Morabaraba_9001
 
         public GameEnd EndGame()
         {
-            if (OtherPlayer.State == PlayerState.Moving)
-                if (!OtherPlayer.CanMove(Referee))
-                    return GameEnd.CantMove;
-            if (OtherPlayer.numCowsOnBoard() == 2 && OtherPlayer.State == PlayerState.Flying)
-                return GameEnd.KilledOff;
-            return GameEnd.NoEnd;
+            return Referee.EndGame(OtherPlayer);
+
+
         }
 
         public MoveError Fly((char, int) fromPos, (char, int) toPos)

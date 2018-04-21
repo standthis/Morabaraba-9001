@@ -137,7 +137,8 @@ namespace Morabaraba_9001
             return false;
                
         }
-        public bool PlayerCanMove(IPlayer player) {
+    
+        private bool PlayerCanMove(IPlayer player) {
            // player.Cows.Where(cow=> cow)
             foreach(ICow cow in player.Cows){
                 IEnumerable<(char,int)> posMoves=GameBoard.PossibleMoves(cow.Pos);
@@ -149,7 +150,15 @@ namespace Morabaraba_9001
             }
             return false;
         }
-
+        public GameEnd EndGame(IPlayer enemyPlayer)
+        {
+            if (enemyPlayer.State == PlayerState.Moving)
+                if (!PlayerCanMove(enemyPlayer))
+                    return GameEnd.CantMove;
+            if (enemyPlayer.numCowsOnBoard() == 2 && enemyPlayer.State == PlayerState.Flying)
+                return GameEnd.KilledOff;
+            return GameEnd.NoEnd;
+        }
        
           
     }

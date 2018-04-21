@@ -93,9 +93,7 @@ namespace Morabaraba_9001
             return MoveError.Valid;
         }
 
-        public bool CanMove(IReferee referee){
-            return referee.PlayerCanMove(this);
-        }
+      
         public void changePlayerState()
         {
             if(State == PlayerState.Placing && UnplacedCows==0){
@@ -105,16 +103,6 @@ namespace Morabaraba_9001
                 State = PlayerState.Flying;
             }
 
-        }
-
-        public PlayerState GetState()
-        {
-            return State;
-        }
-
-        public int getUnplacedCows()
-        {
-            return UnplacedCows;
         }
     }
     
