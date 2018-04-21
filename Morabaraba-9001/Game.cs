@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace Morabaraba_9001
 {
     public class Game :IGame
@@ -119,14 +121,14 @@ namespace Morabaraba_9001
             }
         }
 
-        public MoveError GetMove((char, int) pos)
+        public MoveError GetMove()
         {
             (char, int) fromPos, toPos; 
             switch(CurrentPlayer.State){
               
                 case PlayerState.Placing:
                     toPos = GetPlayerMove("Where do you want to place your cow?: ");
-                    return Place(pos);
+                    return Place(toPos);
                 case PlayerState.Moving:
                     fromPos = GetPlayerMove("Where do you want to move from?: ");
                     toPos = GetPlayerMove("Where do you want to move to?: ");
@@ -141,10 +143,27 @@ namespace Morabaraba_9001
 
             }
                
-               
            
         }
+        public MoveError KillCow((char,int) killPos){
+            MoveError error = Referee.KillCow(OtherPlayer, killPos);
+            if (error == MoveError.Valid)
+            {
+                OtherPlayer.killCow(killPos);
+            }
+            return error;
+        }
 
+        public MoveError getKillCowMove(){
+            (char, int) killPos;
+            killPos = GetPlayerMove("Which cow do you want to shoot");
+            return KillCow(killPos);
+
+        }
+        public bool isMillFormed((char,int) pos){
+            return Referee.MillFormed(CurrentPlayer, pos);
+        }
+      
         public void StartGame()
         {
             throw new NotImplementedException();

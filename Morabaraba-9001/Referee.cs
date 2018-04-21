@@ -118,6 +118,25 @@ namespace Morabaraba_9001
             }
         }
 
+        private bool isInMill(IEnumerable<ITile> mill, (char, int) pos)
+        {
+            return mill.Any(tile => tile.Pos.Equals(pos));
+        }
+
+        public bool MillFormed(IPlayer player, (char, int) pos)
+        {
+            List<IEnumerable<ITile>> playersMills = GameBoard.Mills(player);
+
+            foreach (IEnumerable<ITile> mill in playersMills)
+            {
+                if (isInMill(mill, pos))
+                {
+                    return true;
+                }
+            }
+            return false;
+               
+        }
         public bool PlayerCanMove(IPlayer player) {
            // player.Cows.Where(cow=> cow)
             foreach(ICow cow in player.Cows){
