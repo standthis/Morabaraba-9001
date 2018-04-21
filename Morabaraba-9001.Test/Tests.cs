@@ -543,11 +543,32 @@ namespace Morabaraba_9001.Test
 
         //TESTS FOR DURING FLYING
         [Test]
-        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard()
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int) pos)
         {
-            //Player player = new Player("test")
-            //player.moveCow()
+            // Let 3 cows remain. Show that cows can fly anywhere in this state.
+            IBoard board = new Board();
+            IBoard b = Substitute.For<IBoard>();
+            IPlayer p1 = Substitute.For<IPlayer>();
+            IPlayer p2 = Substitute.For<IPlayer>();
+            p1.Color.Returns(Color.dark);
+            p1.State.Returns(PlayerState.Flying);
+            p1.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.dark));
+            p1.hasCowAtPos(pos).Returns(true);
+            IReferee myRef = new Referee(board);
+            bool pass = true;
+            foreach ((char,int) toPos in new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos})){
+                MoveError error = myRef.Fly(p1, pos, toPos);
+                if (error != MoveError.Valid){
+                    pass = false;
+                    break;
+                }
+            }
+            Assert.AreEqual(pass, true);
+            //p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
+            //p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
         }
+
 
         //GENERAL TESTING
         [Test]
