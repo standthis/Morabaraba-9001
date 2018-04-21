@@ -542,8 +542,8 @@ namespace Morabaraba_9001.Test
 
         //TESTS FOR DURING FLYING
         [Test]
-        [TestCaseSource(nameof(legalMoves))]
-        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int)fromPos,List<(char, int)> possibleMoves)
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int)fromPos)
         {
             IBoard board = new Board(); //used allboardTiles
             IBoard mockBoard = Substitute.For<IBoard>();
