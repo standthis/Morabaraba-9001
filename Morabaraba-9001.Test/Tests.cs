@@ -437,8 +437,6 @@ namespace Morabaraba_9001.Test
                 Assert.That(error == MoveError.InValid);
                 mockBoard.DidNotReceive().Move(game.CurrentPlayer, fromPos, toPos);
                 game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
-            
-               
 
             }
 
@@ -539,14 +537,63 @@ namespace Morabaraba_9001.Test
             Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces);//check that we're starting with just one player on the board
             game.Move(fromPos, toPos); 
             Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces);
+           // Assert.That()
         }
 
         //TESTS FOR DURING FLYING
         [Test]
-        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard()
+        [TestCaseSource(nameof(legalMoves))]
+        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int)fromPos,List<(char, int)> possibleMoves)
         {
-            //Player player = new Player("test")
-            //player.moveCow()
+            IBoard board = new Board(); //used allboardTiles
+            IBoard mockBoard = Substitute.For<IBoard>();
+
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+
+            IReferee referee = new Referee(mockBoard);
+            IGame game = new Game(mockBoard, referee, player_1, player_2);
+
+            //make player have more than 3 cows
+
+            mockBoard.AllTiles.Returns(board.AllTiles); //mock an empty board
+
+            List<(char, int)> fromPosList = new List<(char, int)>();
+            fromPosList.Add(fromPos);
+
+            //try move from fromPos to anywhere on the board except to fromPos ofcourse
+            //try flying with 12 cows to 4 cows -- should fail (move to be invalid)
+            game.CurrentPlayer.numCowsOnBoard().Returns(12);
+            game.CurrentPlayer.State.Returns(PlayerState.Flying);
+            game.CurrentPlayer.hasCowAtPos(fromPos).Returns(true);
+
+            for (int i = 0; i < 12-3; i++) // try from 12 cows to 3 cows
+            {
+
+                foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
+                {
+                    MoveError error = game.Fly(fromPos, toPos);
+                    Assert.That(error==MoveError.InValid);
+                    mockBoard.DidNotReceive().Move(game.CurrentPlayer, fromPos, toPos);
+                    game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
+
+                }
+                game.CurrentPlayer.numCowsOnBoard().Returns(12 - (i + 1));
+            }
+
+            
+            //now try flying with 3 cows --should pass (move to be valid)
+
+            foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
+            {
+                MoveError error = game.Fly(fromPos, toPos);
+                Assert.That(error == MoveError.Valid);
+                mockBoard.Received().Move(game.CurrentPlayer, fromPos, toPos);
+                game.CurrentPlayer.Received().moveCow(fromPos, toPos);
+
+            }
+
+
         }
 
         //GENERAL TESTING
