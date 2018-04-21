@@ -97,7 +97,7 @@ namespace Morabaraba_9001
         void ChangePlayerTurn();
         IPlayer CurrentPlayer { get; }
         IPlayer OtherPlayer { get; }
-        MoveError KillCow((char, int) killPos)
+        MoveError KillCow((char, int) killPos);
 
 
 

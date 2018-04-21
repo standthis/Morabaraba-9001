@@ -11,8 +11,8 @@ namespace Morabaraba_9001
             Referee = referee;
             Player_1 = player_1;
             Player_2 = player_2;
-            CurrentPlayer = Player_1;
-            OtherPlayer = Player_2;
+            CurrentPlayer = player_1;
+            OtherPlayer = player_2;
           /*  if(Player_1.Color==Player_2.Color){ //if wrong information for starting a game is wrong 
                 Player_1 = new Player(Player_1.Name,Color.dark);
                 Player_2 = new Player(Player_2.Name,Color.light);

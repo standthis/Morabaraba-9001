@@ -106,6 +106,16 @@ namespace Morabaraba_9001
             }
 
         }
+
+        public PlayerState GetState()
+        {
+            return State;
+        }
+
+        public int getUnplacedCows()
+        {
+            return UnplacedCows;
+        }
     }
     
 }
