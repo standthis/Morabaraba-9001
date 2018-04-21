@@ -151,6 +151,7 @@ namespace Morabaraba_9001
             if (error == MoveError.Valid)
             {
                 OtherPlayer.killCow(killPos);
+                GameBoard.AllTiles[killPos].color = Color.none;
             }
             return error;
         }
