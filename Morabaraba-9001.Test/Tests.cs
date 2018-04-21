@@ -533,17 +533,18 @@ namespace Morabaraba_9001.Test
           
             int numberOfPieces = posList.Count();
            
-         
-            Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces);//check that we're starting with just one player on the board
-            game.Move(fromPos, toPos); 
             Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces);
-           // Assert.That()
+            player_1.moveCow(fromPos, toPos);  //make move
+            Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces); //assert that num of cows are the same
+            //check that move was actually successful
+            Assert.That(!player_1.hasCowAtPos(fromPos)); 
+            Assert.That(player_1.hasCowAtPos(toPos));
         }
 
         //TESTS FOR DURING FLYING
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
-        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int)fromPos)
+        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char, int) fromPos)
         {
             IBoard board = new Board(); //used allboardTiles
             IBoard mockBoard = Substitute.For<IBoard>();
@@ -567,13 +568,13 @@ namespace Morabaraba_9001.Test
             game.CurrentPlayer.State.Returns(PlayerState.Flying);
             game.CurrentPlayer.hasCowAtPos(fromPos).Returns(true);
 
-            for (int i = 0; i < 12-3; i++) // try from 12 cows to 3 cows
+            for (int i = 0; i < 12 - 3; i++) // try from 12 cows to 3 cows
             {
 
                 foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
                 {
                     MoveError error = game.Fly(fromPos, toPos);
-                    Assert.That(error==MoveError.InValid);
+                    Assert.That(error == MoveError.InValid);
                     mockBoard.DidNotReceive().Move(game.CurrentPlayer, fromPos, toPos);
                     game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
 
@@ -581,7 +582,7 @@ namespace Morabaraba_9001.Test
                 game.CurrentPlayer.numCowsOnBoard().Returns(12 - (i + 1));
             }
 
-            
+
             //now try flying with 3 cows --should pass (move to be valid)
 
             foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
@@ -593,8 +594,34 @@ namespace Morabaraba_9001.Test
 
             }
 
-
         }
+//=======
+//        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int) pos)
+//        {
+//            // Let 3 cows remain. Show that cows can fly anywhere in this state.
+//            IBoard board = new Board();
+//            IBoard b = Substitute.For<IBoard>();
+//            IPlayer p1 = Substitute.For<IPlayer>();
+//            IPlayer p2 = Substitute.For<IPlayer>();
+//            p1.Color.Returns(Color.dark);
+//            p1.State.Returns(PlayerState.Flying);
+//            p1.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.dark));
+//            p1.hasCowAtPos(pos).Returns(true);
+//            IReferee myRef = new Referee(board);
+//            bool pass = true;
+//            foreach ((char,int) toPos in new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos})){
+//                MoveError error = myRef.Fly(p1, pos, toPos);
+//                if (error != MoveError.Valid){
+//                    pass = false;
+//                    break;
+//                }
+//            }
+//            Assert.AreEqual(pass, true);
+//            //p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
+//            //p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
+//>>>>>>> b8fa601ac95144f33d76cf986634523716e20538
+        //}
+
 
         //GENERAL TESTING
         [Test]
@@ -751,13 +778,13 @@ namespace Morabaraba_9001.Test
             IPlayer p2 = Substitute.For<IPlayer>();
             IBoard b = Substitute.For<IBoard>();
             IReferee referee = new Referee(b);
-            p1.State.Returns(PlayerState.Moving);
-            p2.State.Returns(PlayerState.Flying);
-            p1.Color.Returns(Color.dark);
-            p2.Color.Returns(Color.light);
-            p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
-            p2.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             IGame G = new Game(b, referee, p1, p2);
+            G.CurrentPlayer.State.Returns(PlayerState.Moving);
+            G.OtherPlayer.State.Returns(PlayerState.Flying);
+            G.CurrentPlayer.Color.Returns(Color.dark);
+            G.OtherPlayer.Color.Returns(Color.light);
+            G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             G.OtherPlayer.numCowsOnBoard().Returns(2);
             Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
         }
