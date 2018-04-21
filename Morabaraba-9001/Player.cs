@@ -85,12 +85,9 @@ namespace Morabaraba_9001
         }
 
 
-        public MoveError killCow((char, int) pos, IReferee referee)
+        public MoveError killCow((char, int) pos)
         {
-            MoveError error = referee.KillCow(this, pos);
-            if (error != MoveError.Valid)
-                return error;
-            //Cows.Remove(new Cow(Color, pos));
+            
             Cows = Cows.Where(cow => !(cow.Pos.Equals(pos))).ToList();
           
             return MoveError.Valid;
