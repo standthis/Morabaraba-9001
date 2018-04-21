@@ -199,7 +199,7 @@ namespace Morabaraba_9001.Test
                 //simulaate cow being at position, pos
                 board.isOccupied(pos).Returns(true);
              
-                result = referee.Place(player_1, pos);
+                result = referee.Place(game.CurrentPlayer, pos);
                 Assert.AreEqual(result, expected);
                 board.DidNotReceive().Place(player_1, pos);
                 game.CurrentPlayer.DidNotReceive().placeCow(pos);    
@@ -237,6 +237,11 @@ namespace Morabaraba_9001.Test
             Assert.That(referee.Place(player_1,('A',1)) == MoveError.InValid);
            
         }
+        static object[] legalMoves = {
+            new object [] {('A', 1), new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) }},
+            new object [] {('A', 4), new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) }},
+            new object [] {('A', 7), new List<(char, int)> { ('A', 4), ('B', 6), ('D', 7) }}
+        };
 
         [Test]
         public void CowsCannotBeMovedDuringPlacement() // matt 
@@ -297,17 +302,11 @@ namespace Morabaraba_9001.Test
 
             }*/
 
-        }
-
-        [Test]
-        public void ACowCanOnlyMoveToAnEmptySpace() // matt 
-        {
 
         }
-
 
         static object[] toAndFromPositions =
-        {
+      {
             new object[] { ('A', 1), ('A', 4) },
             new object[] { ('A', 1), ('B', 2) },
             new object[] { ('A', 1), ('D', 1) },
@@ -389,6 +388,81 @@ namespace Morabaraba_9001.Test
             new object[] { ('G', 7), ('F', 6) },
             new object[] { ('G', 7), ('G', 4) }
         };
+
+
+        [Test]
+
+        [TestCaseSource(nameof(toAndFromPositions))]
+        public void CowsCannotBeMovedDuringPlacement((char,int)fromPos,(char,int)toPos) // matt 
+        {
+         /*   IBoard board = Substitute.For<IBoard>();
+           
+            IPlayer player = Substitute.For<IPlayer>();
+            IReferee referee = new Referee(board);
+            player.State.Returns(PlayerState.Placing);
+        //    IGame game
+            MoveError error= referee.Move(player, fromPos, toPos);
+            Assert.That(error == MoveError.InValid);
+          //  player.Received().moveCow(fromPos, toPos, referee, PlayerState.Placing);
+            board.Received().Move(player, fromPos, toPos);
+            //Assert.AreEqual(p1.moveCow(Arg.Any<(char, int)>(), Arg.Any<(char, int)>(), Arg.Any<IReferee>(), Arg.Any<PlayerState>()), MoveError.InValid);
+*/
+}
+
+
+
+
+        //[Test]
+
+        //[TestCaseSource(nameof(connectedSpaceTest))]
+        //public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) pos, List<(char, int)> expected) // matt 
+        //{
+        //    IBoard b = new Board();
+        //    IReferee referee = Substitute.For<IReferee>();
+        //    referee.emptyTile(Arg.Is<(char,int)>(x => !x.Equals(pos))).Returns(false);
+        //    IPlayer player = new Player("test player", Color.dark);
+        //    Assert(player.
+        //    Assert.AreEqual(b.PossibleMoves(pos), expected);
+
+
+        //}
+/* 
+        [TestCaseSource(nameof(allBoardPositions))]
+        public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) pos) // not passing 
+        {
+
+            IBoard b = new Board();
+            IPlayer player_1 = new Player("test player 1 ", Color.dark);
+
+            IReferee mockRef = Substitute.For<IReferee>();
+
+            IEnumerable<(char, int)> possibleMoves = b.AllTiles[pos].PossibleMoves;
+            foreach ((char, int) position in possibleMoves)
+            {
+                mockRef.Move(Arg.Any<Player>(), Arg.Any<(char, int)>(), Arg.Any<(char, int)>()).Returns(MoveError.Valid);
+                Assert.That(player_1.moveCow(pos, position, mockRef, PlayerState.Moving) == MoveError.Valid);
+
+
+            }
+            foreach ((char, int) position in b.AllTiles.Values.Select(t => t.Pos).Except(possibleMoves))
+            {
+                mockRef.Move(Arg.Any<Player>(), Arg.Any<(char, int)>(), Arg.Any<(char, int)>()).Returns(MoveError.InValid);
+                Assert.That(player_1.moveCow(pos, position, mockRef, PlayerState.Moving) == MoveError.InValid);
+
+
+
+            }
+
+        }
+*/
+        [Test]
+        public void ACowCanOnlyMoveToAnEmptySpace() // matt 
+        {
+
+        }
+
+
+
 
         [Test]
         [TestCaseSource(nameof(toAndFromPositions))]
