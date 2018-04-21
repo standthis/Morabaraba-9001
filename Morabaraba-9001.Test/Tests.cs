@@ -362,18 +362,23 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(toAndFromPositions))]
         public void CowsCannotBeMovedDuringPlacement((char,int)fromPos,(char,int)toPos) // matt 
         {
-         /*   IBoard board = Substitute.For<IBoard>();
-           
-            IPlayer player = Substitute.For<IPlayer>();
+            IBoard board = Substitute.For<IBoard>();
+            
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+
             IReferee referee = new Referee(board);
-            player.State.Returns(PlayerState.Placing);
-        //    IGame game
-            MoveError error= referee.Move(player, fromPos, toPos);
+           
+            IGame game = new Game(board, referee, player_1, player_2); 
+            game.CurrentPlayer.State.Returns(PlayerState.Placing);
+
+            MoveError error= game.Move(fromPos, toPos);
+
             Assert.That(error == MoveError.InValid);
-          //  player.Received().moveCow(fromPos, toPos, referee, PlayerState.Placing);
-            board.Received().Move(player, fromPos, toPos);
-            //Assert.AreEqual(p1.moveCow(Arg.Any<(char, int)>(), Arg.Any<(char, int)>(), Arg.Any<IReferee>(), Arg.Any<PlayerState>()), MoveError.InValid);
-*/
+            board.DidNotReceive().Move(game.CurrentPlayer, fromPos, toPos);
+            game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
+        
+
 }
 
 
