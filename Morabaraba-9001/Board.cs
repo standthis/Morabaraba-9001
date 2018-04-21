@@ -6,8 +6,8 @@ namespace Morabaraba_9001
     public class Board : IBoard
     {
 
-        public Dictionary<(char, int), ITile> AllTiles { get; }
-        public IEnumerable<IEnumerable<ITile>> AllBoardMills { get; }
+        public Dictionary<(char, int), ITile> AllTiles { get; private set; }
+        public IEnumerable<IEnumerable<ITile>> AllBoardMills { get; private set; }
 
         public Board()
         {
