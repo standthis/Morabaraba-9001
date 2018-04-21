@@ -838,10 +838,14 @@ namespace Morabaraba_9001.Test
             G.OtherPlayer.State.Returns(PlayerState.Flying);
             G.CurrentPlayer.Color.Returns(Color.dark);
             G.OtherPlayer.Color.Returns(Color.light);
-            G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
-            G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
+            //   G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            //  G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             G.OtherPlayer.numCowsOnBoard().Returns(2);
             Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
+            //if the player is placing and only has 2 cows on the board game shouldn't end
+            G.OtherPlayer.State.Returns(PlayerState.Placing);
+            Assert.AreEqual(G.EndGame(), GameEnd.NoEnd);
+
         }
     }
 }
