@@ -394,7 +394,7 @@ namespace Morabaraba_9001.Test
         [Test]
 
         [TestCaseSource(nameof(legalMoves))]
-        public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) fromPos,List<(char,int)> possibleMoves) // not passing 
+        public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) fromPos,List<(char,int)> possibleMoves) 
         {
 
             IBoard board = new Board(); //used allboardTiles
@@ -496,7 +496,7 @@ namespace Morabaraba_9001.Test
 
         }
 
-
+       
 
 
         [Test]
@@ -595,79 +595,134 @@ namespace Morabaraba_9001.Test
             }
 
         }
-//=======
-//        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int) pos)
-//        {
-//            // Let 3 cows remain. Show that cows can fly anywhere in this state.
-//            IBoard board = new Board();
-//            IBoard b = Substitute.For<IBoard>();
-//            IPlayer p1 = Substitute.For<IPlayer>();
-//            IPlayer p2 = Substitute.For<IPlayer>();
-//            p1.Color.Returns(Color.dark);
-//            p1.State.Returns(PlayerState.Flying);
-//            p1.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.dark));
-//            p1.hasCowAtPos(pos).Returns(true);
-//            IReferee myRef = new Referee(board);
-//            bool pass = true;
-//            foreach ((char,int) toPos in new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos})){
-//                MoveError error = myRef.Fly(p1, pos, toPos);
-//                if (error != MoveError.Valid){
-//                    pass = false;
-//                    break;
-//                }
-//            }
-//            Assert.AreEqual(pass, true);
-//            //p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
-//            //p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
-//>>>>>>> b8fa601ac95144f33d76cf986634523716e20538
+        //=======
+        //        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int) pos)
+        //        {
+        //            // Let 3 cows remain. Show that cows can fly anywhere in this state.
+        //            IBoard board = new Board();
+        //            IBoard b = Substitute.For<IBoard>();
+        //            IPlayer p1 = Substitute.For<IPlayer>();
+        //            IPlayer p2 = Substitute.For<IPlayer>();
+        //            p1.Color.Returns(Color.dark);
+        //            p1.State.Returns(PlayerState.Flying);
+        //            p1.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.dark));
+        //            p1.hasCowAtPos(pos).Returns(true);
+        //            IReferee myRef = new Referee(board);
+        //            bool pass = true;
+        //            foreach ((char,int) toPos in new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos})){
+        //                MoveError error = myRef.Fly(p1, pos, toPos);
+        //                if (error != MoveError.Valid){
+        //                    pass = false;
+        //                    break;
+        //                }
+        //            }
+        //            Assert.AreEqual(pass, true);
+        //            //p1.Cows.Returns(posToCows(new List<(char,int)>(board.AllTiles.Keys).Except(new List<(char,int)> {pos} ).ToList(), Color.dark));
+        //            //p2.Cows.Returns(posToCows(new List<(char,int)> {pos}, Color.light));
+        //>>>>>>> b8fa601ac95144f33d76cf986634523716e20538
         //}
 
 
         //GENERAL TESTING
+
+        static object[] allPossibleMills = {
+
+            new object []{('A', 1),('A', 4),('A', 7)}, 
+            new object []{('B', 2),('B', 4),('B', 6)}, 
+            new object []{('C', 3),('C', 4),('C', 5)}, 
+            new object []{('D', 1),('D', 2),('D', 3)}, 
+            new object []{('D', 5),('D', 6),('D', 7)}, 
+            new object []{('E', 3),('E', 4),('E', 5)}, 
+            new object []{('F', 2),('F', 4),('F', 6)}, 
+            new object []{('G', 1),('G', 4),('G', 7)}, 
+            new object []{('A', 1),('D', 1),('G', 1)}, 
+            new object []{('B', 2),('D', 2),('F', 2)}, 
+            new object []{('C', 3),('D', 3),('E', 3)}, 
+            new object []{('A', 4),('B', 4),('C', 4)}, 
+            new object []{('E', 4),('F', 4),('G', 4)}, 
+            new object []{('C', 5),('D', 5),('E', 5)}, 
+            new object []{('B', 6),('D', 6),('F', 6)}, 
+            new object []{('A', 7),('D', 7),('G', 7)}, 
+            new object []{('A', 1),('B', 2),('C', 3)}, 
+            new object []{('C', 5),('B', 6),('A', 7)}, 
+            new object []{('G', 1),('F', 2),('E', 3)}, 
+            new object []{('E', 5),('F', 6),('G', 7)}
+
+        };
         [Test]
-        public void AMillFormsWhen3CowsOfTheSameColorAreInARow()
+        [TestCaseSource(nameof(allPossibleMills))]
+        public void AMillFormsWhen3CowsOfTheSameColorAreInARow((char,int)pos_1,(char, int) pos_2,(char, int) pos_3)
         {
-            IBoard b = new Board();
+            IBoard board = new Board();
             IPlayer p1 = Substitute.For<IPlayer>();
-            p1.Color.Returns(Color.dark);
+
+            Referee referee = new Referee(board);
+
          
-            //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('A', 7)) });
-            p1.hasCowAtPos(('A', 1)).Returns(true);
-            p1.hasCowAtPos(('A', 4)).Returns(true);
-            p1.hasCowAtPos(('A', 7)).Returns(true);
+           
+            p1.hasCowAtPos(pos_1).Returns(true);
+            p1.hasCowAtPos(pos_2).Returns(true);
+            p1.hasCowAtPos(pos_3).Returns(true);
+
+            //check if player 1 cows form a mill (they should)
+            Assert.That(referee.MillFormed(p1,pos_1) == true);
+            Assert.That(referee.MillFormed(p1,pos_2) == true);
+            Assert.That(referee.MillFormed(p1,pos_3) == true);
+            
+         
            // Assert.That(b.MillFormed(p1, ('A', 4)) == true);
             //  A1, A4, A7
         }
 
         [Test]
-        public void AMillIsNotFormedWhen3CowsInALineAreDifferentColors()
+        [TestCaseSource(nameof(allPossibleMills))]
+        public void AMillIsNotFormedWhen3CowsInALineAreDifferentColors((char, int) pos_1, (char, int) pos_2, (char, int) pos_3)
         {
-            IBoard b = new Board();
+            IBoard board = new Board();
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
 
-            p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 7)) });
-            p1.hasCowAtPos(('A', 1)).Returns(true);
-            p1.hasCowAtPos(('A', 7)).Returns(true);
+            Referee referee = new Referee(board);
 
-            p2.Cows.Returns(new List<ICow> { new Cow(Color.light, ('A', 4)) });
-            p2.hasCowAtPos(('A', 4)).Returns(true);
-        //    Assert.That(b.MillFormed(p1, ('A', 4)) == false);
+
+            //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('A', 7)) });
+            p1.hasCowAtPos(pos_1).Returns(true);
+            p1.hasCowAtPos(pos_2).Returns(true);
+            p2.hasCowAtPos(pos_3).Returns(true);
+
+            //check if player 1 cows form a mill (they shouldn't)
+            Assert.That(referee.MillFormed(p1, pos_1) == false);
+            Assert.That(referee.MillFormed(p1, pos_2) == false);
+            //check if player 2 cows from a mill (they shouldn't)
+            Assert.That(referee.MillFormed(p2, pos_3) == false);
 
         }
 
         [Test]
-        public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine()
+        [TestCaseSource(nameof(legalMoves))]
+        public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine((char, int) fromPos,List<(char, int)> possibleMoves)
         {
-            IBoard b = new Board();
+           /* IBoard board = new Board();
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
-            p1.Color.Returns(Color.dark);
-            p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
-            p1.hasCowAtPos(('A', 1)).Returns(true);
-            p1.hasCowAtPos(('A', 4)).Returns(true);
-            p1.hasCowAtPos(('D', 1)).Returns(true);
-           // Assert.That(b.MillFormed(p1, ('A', 4)) == false);
+
+            Referee referee = new Referee(board);
+            p1.hasCowAtPos(fromPos).Returns(true);
+            //add 2 other pieces from its connected spaces
+            (char, int) pos_2 = possibleMoves.ElementAt(0);
+            (char, int) pos_3 = possibleMoves.ElementAt(1);
+         
+            p1.hasCowAtPos(pos_2).Returns(true);
+            p1.hasCowAtPos(pos_3).Returns(true);
+
+            //check player 1 cows that are connected do not from a mill
+            Assert.That(referee.MillFormed(p1, fromPos) == false);
+            Assert.That(referee.MillFormed(p1, pos_2) == false);
+         
+            Assert.That(referee.MillFormed(p1, pos_3) == false);*/
+
+
+
         }
 
         [Test]
