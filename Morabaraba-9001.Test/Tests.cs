@@ -778,14 +778,39 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(allBoardPositions))]
         public void ShotCowsAreRemovedFromTheBoard((char, int) pos)
         {
-            IReferee mockReferee = Substitute.For<IReferee>();
-            List<(char, int)> posList = new List<(char, int)>();
-            posList.Add(pos);
-            Player player = new Player("test player_1", Color.dark, PlayerState.Placing, posList);////create an enemy player (the player being shot) with a cow at the given position
-            mockReferee.KillCow(player, pos).Returns(MoveError.Valid);
-            //MoveError result = player.killCow(pos, mockReferee);//kill enemy player's cow at position given 
-          //  Assert.That(result == MoveError.Valid);
-           // Assert.That(!player.Cows.Any(cow => cow.Pos.Equals(pos))); //player should not cow
+
+            IBoard board = new Board(); //used allboardTiles
+            IBoard mockBoard = Substitute.For<IBoard>();
+
+            IPlayer player_1 = Substitute.For<IPlayer>();
+
+            //make target player have 1 cow at shooting position
+            IPlayer player_2 = new Player("testing player_2", Color.light, PlayerState.Placing, new List<(char, int)>() { pos });
+           
+
+            IReferee mockRef = Substitute.For<IReferee>();
+            IGame game = new Game(board, mockRef, player_1, player_2);
+            //have board occupied at position pos
+            mockBoard.AllTiles.Returns(board.AllTiles);
+            mockBoard.isOccupied(pos).Returns(true);
+
+
+            board.AllTiles[pos].color = game.OtherPlayer.Color;
+
+            mockRef.KillCow(Arg.Any<IPlayer>(), pos).Returns(MoveError.Valid);
+
+            //check playerr and board have cow to start off with
+            Assert.AreEqual(true, game.OtherPlayer.hasCowAtPos(pos)); //
+            Assert.AreEqual(true, board.isOccupied(pos));
+
+            //kill should be valid
+            Assert.AreEqual(MoveError.Valid, game.KillCow(pos));
+
+            //player should not cow and neither should board
+            Assert.AreEqual(false, game.OtherPlayer.hasCowAtPos(pos)); //
+            Assert.AreEqual(false, board.isOccupied(pos));
+
+         
           }
 
         
