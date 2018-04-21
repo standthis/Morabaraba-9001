@@ -99,26 +99,7 @@ namespace Morabaraba_9001
             }
             return retMills;
         }
-        public bool MillFormed(IPlayer player,(char,int ) pos){
-            List<IEnumerable<ITile>> playersMills = Mills(player);
       
-            foreach(IEnumerable<ITile> mill in playersMills){
-                int count = 0;
-                for (int i = 0; i < mill.Count(); i++)
-                {
-                    ITile currentTile = mill.ElementAt(i);
-                    if (player.hasCowAtPos(currentTile.Pos))
-                    {
-                        count++;
-                    }
-                }
-                if (count == 3)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
         public void Place(IPlayer player,(char,int) pos){
             AllTiles[pos].color = player.Color;
         }
