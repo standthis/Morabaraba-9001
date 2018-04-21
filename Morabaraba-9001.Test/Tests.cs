@@ -725,13 +725,13 @@ namespace Morabaraba_9001.Test
             IPlayer p2 = Substitute.For<IPlayer>();
             IBoard b = Substitute.For<IBoard>();
             IReferee referee = new Referee(b);
-            p1.State.Returns(PlayerState.Moving);
-            p2.State.Returns(PlayerState.Flying);
-            p1.Color.Returns(Color.dark);
-            p2.Color.Returns(Color.light);
-            p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
-            p2.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             IGame G = new Game(b, referee, p1, p2);
+            G.CurrentPlayer.State.Returns(PlayerState.Moving);
+            G.OtherPlayer.State.Returns(PlayerState.Flying);
+            G.CurrentPlayer.Color.Returns(Color.dark);
+            G.OtherPlayer.Color.Returns(Color.light);
+            G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             G.OtherPlayer.numCowsOnBoard().Returns(2);
             Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
         }
