@@ -740,8 +740,30 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void ACowInAMillCannotBeShotWhenNonMillCowsExist()
+        [TestCaseSource(nameof(allPossibleMills))]
+        public void ACowInAMillCannotBeShotWhenNonMillCowsExist((char,int)pos_1,(char,int) pos_2,(char,int)pos_3)
         {
+            IBoard board = new Board();
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+            IReferee referee = new Referee(board);
+            //make target player have mill
+            player_2.hasCowAtPos(pos_1).Returns(true);
+            player_2.hasCowAtPos(pos_2).Returns(true);
+            player_2.hasCowAtPos(pos_3).Returns(true);
+            
+           
+
+            List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
+            List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
+            //add a non-mill cow
+            player_2.hasCowAtPos(restOfBoard.ElementAt(0)).Returns(true);
+
+            //try to kill cow in mills - should fail
+            Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_1));
+            Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_2));
+            Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_3));
+       
 
         }
 
