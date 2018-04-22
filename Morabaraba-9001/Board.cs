@@ -100,6 +100,7 @@ namespace Morabaraba_9001
             return retMills;
         }
    
+
         public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
         {
           
@@ -113,6 +114,57 @@ namespace Morabaraba_9001
             }
         }
         
+
+        public void printBoard()
+        {
+            string[] cowColors = new string[24];
+            int counter = 0;
+
+            foreach (KeyValuePair<(char, int), ITile> entry in AllTiles)
+            {
+                if (entry.Value.color == Color.none)
+                {
+                    cowColors[counter] = " ";
+                }
+                else if (entry.Value.color == Color.dark)
+                {
+                    cowColors[counter] = "x";
+                }
+                else
+                {
+                    cowColors[counter] = "o";
+                }
+            }
+
+            string s = String.Format(@"
+                                     1   2   3       4      5   6   7
+
+                                A  ({0})-------------({1})------------({2})
+                                     |\              |             /|
+                                     | \             |            / |
+                                     |  \            |           /  |
+                                B    | ({3})---------({4})--------({5})  |
+                                     |   |\          |         /|   |
+                                     |   | \         |        / |   |
+                                     |   |  \        |       /  |   |
+                                C    |   | ({6})-----({7})----({8})  |   |
+                                     |   |   |              |   |   |
+                                     |   |   |              |   |   |
+                                D  ({9})-({10})-({11})            ({12})-({13})-({14})
+                                     |   |   |              |   |   |
+                                     |   |   |              |   |   |
+                                E    |   | ({15})-----({16})----({17})  |   |
+                                     |   |  /        |       \  |   |
+                                     |   | /         |        \ |   |
+                                     |   |/          |         \|   |
+                                F    | ({18})---------({19})--------({20})  |
+                                     |  /            |           \  |
+                                     | /             |            \ |
+                                     |/              |             \|
+                                G  ({21})-------------({22})------------({23})
+            ", cowColors);
+        }
+
     }
     
 }
