@@ -92,12 +92,21 @@ namespace Morabaraba_9001
         {
           
             List<IEnumerable<ITile>> playerMills = GameBoard.Mills(player);
+            int CowsInMills = 0;
+            foreach (ICow cow in player.Cows)
+            {
+                if(playerMills.Any(mill => IsInMill(mill.ToList(), cow.Pos))){
+                    CowsInMills++;
+                }
+      
+                
+            }
 
             if (player.hasCowAtPos(killPos))
             {
                 if (playerMills.Any(mill => IsInMill(mill.ToList(),killPos)) ) //check if killPos in any of players mills
                 {
-                    if (playerMills.Count() == player.numCowsOnBoard())
+                    if (CowsInMills == player.numCowsOnBoard())
                     {
                         
                         return MoveError.Valid;
