@@ -4,6 +4,25 @@ using System.Linq;
 using System.Collections.Generic;
 using NSubstitute;
 using Morabaraba_9001;
+/****
+ * NOTE:
+ * FOR SOME OF THE TEST THE GAME OBJECT WAS ASSERTED BECAUSE WE NEEDED TO CHECK IF THE MOCKED PLAYER CALLED
+ * IT'S APPROPRIATE METHOD AFTER THE REFEREE HAD VALIDATED SOMETHING. HOWEVER INSTEAD OF STUBBING METHODS
+ * FOR THE PLAYER(SAY PLAYER_1) THAT WAS PASSED THROUGH AS A PARAMETER TO THE GAME OBJECT'S CONSTRUCTOR.
+ * WE STUBBED METHODS FOR GAME.CURRENTPLAYER WHICH WAS SET TO EQUAL PLAYER_1 IN THE CONSTRUCTOR. FOR SOME REASON
+ * STUBBING PLAYER_1'S METHODS DIDN'T WORK BECAUSE GAME.CURRENTPLAYER WAS NOT RECOGNIZING THOSE STUBBED 
+ * METHODS. SO WE HAD TO STUB GAME.CURRENTPLAYER'S METHODS WHICH MADE THE TESTS PASS. PLAYER_1 IS EQUAL TO 
+ * GAME.CURRENTPLAYER SO STUBBING THE GAME.CURRENTPLAYER SHOULD BE EQUIVALENT TO STUBBING PLAYER_1. GAME.CURRENTPLAYER
+ * REFERENCES PLAYER_1 SO ANY METHOD CALLED ON GAME.CURRENTPLAYER IS ALSO CALLED ON PLAYER_1. SO THIS IS WHY WE
+ * DIDN'T SEE THIS TO BE TO BIG OF AN ISSUE. SAME CAN APPLY FOR PLAYER_2 AND GAME.OTHERPLAYER
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
+
+
 
 namespace Morabaraba_9001.Test
 {
@@ -710,7 +729,8 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(legalMoves))]
         public void AMillIsNotFormedWhenConnectedSpacesDoNotFormALine((char, int) fromPos,List<(char, int)> possibleMoves)
         {
-           /* IBoard board = new Board();
+            //A line is a max of 3 positions 
+            IBoard board = new Board();
             IPlayer p1 = Substitute.For<IPlayer>();
             IPlayer p2 = Substitute.For<IPlayer>();
 
@@ -719,7 +739,37 @@ namespace Morabaraba_9001.Test
             //add 2 other pieces from its connected spaces
             (char, int) pos_2 = possibleMoves.ElementAt(0);
             (char, int) pos_3 = possibleMoves.ElementAt(1);
-         
+
+            //pos_2 and pos_3 are connected spaces to fromPos
+
+            //MAKE SURE LINE IS NOT FORMED BY 3 SPACES BUT ENSURE THEY ARE CONNECTED
+            //check if 3 poisitions form a line
+            List<(char, int)> line = new List<(char, int)>() { fromPos, pos_2, pos_3 };
+            bool lineFormed = false;
+            //board.AllBoardMills holds all the possible lines
+            //now check fromPos, pos_2,pos_3 form a line (if they are a purmatation of a line/mill)
+            foreach(IEnumerable<ITile> mill in board.AllBoardMills){
+                int count = 0;
+                foreach(ITile tile in mill){
+                    if (line.Any(pos => pos.Equals(tile.Pos)))
+                    {
+                        count++;
+                    }
+                }
+                if(count==3){// is line is formed
+                    lineFormed = true;
+                    break;
+                } 
+            }
+            if(lineFormed){
+              
+                pos_3 = possibleMoves.ElementAt(2); //change pos_3 so it is not a line but still a conncted_space to fromPos
+            }
+            //it would be impossible for fromPos,pos_2 and pos_3 to form a line now
+            //because if pos_3 formed a line with fromPos and pos_2 originally.The new pos_3 cannot form a line because a line 
+            // is unique with 2 connected spaces and if you change one of those spaces (pos_3) and keep the other 2
+            // the same it cannot possibly be a line
+           
             p1.hasCowAtPos(pos_2).Returns(true);
             p1.hasCowAtPos(pos_3).Returns(true);
 
@@ -727,7 +777,7 @@ namespace Morabaraba_9001.Test
             Assert.That(referee.MillFormed(p1, fromPos) == false);
             Assert.That(referee.MillFormed(p1, pos_2) == false);
          
-            Assert.That(referee.MillFormed(p1, pos_3) == false);*/
+            Assert.That(referee.MillFormed(p1, pos_3) == false);
 
 
 
