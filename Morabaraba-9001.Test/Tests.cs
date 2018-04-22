@@ -806,16 +806,29 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(allBoardPositions))]
         public void APlayerCannotShootTheirOwnCows((char, int) pos)
         {
-            IReferee mockReferee = Substitute.For<IReferee>();
+            IBoard board = new Board();
+            IReferee referee = new Referee(board);
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+            IGame game = new Game(board, referee, player_1, player_2);
             List<(char, int)> posList = new List<(char, int)>();
             posList.Add(pos);
-            Player player1 = new Player("test player_1", Color.dark, PlayerState.Placing, posList);//create a player with a cow in the given position
-            Player player2 = new Player("test player_2", Color.light);
-            mockReferee.KillCow(player2, pos).Returns(MoveError.InValid);
+            //mock player to have 1 cow
+            game.CurrentPlayer.hasCowAtPos(pos).Returns(true);
+            game.CurrentPlayer.Cows.Returns(posToCows(posList, Color.dark));
+            game.CurrentPlayer.numCowsOnBoard().Returns(1);
 
-            //MoveError result = player2.killCow(pos, mockReferee);//request for enemy player's cow to be killed at the position where player1's cow actually is
-           // Assert.That(result != MoveError.Valid);
-            Assert.That(player1.Cows.Where(cow => cow.Pos.Equals(pos)).Count() == 1); //player 1 should still have cow
+            game.OtherPlayer.hasCowAtPos(pos).Returns(false);
+            game.OtherPlayer.Cows.Returns(new List<ICow>());
+            game.OtherPlayer.numCowsOnBoard().Returns(0);
+
+            //should not be a valid kill
+            Assert.AreNotEqual(MoveError.Valid,game.KillCow(pos));
+            //player should shot recieve a call to kill its cow
+            game.CurrentPlayer.DidNotReceive().killCow(pos);
+
+
+           
 
         }
 
@@ -824,11 +837,27 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(allBoardPositions))]
         public void APlayerCannotShootAnEmptySpace((char, int) pos)
         {
-            IReferee mockReferee = Substitute.For<IReferee>();
-            Player player = new Player("test player", Color.dark);//create an enemy player (the player being shot)
-            mockReferee.KillCow(player, pos).Returns(MoveError.InValid);
-            //MoveError result = player.killCow(pos, mockReferee);//request for enemy player's cow to be killed at the position where no cow has been created for
-          //  Assert.That(result != MoveError.Valid);
+            //IBoard board = new Board();
+            //IReferee referee = new Referee(board);
+            //IPlayer player_1 = Substitute.For<IPlayer>();
+            //IPlayer player_2 = Substitute.For<IPlayer>();
+            //IGame game = new Game(board, referee, player_1, player_2);
+            //List<(char, int)> posList = new List<(char, int)>();
+            //posList.Add(pos);
+            ////mock player to have 1 cow
+            //game.CurrentPlayer.hasCowAtPos(pos).Returns(false);
+            //game.CurrentPlayer.Cows.Returns(posToCows(posList, Color.dark));
+            //game.CurrentPlayer.numCowsOnBoard().Returns(1);
+
+            //game.OtherPlayer.hasCowAtPos(pos).Returns(false);
+            //game.OtherPlayer.Cows.Returns(new List<ICow>());
+            //game.OtherPlayer.numCowsOnBoard().Returns(0);
+
+            ////should not be a valid kill
+            //Assert.AreNotEqual(MoveError.Valid,game.KillCow(pos));
+            ////player should shot recieve a call to kill its cow
+            //game.CurrentPlayer.DidNotReceive().killCow(pos);
+            //List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
 
         }
 
@@ -856,6 +885,7 @@ namespace Morabaraba_9001.Test
             //check playerr and board have cow to start off with
             Assert.AreEqual(true, game.OtherPlayer.hasCowAtPos(pos)); //
             Assert.AreEqual(true, game.IsTileOccupied(pos));
+
 
             //kill should be valid
             Assert.AreEqual(MoveError.Valid, game.KillCow(pos));
