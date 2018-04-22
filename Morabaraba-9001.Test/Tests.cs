@@ -748,16 +748,22 @@ namespace Morabaraba_9001.Test
             IPlayer player_2 = Substitute.For<IPlayer>();
             IReferee referee = new Referee(board);
             //make target player have mill
+            List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
+            List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
+            //mock player to have 3 cows all in mills and 1 non mill cow
             player_2.hasCowAtPos(pos_1).Returns(true);
             player_2.hasCowAtPos(pos_2).Returns(true);
             player_2.hasCowAtPos(pos_3).Returns(true);
+            player_2.hasCowAtPos(restOfBoard.ElementAt(0)).Returns(true);
             
            
-
-            List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
-            List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
+      
+         
             //add a non-mill cow
-            player_2.hasCowAtPos(restOfBoard.ElementAt(0)).Returns(true);
+         
+            mill.Add(restOfBoard.ElementAt(0));
+
+            player_2.Cows.Returns(posToCows(mill, Color.light));
 
             //try to kill cow in mills - should fail
             Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_1));
@@ -768,8 +774,30 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void ACowInAMillCanBeShotWhenOnlyCowsInMillsExist()
+        [TestCaseSource(nameof(allPossibleMills))]
+        public void ACowInAMillCanBeShotWhenOnlyCowsInMillsExist((char, int) pos_1, (char, int) pos_2, (char, int) pos_3)
         {
+            IBoard board = new Board();
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+            IReferee referee = new Referee(board);
+            //make target player have only cows in mill
+
+            //mock player to have 3 cows all in mills
+            player_2.hasCowAtPos(pos_1).Returns(true);
+            player_2.hasCowAtPos(pos_2).Returns(true);
+            player_2.hasCowAtPos(pos_3).Returns(true);
+
+            List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
+            player_2.Cows.Returns(posToCows(mill,Color.light));
+            player_2.numCowsOnBoard().Returns(3);
+
+        
+            //try to kill cow in mills - should pass cause all cow are in mills
+            Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_1));
+            Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_2));
+            Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_3));
+       
 
         }
 
