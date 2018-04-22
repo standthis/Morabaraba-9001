@@ -31,8 +31,7 @@ namespace Morabaraba_9001.Test
     {
 
         //TESTS FOR DURING PLACEMENT
-
-
+        
         static object[] allBoardPositions =
         {
             new object[] { ('A', 1) },
@@ -59,13 +58,12 @@ namespace Morabaraba_9001.Test
             new object[] { ('G', 1) },
             new object[] { ('G', 4) },
             new object[] { ('G', 7) }
-
         };
+
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
         public void BoardIsEmptyAtStart((char, int) pos)//Louise
         {
-
             IPlayer player_1 = new Player("Player 1", Color.dark);
             IPlayer player_2 = new Player("Player 2", Color.light);
             IBoard board = Substitute.For<IBoard>();
@@ -182,11 +180,8 @@ namespace Morabaraba_9001.Test
             new object[] { ('G', 1), false, MoveError.InValid },
             new object[] { ('G', 4), false, MoveError.InValid },
             new object[] { ('G', 7), false, MoveError.InValid },
-
-          //  new object[] { ('H', 7), false, MoveError.InValid }
-
-
         };
+
         [Test]
         [TestCaseSource(nameof(legalPlacementOfCowsOnOccupiedAndUnoccupiedTiles))]
         public void CowsCanOnlyBePlacedOnEmptyTiles((char, int) pos, bool isOpenBoardSpace, MoveError expected)//Louise
@@ -225,16 +220,11 @@ namespace Morabaraba_9001.Test
                 game.CurrentPlayer.DidNotReceive().placeCow(pos);    
 
             }
-
-
-
         }
 
         [Test]
-
         public void AMaximumOf12PlacementsPerPlayer() // matt 
         {
-
             IPlayer player_1 = Substitute.For<IPlayer>();
             IPlayer player_2 = Substitute.For<IPlayer>();
 
@@ -263,8 +253,8 @@ namespace Morabaraba_9001.Test
             }
             // 13'th place should fail 
             Assert.That(game.Place(('A',1)) == MoveError.InValid);
-           
         }
+
         static object[] legalMoves = {
             new object [] {('A', 1), new List<(char, int)> { ('A', 4), ('B', 2), ('D', 1) }},
             new object [] {('A', 4), new List<(char, int)> { ('A', 1), ('A', 7), ('B', 4) }},
@@ -298,10 +288,8 @@ namespace Morabaraba_9001.Test
             new object [] {('G', 4), new List<(char, int)> { ('F', 4), ('G', 1), ('G', 7) }},
             new object [] {('G', 7), new List<(char, int)> { ('D', 7), ('F', 6), ('G', 4) }},
         };
-
-
-        static object[] toAndFromPositions =
-      {
+        
+        static object[] toAndFromPositions = {
             new object[] { ('A', 1), ('A', 4) },
             new object[] { ('A', 1), ('B', 2) },
             new object[] { ('A', 1), ('D', 1) },
@@ -383,10 +371,8 @@ namespace Morabaraba_9001.Test
             new object[] { ('G', 7), ('F', 6) },
             new object[] { ('G', 7), ('G', 4) }
         };
-
-
+        
         [Test]
-
         [TestCaseSource(nameof(toAndFromPositions))]
         public void CowsCannotBeMovedDuringPlacement((char,int)fromPos,(char,int)toPos) // matt 
         {
@@ -404,19 +390,12 @@ namespace Morabaraba_9001.Test
 
             Assert.That(error == MoveError.InValid);
             game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
-        
-
         }
-
-
-
-
+        
         [Test]
-
         [TestCaseSource(nameof(legalMoves))]
         public void ACowCanOnlyMoveToAnotherConnectedSpace((char, int) fromPos,List<(char,int)> possibleMoves) 
         {
-
             IBoard board = new Board(); //used allboardTiles
             IBoard mockBoard= Substitute.For<IBoard>();
             
@@ -436,20 +415,15 @@ namespace Morabaraba_9001.Test
             mockBoard.AllTiles.Returns(board.AllTiles);
             //mock a board where only 1 tile is occupied
          
-                
             //try moving to possible places
             foreach ((char, int) toPos in possibleMoves)
             {
-          
                 MoveError error = game.Move(fromPos,toPos);
                 Assert.That(error == MoveError.Valid);
     
                 game.CurrentPlayer.Received().moveCow(fromPos,toPos);
-                
-                
-
-
             }
+
             mockBoard.ClearReceivedCalls();
             game.CurrentPlayer.ClearReceivedCalls();
             //try moving anywhere except from the possible places
@@ -459,9 +433,7 @@ namespace Morabaraba_9001.Test
                 Assert.That(error == MoveError.InValid);
 
                 game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
-
             }
-
         }
 
         [Test]
@@ -472,7 +444,6 @@ namespace Morabaraba_9001.Test
 
             IBoard board = new Board(); //used allboardTiles
          
-
             IPlayer player_1 = Substitute.For<IPlayer>();
             IPlayer player_2 = Substitute.For<IPlayer>();
 
@@ -487,10 +458,6 @@ namespace Morabaraba_9001.Test
             game.CurrentPlayer.Color.Returns(Color.dark);
             //mock a completly empty board except for the fromPos
            
-
-          
-           
-
             //try moving to possible places when they are empty
             foreach ((char, int) toPos in possibleMoves)
             {
@@ -502,8 +469,7 @@ namespace Morabaraba_9001.Test
                 game.CurrentPlayer.Received().moveCow(fromPos, toPos);
             }
             //mock a completly full board
-           
-           
+         
             game.CurrentPlayer.ClearReceivedCalls();
 
             //try moving to possible places when they are not empty
@@ -516,23 +482,13 @@ namespace Morabaraba_9001.Test
                 Assert.That(error == MoveError.InValid);
                
                 game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
-
             }
-
-
-
         }
-
-       
-
 
         [Test]
         [TestCaseSource(nameof(toAndFromPositions))]
         public void MovingDoesNotDecreaseOrIncreaseTheNumberOfCowsOnTheBoard((char, int) fromPos, (char, int) toPos) //Louise
         {
-
-
-
             IBoard mockBoard = Substitute.For<IBoard>();
             IReferee mockReferee = Substitute.For<IReferee>();
            
@@ -556,8 +512,6 @@ namespace Morabaraba_9001.Test
           
             IGame game = new Game(mockBoard, mockReferee, player_1, mock_player);
           
-
-          
             int numberOfPieces = posList.Count();
            
             Assert.AreEqual(player_1.numCowsOnBoard(), numberOfPieces);
@@ -569,13 +523,13 @@ namespace Morabaraba_9001.Test
         }
 
         //TESTS FOR DURING FLYING
+
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
         public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char, int) fromPos)
         {
             IBoard board = new Board(); //used allboardTiles
          
-
             IPlayer player_1 = Substitute.For<IPlayer>();
             IPlayer player_2 = Substitute.For<IPlayer>();
 
@@ -583,9 +537,7 @@ namespace Morabaraba_9001.Test
             IGame game = new Game(board, referee, player_1, player_2);
 
             //make player have more than 3 cows
-
-          
-
+            
             List<(char, int)> fromPosList = new List<(char, int)>();
             fromPosList.Add(fromPos);
 
@@ -597,19 +549,16 @@ namespace Morabaraba_9001.Test
 
             for (int i = 0; i < 12 - 3; i++) // try from 12 cows to 3 cows
             {
-
                 foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
                 {
                     MoveError error = game.Fly(fromPos, toPos);
                     Assert.That(error == MoveError.InValid);
                    
                     game.CurrentPlayer.DidNotReceive().moveCow(fromPos, toPos);
-
                 }
                 game.CurrentPlayer.numCowsOnBoard().Returns(12 - (i + 1));
             }
-
-
+            
             //now try flying with 3 cows --should pass (move to be valid)
 
             foreach ((char, int) toPos in board.AllTiles.Values.Select(t => t.Pos).Except(fromPosList))
@@ -620,8 +569,8 @@ namespace Morabaraba_9001.Test
                 game.CurrentPlayer.Received().moveCow(fromPos, toPos);
 
             }
-
         }
+
         //=======
         //        public void CowsCanFlyAnywhereIfOnly3CowsRemainOnTheBoard((char,int) pos)
         //        {
@@ -653,7 +602,6 @@ namespace Morabaraba_9001.Test
         //GENERAL TESTING
 
         static object[] allPossibleMills = {
-
             new object []{('A', 1),('A', 4),('A', 7)}, 
             new object []{('B', 2),('B', 4),('B', 6)}, 
             new object []{('C', 3),('C', 4),('C', 5)}, 
@@ -676,6 +624,7 @@ namespace Morabaraba_9001.Test
             new object []{('E', 5),('F', 6),('G', 7)}
 
         };
+
         [Test]
         [TestCaseSource(nameof(allPossibleMills))]
         public void AMillFormsWhen3CowsOfTheSameColorAreInARow((char,int)pos_1,(char, int) pos_2,(char, int) pos_3)
@@ -684,9 +633,7 @@ namespace Morabaraba_9001.Test
             IPlayer p1 = Substitute.For<IPlayer>();
 
             Referee referee = new Referee(board);
-
-         
-           
+            
             p1.hasCowAtPos(pos_1).Returns(true);
             p1.hasCowAtPos(pos_2).Returns(true);
             p1.hasCowAtPos(pos_3).Returns(true);
@@ -696,7 +643,6 @@ namespace Morabaraba_9001.Test
             Assert.That(referee.MillFormed(p1,pos_2) == true);
             Assert.That(referee.MillFormed(p1,pos_3) == true);
             
-         
            // Assert.That(b.MillFormed(p1, ('A', 4)) == true);
             //  A1, A4, A7
         }
@@ -710,8 +656,7 @@ namespace Morabaraba_9001.Test
             IPlayer p2 = Substitute.For<IPlayer>();
 
             Referee referee = new Referee(board);
-
-
+            
             //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('A', 7)) });
             p1.hasCowAtPos(pos_1).Returns(true);
             p1.hasCowAtPos(pos_2).Returns(true);
@@ -722,7 +667,6 @@ namespace Morabaraba_9001.Test
             Assert.That(referee.MillFormed(p1, pos_2) == false);
             //check if player 2 cows from a mill (they shouldn't)
             Assert.That(referee.MillFormed(p2, pos_3) == false);
-
         }
 
         [Test]
@@ -743,6 +687,7 @@ namespace Morabaraba_9001.Test
             //pos_2 and pos_3 are connected spaces to fromPos
 
             //MAKE SURE LINE IS NOT FORMED BY 3 SPACES BUT ENSURE THEY ARE CONNECTED
+
             //check if 3 poisitions form a line
             List<(char, int)> line = new List<(char, int)>() { fromPos, pos_2, pos_3 };
             bool lineFormed = false;
@@ -761,10 +706,12 @@ namespace Morabaraba_9001.Test
                     break;
                 } 
             }
+
             if(lineFormed){
               
                 pos_3 = possibleMoves.ElementAt(2); //change pos_3 so it is not a line but still a conncted_space to fromPos
             }
+
             //it would be impossible for fromPos,pos_2 and pos_3 to form a line now
             //because if pos_3 formed a line with fromPos and pos_2 originally.The new pos_3 cannot form a line because a line 
             // is unique with 2 connected spaces and if you change one of those spaces (pos_3) and keep the other 2
@@ -778,9 +725,6 @@ namespace Morabaraba_9001.Test
             Assert.That(referee.MillFormed(p1, pos_2) == false);
          
             Assert.That(referee.MillFormed(p1, pos_3) == false);
-
-
-
         }
 
         [Test]
@@ -793,12 +737,10 @@ namespace Morabaraba_9001.Test
             IPlayer player_1 = Substitute.For<IPlayer>();
             IPlayer player_2 = Substitute.For<IPlayer>();
             IReferee referee = new Referee(board);
-
-           
+            
             List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
             List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
-
-          
+            
             //mock player with a mill already and then make then have an extra cow outside that mill
             player_1.hasCowAtPos(pos_1).Returns(true);
             player_1.hasCowAtPos(pos_2).Returns(true);
@@ -814,9 +756,6 @@ namespace Morabaraba_9001.Test
 
             //check if mill is formed if player_1 has recently move to pos_4 and still has a mill with pos_1,pos_2,pos_3 (A mill should not be formed)
             Assert.AreEqual(false, referee.MillFormed(player_1,pos_4));
-
-          
-
         }
 
         [Test]
@@ -836,9 +775,6 @@ namespace Morabaraba_9001.Test
             player_2.hasCowAtPos(pos_3).Returns(true);
             player_2.hasCowAtPos(restOfBoard.ElementAt(0)).Returns(true);
             
-           
-      
-         
             //add a non-mill cow
          
             mill.Add(restOfBoard.ElementAt(0));
@@ -849,8 +785,6 @@ namespace Morabaraba_9001.Test
             Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_1));
             Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_2));
             Assert.AreEqual(MoveError.InValid, referee.KillCow(player_2, pos_3));
-       
-
         }
 
         [Test]
@@ -871,17 +805,13 @@ namespace Morabaraba_9001.Test
             List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
             player_2.Cows.Returns(posToCows(mill,Color.light));
             player_2.numCowsOnBoard().Returns(3);
-
-        
+            
             //try to kill cow in mills - should pass cause all cow are in mills
             Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_1));
             Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_2));
             Assert.AreEqual(MoveError.Valid, referee.KillCow(player_2, pos_3));
-       
-
         }
-
-
+        
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
         public void APlayerCannotShootTheirOwnCows((char, int) pos)
@@ -905,10 +835,6 @@ namespace Morabaraba_9001.Test
             Assert.AreNotEqual(MoveError.Valid,game.KillCow(pos));
             //player should shot recieve a call to kill its cow
             game.CurrentPlayer.DidNotReceive().killCow(pos);
-
-
-           
-
         }
 
         //is passing, but probably not for the right reasons. I'm sleepy. Think I need to somehow assert the space is empty that I'm trying to shoot.
@@ -923,7 +849,6 @@ namespace Morabaraba_9001.Test
             IGame game = new Game(board, referee, player_1, player_2);
             List<(char, int)> posList = new List<(char, int)>(){pos};
            
-
             List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(posList).ToList();
 
             //mock a completly empty board and try shoot cow at pos
@@ -940,15 +865,12 @@ namespace Morabaraba_9001.Test
             //no players should recieve a call to shoot a cow
             game.CurrentPlayer.DidNotReceive().killCow(pos);
             game.OtherPlayer.DidNotReceive().killCow(pos);
-
-
         }
 
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
         public void ShotCowsAreRemovedFromTheBoard((char, int) pos)
         {
-
             IBoard board = new Board(); //used allboardTiles
           
             IPlayer player_1 = Substitute.For<IPlayer>();
@@ -956,19 +878,16 @@ namespace Morabaraba_9001.Test
             //make target player have 1 cow at shooting position
             IPlayer player_2 = new Player("testing player_2", Color.light, PlayerState.Placing, new List<(char, int)>() { pos });
            
-
             IReferee mockRef = Substitute.For<IReferee>();
             IGame game = new Game(board, mockRef, player_1, player_2);
             //have board occupied at position pos
             game.CurrentPlayer.hasCowAtPos(pos).Returns(false);
            
-
             mockRef.KillCow(Arg.Any<IPlayer>(), pos).Returns(MoveError.Valid);
           
             //check playerr and board have cow to start off with
             Assert.AreEqual(true, game.OtherPlayer.hasCowAtPos(pos)); //
             Assert.AreEqual(true, game.IsTileOccupied(pos));
-
 
             //kill should be valid
             Assert.AreEqual(MoveError.Valid, game.KillCow(pos));
@@ -976,8 +895,6 @@ namespace Morabaraba_9001.Test
             //player should not cow and neither should board
             Assert.AreEqual(false, game.OtherPlayer.hasCowAtPos(pos)); //
             Assert.AreEqual(false, game.IsTileOccupied(pos));
-
-         
           }
 
         
@@ -985,6 +902,7 @@ namespace Morabaraba_9001.Test
             List<ICow> result = possies.Select(p => new Cow(c, p)).ToList<ICow>();
             return result; 
         }
+
         [Test]
         [TestCaseSource(nameof(allBoardPositions))]
         public void AWinOccursIfAnOpponentCannotMove((char, int) pos)
@@ -1004,8 +922,8 @@ namespace Morabaraba_9001.Test
             }
             newDic[pos].color = Color.light;
            
-            //bool result =  myRef.PlayerCanMove(p2);
-           // p2.CanMove(myRef).Returns(result);
+            // bool result =  myRef.PlayerCanMove(p2);
+            // p2.CanMove(myRef).Returns(result);
             IGame G = new Game(board, myRef, p1, p2);
             G.CurrentPlayer.Color.Returns(Color.dark);
             G.OtherPlayer.Color.Returns(Color.light);
@@ -1025,6 +943,7 @@ namespace Morabaraba_9001.Test
             //p1.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
             //var list3 = list1.Except(list2).ToList();
         }
+
         [Test]
         public void AWinOccursIfAPlayerIsNotInPlacingAndHasLessThan3Cows()
         {
@@ -1037,14 +956,13 @@ namespace Morabaraba_9001.Test
             G.OtherPlayer.State.Returns(PlayerState.Flying);
             G.CurrentPlayer.Color.Returns(Color.dark);
             G.OtherPlayer.Color.Returns(Color.light);
-            //   G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
-            //  G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
+            // G.CurrentPlayer.Cows.Returns(new List<ICow> { new Cow(Color.dark, ('A', 1)), new Cow(Color.dark, ('A', 4)), new Cow(Color.dark, ('D', 1)) });
+            // G.OtherPlayer.Cows.Returns(new List<ICow> { new Cow(Color.light, ('G', 1)), new Cow(Color.light, ('D', 2))});
             G.OtherPlayer.numCowsOnBoard().Returns(2);
             Assert.AreEqual(G.EndGame(), GameEnd.KilledOff);
-            //if the player is placing and only has 2 cows on the board game shouldn't end
+            // if the player is placing and only has 2 cows on the board game shouldn't end
             G.OtherPlayer.State.Returns(PlayerState.Placing);
             Assert.AreEqual(G.EndGame(), GameEnd.NoEnd);
-
         }
     }
 }
