@@ -16,7 +16,7 @@ namespace Morabaraba_9001
             GameBoard = board;
 
         }
-        public MoveError Place(IPlayer player, (char, int) toPos)
+        public MoveError Place(IPlayer player,IPlayer otherPlayer, (char, int) toPos)
         {
             
             if (player.State != PlayerState.Placing || player.UnplacedCows<=0)
@@ -24,7 +24,7 @@ namespace Morabaraba_9001
                 return MoveError.InValid;
             }
 
-            if (!GameBoard.isOccupied(toPos))
+            if (!isTileOccupied(player, otherPlayer, toPos))
             {
                 return MoveError.Valid;
             }
@@ -33,7 +33,7 @@ namespace Morabaraba_9001
                 return MoveError.InValid;
             }
         }
-        public MoveError Move(IPlayer player, (char, int) fromPos, (char, int) toPos)
+        public MoveError Move(IPlayer player,IPlayer otherPlayer, (char, int) fromPos, (char, int) toPos)
         {
             if (player.State != PlayerState.Moving)
             {
@@ -41,7 +41,7 @@ namespace Morabaraba_9001
             }
             if (player.hasCowAtPos(fromPos))
             {
-                if (!GameBoard.isOccupied(toPos) && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
+                if (!isTileOccupied(player, otherPlayer, toPos) && GameBoard.AllTiles[fromPos].PossibleMoves.Any(tile => tile.Equals(toPos)))
                 {
 
                     return MoveError.Valid;
@@ -57,7 +57,7 @@ namespace Morabaraba_9001
         }
 
        
-        public MoveError Fly(IPlayer player,(char, int) fromPos, (char, int) toPos)
+        public MoveError Fly(IPlayer player,IPlayer otherPlayer,(char, int) fromPos, (char, int) toPos)
         {
             if (player.State != PlayerState.Flying || player.numCowsOnBoard()!=3){
                 return MoveError.InValid;
@@ -66,7 +66,7 @@ namespace Morabaraba_9001
          
             if (player.hasCowAtPos(fromPos))
             {
-                if (!GameBoard.isOccupied(toPos))
+                if (!isTileOccupied(player,otherPlayer,toPos))
                 {
 
                     return MoveError.Valid;
@@ -138,22 +138,26 @@ namespace Morabaraba_9001
                
         }
     
-        private bool PlayerCanMove(IPlayer player) {
+        private bool PlayerCanMove(IPlayer player,IPlayer otherPlayer) {
            // player.Cows.Where(cow=> cow)
             foreach(ICow cow in player.Cows){
                 IEnumerable<(char,int)> posMoves=GameBoard.PossibleMoves(cow.Pos);
                 foreach((char,int) position in posMoves){
-                    if(!GameBoard.isOccupied(position)){
+                    if(!isTileOccupied(player,otherPlayer,position)){
                         return true;
                     }
                 }
             }
             return false;
         }
-        public GameEnd EndGame(IPlayer enemyPlayer)
+        private bool isTileOccupied(IPlayer player,IPlayer otherPlayer,(char,int) pos){
+            return player.hasCowAtPos(pos) || otherPlayer.hasCowAtPos(pos);
+            
+        }
+        public GameEnd EndGame(IPlayer enemyPlayer,IPlayer currentPlayer)
         {
             if (enemyPlayer.State == PlayerState.Moving)
-                if (!PlayerCanMove(enemyPlayer))
+                if (!PlayerCanMove(enemyPlayer,currentPlayer))
                     return GameEnd.CantMove;
             if (enemyPlayer.numCowsOnBoard() == 2 && enemyPlayer.State == PlayerState.Flying)
                 return GameEnd.KilledOff;

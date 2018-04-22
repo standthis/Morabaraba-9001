@@ -99,41 +99,18 @@ namespace Morabaraba_9001
             }
             return retMills;
         }
-      
-        public void Place(IPlayer player,(char,int) pos){
-            AllTiles[pos].color = player.Color;
-        }
-        public void Move(IPlayer player, (char, int) fromPos,(char,int) toPos)
-        {
-            AllTiles[fromPos].color = Color.none;
-            AllTiles[toPos].color = player.Color;
-        }
-     
-
-        public bool isOccupied((char, int) pos)
-        {
-            try
-            {
-                return AllTiles[pos].color != Color.none;
-            }
-            catch(KeyNotFoundException){
-                return false;
-            }
-
-        }
-        public List<ICow> playerCows(IPlayer player){
-            List<ICow> retCows= new List<ICow>();
-            foreach(ITile tile in AllTiles.Values){
-                if(tile.color==player.Color){
-                    retCows.Add(new Cow(tile.color,tile.Pos));
-                }
-            }
-            return retCows;
-        }
-       
+   
         public IEnumerable<(char, int)> PossibleMoves((char, int) pos)
         {
-            return AllTiles[pos].PossibleMoves;
+          
+            try
+            {
+                return AllTiles[pos].PossibleMoves;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
         }
         
     }

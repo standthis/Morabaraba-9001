@@ -39,7 +39,7 @@ namespace Morabaraba_9001
 
         public GameEnd EndGame()
         {
-            GameEnd result = Referee.EndGame(OtherPlayer);
+            GameEnd result = Referee.EndGame(OtherPlayer,CurrentPlayer);
             if(result != GameEnd.NoEnd){
                 Winner = CurrentPlayer;
             }
@@ -50,9 +50,9 @@ namespace Morabaraba_9001
 
         public MoveError Fly((char, int) fromPos, (char, int) toPos)
         {
-            MoveError error = Referee.Fly(CurrentPlayer, fromPos, toPos);
+            MoveError error = Referee.Fly(CurrentPlayer,OtherPlayer, fromPos, toPos);
             if(error == MoveError.Valid){
-                GameBoard.Move(CurrentPlayer, fromPos, toPos);
+              
                 CurrentPlayer.moveCow(fromPos, toPos);
             }
 
@@ -61,17 +61,13 @@ namespace Morabaraba_9001
 
         }
 
-        public bool IsTileOccupied((char, int) pos)
-        {
-            return GameBoard.isOccupied(pos);
-        }
 
         public MoveError Move((char, int) fromPos, (char, int) toPos)
         {
-            MoveError error = Referee.Move(CurrentPlayer,fromPos,toPos);
+            MoveError error = Referee.Move(CurrentPlayer,OtherPlayer,fromPos,toPos);
             if (error == MoveError.Valid)
             {
-                GameBoard.Move(CurrentPlayer, fromPos, toPos);
+             
                 CurrentPlayer.moveCow(fromPos, toPos);
             }
 
@@ -81,10 +77,10 @@ namespace Morabaraba_9001
 
         public MoveError Place((char, int) pos){
 
-            MoveError error = Referee.Place(CurrentPlayer,pos);
+            MoveError error = Referee.Place(CurrentPlayer,OtherPlayer,pos);
             if (error == MoveError.Valid)
             {
-                GameBoard.Place(CurrentPlayer, pos);
+
                 CurrentPlayer.placeCow(pos);
               
 
@@ -171,6 +167,9 @@ namespace Morabaraba_9001
             throw new NotImplementedException();
         }
 
-       
+        public bool IsTileOccupied((char, int) pos)
+        {
+            return CurrentPlayer.hasCowAtPos(pos) || OtherPlayer.hasCowAtPos(pos);
+        }
     }
 }
