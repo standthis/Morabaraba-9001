@@ -54,6 +54,8 @@ namespace Morabaraba_9001
             if(error == MoveError.Valid){
               
                 CurrentPlayer.moveCow(fromPos, toPos);
+                GameBoard.AllTiles[fromPos].color = Color.none;
+                GameBoard.AllTiles[toPos].color = CurrentPlayer.Color;
             }
 
             return error;
@@ -69,6 +71,8 @@ namespace Morabaraba_9001
             {
              
                 CurrentPlayer.moveCow(fromPos, toPos);
+                GameBoard.AllTiles[fromPos].color = Color.none;
+                GameBoard.AllTiles[toPos].color = CurrentPlayer.Color;
             }
 
             return error;
@@ -82,6 +86,7 @@ namespace Morabaraba_9001
             {
 
                 CurrentPlayer.placeCow(pos);
+                GameBoard.AllTiles[pos].color = CurrentPlayer.Color;
               
 
             }
