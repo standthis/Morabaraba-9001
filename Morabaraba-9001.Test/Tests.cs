@@ -734,8 +734,38 @@ namespace Morabaraba_9001.Test
         }
 
         [Test]
-        public void ShootingOnlyOccursInTheTurnTheMillIsCreatedAndNotInTheNextTurnItStillExists()
+        [TestCaseSource(nameof(allPossibleMills))]
+        public void ShootingOnlyOccursInTheTurnTheMillIsCreatedAndNotInTheNextTurnItStillExists((char, int) pos_1, (char, int) pos_2, (char, int) pos_3)
         {
+            //shooting occurs when forming mills. So if no mill is formed
+            //no shooting occurs
+            IBoard board = new Board();
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+            IReferee referee = new Referee(board);
+
+           
+            List<(char, int)> mill = new List<(char, int)>() { pos_1, pos_2, pos_3 };
+            List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
+
+          
+            //mock player with a mill already and then make then have an extra cow outside that mill
+            player_1.hasCowAtPos(pos_1).Returns(true);
+            player_1.hasCowAtPos(pos_2).Returns(true);
+            player_1.hasCowAtPos(pos_3).Returns(true);
+
+            //add cow not in mill
+            (char, int) pos_4 = restOfBoard.ElementAt(0);
+            player_1.hasCowAtPos(pos_4).Returns(false);
+
+            mill.Add(pos_4);
+            //and mock player with 4 cows 
+            player_1.Cows.Returns(posToCows(mill, Color.dark));
+
+            //check if mill is formed if player_1 has recently move to pos_4 and still has a mill with pos_1,pos_2,pos_3 (A mill should not be formed)
+            Assert.AreEqual(false, referee.MillFormed(player_1,pos_4));
+
+          
 
         }
 
