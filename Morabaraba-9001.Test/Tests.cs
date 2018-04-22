@@ -811,8 +811,7 @@ namespace Morabaraba_9001.Test
             IPlayer player_1 = Substitute.For<IPlayer>();
             IPlayer player_2 = Substitute.For<IPlayer>();
             IGame game = new Game(board, referee, player_1, player_2);
-            List<(char, int)> posList = new List<(char, int)>();
-            posList.Add(pos);
+            List<(char, int)> posList = new List<(char, int)>() { pos };
             //mock player to have 1 cow
             game.CurrentPlayer.hasCowAtPos(pos).Returns(true);
             game.CurrentPlayer.Cows.Returns(posToCows(posList, Color.dark));
@@ -837,27 +836,31 @@ namespace Morabaraba_9001.Test
         [TestCaseSource(nameof(allBoardPositions))]
         public void APlayerCannotShootAnEmptySpace((char, int) pos)
         {
-            //IBoard board = new Board();
-            //IReferee referee = new Referee(board);
-            //IPlayer player_1 = Substitute.For<IPlayer>();
-            //IPlayer player_2 = Substitute.For<IPlayer>();
-            //IGame game = new Game(board, referee, player_1, player_2);
-            //List<(char, int)> posList = new List<(char, int)>();
-            //posList.Add(pos);
-            ////mock player to have 1 cow
-            //game.CurrentPlayer.hasCowAtPos(pos).Returns(false);
-            //game.CurrentPlayer.Cows.Returns(posToCows(posList, Color.dark));
-            //game.CurrentPlayer.numCowsOnBoard().Returns(1);
+            IBoard board = new Board();
+            IReferee referee = new Referee(board);
+            IPlayer player_1 = Substitute.For<IPlayer>();
+            IPlayer player_2 = Substitute.For<IPlayer>();
+            IGame game = new Game(board, referee, player_1, player_2);
+            List<(char, int)> posList = new List<(char, int)>(){pos};
+           
 
-            //game.OtherPlayer.hasCowAtPos(pos).Returns(false);
-            //game.OtherPlayer.Cows.Returns(new List<ICow>());
-            //game.OtherPlayer.numCowsOnBoard().Returns(0);
+            List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(posList).ToList();
 
-            ////should not be a valid kill
-            //Assert.AreNotEqual(MoveError.Valid,game.KillCow(pos));
-            ////player should shot recieve a call to kill its cow
-            //game.CurrentPlayer.DidNotReceive().killCow(pos);
-            //List<(char, int)> restOfBoard = board.AllTiles.Keys.Select(x => x).Except(mill).ToList();
+            //mock a completly empty board and try shoot cow at pos
+            game.CurrentPlayer.hasCowAtPos(pos).Returns(false);
+            game.CurrentPlayer.Cows.Returns(new List<ICow>());
+            game.CurrentPlayer.numCowsOnBoard().Returns(0);
+
+            game.OtherPlayer.hasCowAtPos(pos).Returns(false);
+            game.OtherPlayer.Cows.Returns(new List<ICow>());
+            game.OtherPlayer.numCowsOnBoard().Returns(0);
+
+            //should not be a valid kill
+            Assert.AreNotEqual(MoveError.Valid,game.KillCow(pos));
+            //no players should recieve a call to shoot a cow
+            game.CurrentPlayer.DidNotReceive().killCow(pos);
+            game.OtherPlayer.DidNotReceive().killCow(pos);
+
 
         }
 
