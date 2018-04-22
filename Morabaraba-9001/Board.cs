@@ -163,6 +163,7 @@ namespace Morabaraba_9001
                                      |/              |             \|
                                 G  ({21})-------------({22})------------({23})
             ", cowColors);
+            Console.WriteLine(s);
         }
 
     }
